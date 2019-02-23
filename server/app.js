@@ -8,7 +8,7 @@ const logger = require("morgan");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const passport = require("passport");
-
+const mongoose = require("mongoose");
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const authRouter = require("./routes/auth-routers");
@@ -45,9 +45,19 @@ app.use(passport.session());
 passport.serializeUser((user, cb) => {
   cb(null, user);
 });
-
 passport.deserializeUser((obj, cb) => {
   cb(null, obj);
+});
+
+// Config database
+mongoose.connect(process.env.MONGOOSE_URL, { useNewUrlParser: true }, err => {
+  if (err) {
+    // eslint-disable-next-line no-console
+    console.log(err);
+  } else {
+    // eslint-disable-next-line no-console
+    console.log("MongoDB Connected!");
+  }
 });
 
 app.use("/", indexRouter);
