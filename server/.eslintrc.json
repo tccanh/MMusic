@@ -8,6 +8,7 @@
       { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }
     ],
     "linebreak-style": 0,
-    "comma-dangle": "off"
+    "comma-dangle": "off",
+    "arrow-parens": "off"
   }
 }

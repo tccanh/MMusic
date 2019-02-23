@@ -1,11 +1,17 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+require("dotenv").config();
 const createError = require("http-errors");
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
+const bodyParser = require("body-parser");
+const session = require("express-session");
+const passport = require("passport");
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
+const authRouter = require("./routes/auth-routers");
 
 const app = express();
 
@@ -19,14 +25,41 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+// Use application-level middleware for common functionality, including
+// logging, parsing, and session handling.
+app.use(
+  session({
+    secret: "helloworld",
+    resave: true,
+    saveUninitialized: true
+  })
+);
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+// Initialize Passport and restore authentication state, if any, from the session.
+require("./configs/passport")(passport);
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.serializeUser((user, cb) => {
+  cb(null, user);
+});
+
+passport.deserializeUser((obj, cb) => {
+  cb(null, obj);
+});
+
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+app.use("/auth", authRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
   next(createError(404));
 });
 
+// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;

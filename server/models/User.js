@@ -3,17 +3,20 @@ const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
 const UserSchema = new Schema({
-  firstname: {
+  name: {
     type: String,
     required: true
   },
-  lastname: {
-    type: String,
-    required: true
+  phone: {
+    type: String
   },
   email: {
     type: String,
     required: true
+  },
+  gender: {
+    type: String,
+    enum: ["Male", "Female", "Other"]
   },
   password: {
     type: String,
