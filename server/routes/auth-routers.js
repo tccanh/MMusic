@@ -2,43 +2,49 @@
 /* eslint-disable arrow-body-style */
 const router = require("express").Router();
 const passport = require("passport");
-
 const User = require("../models/User");
 // Define route callback
 const providers = ["google", "facebook"];
 const callbacksURL = providers.map(provider => `/${provider}/callback`);
 const [googleURL, facebookURL] = callbacksURL;
 
-// Define routes.
-router.get("/", (req, res) => {
-  res.render("index", { user: req.user });
-});
+// // Define routes.
+// router.get("/", (req, res) => {
+//   res.render("index", { user: req.user });
+// });
 
-router.get("/login", (req, res) => {
-  res.render("index", { user: req.user });
-});
+// router.get("/login", (req, res) => {
+//   res.render("index", { user: req.user });
+// });
 
 // Register User
+// eslint-disable-next-line consistent-return
 router.post("/register", (req, res) => {
-  const { password } = req.body;
-  const { password2 } = req.body;
+  const errors = {};
+  const { password, password2, username } = req.body;
 
   if (password === password2) {
-    const newUser = new User({
-      name: req.body.name,
-      email: req.body.email,
-      password: req.body.password
-    });
-    User.createUser(newUser, (err, user) => {
-      if (err) throw err;
-      res.send(user).end();
+    // eslint-disable-next-line consistent-return
+    User.findOne({ username }).then(user => {
+      if (user) {
+        errors.email = "Username already exists";
+        return res.status(400).json(errors);
+      }
+      const newUser = new User({
+        name: req.body.name,
+        username: req.body.username,
+        email: req.body.email,
+        password: req.body.password
+      });
+      // eslint-disable-next-line no-shadow
+      User.createUser(newUser, (err, user) => {
+        if (err) throw err;
+        return res.json(user);
+      });
     });
   } else {
-    res
-      .status(500)
-      // eslint-disable-next-line quotes
-      .send('{errors: "Passwords don\'t match"}')
-      .end();
+    errors.password = "Passwords don't match";
+    return res.status(500).json(errors);
   }
 });
 

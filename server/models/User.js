@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-shadow */
 /* eslint-disable func-names */
 /* eslint-disable space-before-function-paren */
 /* eslint-disable comma-dangle */
@@ -44,13 +46,12 @@ const UserSchema = new Schema({
     name: String
   }
 });
-const User = mongoose.model("users", UserSchema);
 
+const User = mongoose.model("User", UserSchema);
+module.exports = User;
 module.exports.createUser = function(newUser, callback) {
   bcrypt.genSalt(10, (err, salt) => {
-    // eslint-disable-next-line no-shadow
     bcrypt.hash(newUser.password, salt, (err, hash) => {
-      // eslint-disable-next-line no-param-reassign
       newUser.password = hash;
       newUser.save(callback);
     });
@@ -72,4 +73,3 @@ module.exports.comparePassword = function(candidatePassword, hash, callback) {
     callback(null, isMatch);
   });
 };
-module.exports = User;
