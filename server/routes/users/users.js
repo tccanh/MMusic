@@ -2,9 +2,8 @@ const express = require("express");
 
 const router = express.Router();
 
-// Endpoint to get current user
-router.get("/user", (req, res) => {
-  res.json(req.user);
-});
-
+// Sửa thông tin
+// Xoá tài khoản
+// Lấy thông tin
+// Lấy danh sách user
 module.exports = router;

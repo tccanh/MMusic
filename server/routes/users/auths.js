@@ -1,12 +1,14 @@
+/* eslint-disable no-shadow */
+/* eslint-disable consistent-return */
 const router = require("express").Router();
 const passport = require("passport");
-const User = require("../models/User");
+const User = require("../../models/User");
 // Define route callback
 const providers = ["google", "facebook"];
 const callbacksURL = providers.map(provider => `/${provider}/callback`);
 const [googleURL, facebookURL] = callbacksURL;
 // Validate
-const validateRegister = require("../validations/register");
+const validateRegister = require("../../validations/register");
 
 // Local
 router.post("/login", passport.authenticate("local"), (req, res) =>
@@ -42,7 +44,7 @@ router.post("/register", (req, res) => {
 /* Handle Logout */
 router.get("/logout", (req, res) => {
   req.logout();
-  res.json("Logout Done");
+  res.redirect("/");
 });
 
 // Google
@@ -50,10 +52,8 @@ router.get("/google", passport.authenticate("google", { scope: ["profile"] }));
 router.get(
   googleURL,
   passport.authenticate("google", { failureRedirect: "/login" }),
-  (req, res) => {
-    // Successful authentication, redirect home.
-    res.render("index", { user: req.user });
-  }
+  // Successful authentication, redirect home.
+  (req, res) => res.redirect("/")
 );
 
 // Facebook
@@ -66,10 +66,8 @@ router.get(
 router.get(
   facebookURL,
   passport.authenticate("facebook", { failureRedirect: "/login" }),
-  (req, res) => {
-    // Successful authentication, redirect home.
-    res.render("index", { user: req.user });
-  }
+  // Successful authentication, redirect home.
+  (req, res) => res.redirect("/")
 );
 
 module.exports = router;
