@@ -5,37 +5,38 @@ const User = require("../models/User");
 const providers = ["google", "facebook"];
 const callbacksURL = providers.map(provider => `/${provider}/callback`);
 const [googleURL, facebookURL] = callbacksURL;
+// Validate
+const validateRegister = require("../validations/register");
 
 // Local
-router.post("/login", passport.authenticate("local"), (req, res) => {
-  res.json(req.user);
-});
+router.post("/login", passport.authenticate("local"), (req, res) =>
+  // eslint-disable-next-line implicit-arrow-linebreak
+  res.json(req.user)
+);
 
 router.post("/register", (req, res) => {
-  const errors = {};
-  const { password, password2, username } = req.body;
+  const { errors, isValid } = validateRegister(req.body);
 
-  if (password === password2) {
-    User.findOne({ username }).then(user => {
-      if (user) {
-        errors.email = "Username already exists";
-        return res.status(400).json(errors);
-      }
-      const newUser = new User({
-        name: req.body.name,
-        username: req.body.username,
-        email: req.body.email,
-        password: req.body.password
-      });
-      User.createUser(newUser, (err, user) => {
-        if (err) throw err;
-        return res.json(user);
-      });
-    });
-  } else {
-    errors.password = "Passwords don't match";
-    return res.status(500).json(errors);
+  // Check Validation
+  if (!isValid) {
+    return res.status(400).json(errors);
   }
+  User.findOne({ username: req.body.username }).then(user => {
+    if (user) {
+      errors.email = "Username already exists";
+      return res.status(400).json(errors);
+    }
+    const newUser = new User({
+      name: req.body.name,
+      username: req.body.username,
+      email: req.body.email,
+      password: req.body.password
+    });
+    User.createUser(newUser, (err, user) => {
+      if (err) throw err;
+      return res.json(user);
+    });
+  });
 });
 
 /* Handle Logout */
