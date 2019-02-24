@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Home</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+  <body>
+    <h1>HOME</h1>
+    <p>User: <%= user %></p>
+    <a href="/auth/google">Google</a>
+    <hr />
+    <a href="/auth/facebook">Facebook</a>
+    <hr />
+    <a href="/auth/logout">Logout</a>
+    <hr />
+    <form action="/users/update" method="post" enctype="multipart/form-data">
+      <label for="">Name</label> <input type="text" name="name" />
+      <hr />
+      <label for="">username</label> <input type="text" name="username" />
+      <hr />
+      <label for="">email</label> <input type="text" name="email" />
+      <hr />
+      <label for="">image</label>
+      <input
+        type="file"
+        id="image"
+        name="image"
+        accept="image/png, image/jpeg"
+      />
+      <hr />
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html>

@@ -11,10 +11,11 @@ const [googleURL, facebookURL] = callbacksURL;
 const validateRegister = require("../../validations/register");
 
 // Local
-router.post("/login", passport.authenticate("local"), (req, res) =>
+router.post("/login", passport.authenticate("local"), (req, res) => {
   // eslint-disable-next-line implicit-arrow-linebreak
-  res.json(req.user)
-);
+  console.log(req);
+  return res.json(req.user);
+});
 
 router.post("/register", (req, res) => {
   const { errors, isValid } = validateRegister(req.body);

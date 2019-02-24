@@ -9,9 +9,10 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const passport = require("passport");
 const mongoose = require("mongoose");
+const cloudinary = require("cloudinary");
 
 const indexRouter = require("./routes/index");
-const usersRouter = require("./routes/users/users");
+const usersRouter = require("./routes/users/profiles");
 const authRouter = require("./routes/users/auths");
 
 const app = express();
@@ -53,6 +54,12 @@ mongoose.connect(process.env.MONGOOSE_URL, { useNewUrlParser: true }, err => {
     // eslint-disable-next-line no-console
     console.log("MongoDB Connected!");
   }
+});
+// Config cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_KEY,
+  api_secret: process.env.CLOUD_SECRET
 });
 
 app.use("/", indexRouter);
