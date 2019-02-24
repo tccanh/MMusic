@@ -29,7 +29,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // logging, parsing, and session handling.
 app.use(
   session({
-    secret: "helloworld",
+    secret: process.env.SESSION_KEY,
     resave: true,
     saveUninitialized: true
   })
@@ -42,12 +42,6 @@ require("./configs/passport")(passport);
 
 app.use(passport.initialize());
 app.use(passport.session());
-passport.serializeUser((user, cb) => {
-  cb(null, user);
-});
-passport.deserializeUser((obj, cb) => {
-  cb(null, obj);
-});
 
 // Config database
 mongoose.connect(process.env.MONGOOSE_URL, { useNewUrlParser: true }, err => {
