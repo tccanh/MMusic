@@ -1,5 +1,3 @@
-/* eslint-disable import/no-unresolved */
-/* eslint-disable arrow-body-style */
 const router = require("express").Router();
 const passport = require("passport");
 const User = require("../models/User");
@@ -8,23 +6,16 @@ const providers = ["google", "facebook"];
 const callbacksURL = providers.map(provider => `/${provider}/callback`);
 const [googleURL, facebookURL] = callbacksURL;
 
-// // Define routes.
-// router.get("/", (req, res) => {
-//   res.render("index", { user: req.user });
-// });
+// Local
+router.post("/login", passport.authenticate("local"), (req, res) => {
+  res.json(req.user);
+});
 
-// router.get("/login", (req, res) => {
-//   res.render("index", { user: req.user });
-// });
-
-// Register User
-// eslint-disable-next-line consistent-return
 router.post("/register", (req, res) => {
   const errors = {};
   const { password, password2, username } = req.body;
 
   if (password === password2) {
-    // eslint-disable-next-line consistent-return
     User.findOne({ username }).then(user => {
       if (user) {
         errors.email = "Username already exists";
@@ -36,7 +27,6 @@ router.post("/register", (req, res) => {
         email: req.body.email,
         password: req.body.password
       });
-      // eslint-disable-next-line no-shadow
       User.createUser(newUser, (err, user) => {
         if (err) throw err;
         return res.json(user);
@@ -51,8 +41,9 @@ router.post("/register", (req, res) => {
 /* Handle Logout */
 router.get("/logout", (req, res) => {
   req.logout();
-  res.redirect("/");
+  res.json("Logout Done");
 });
+
 // Google
 router.get("/google", passport.authenticate("google", { scope: ["profile"] }));
 router.get(
