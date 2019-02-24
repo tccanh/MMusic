@@ -9,9 +9,10 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const passport = require("passport");
 const mongoose = require("mongoose");
+
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
-const authRouter = require("./routes/auth-routers");
+const authRouter = require("./routes/auths");
 
 const app = express();
 
