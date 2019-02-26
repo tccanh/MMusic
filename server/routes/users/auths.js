@@ -2,7 +2,10 @@
 /* eslint-disable consistent-return */
 const router = require("express").Router();
 const passport = require("passport");
+const jwt = require("jsonwebtoken");
+
 const User = require("../../models/User");
+
 // Define route callback
 const providers = ["google", "facebook"];
 const callbacksURL = providers.map(provider => `/${provider}/callback`);
@@ -11,10 +14,32 @@ const [googleURL, facebookURL] = callbacksURL;
 const validateRegister = require("../../validations/register");
 
 // Local
-router.post("/login", passport.authenticate("local"), (req, res) => {
-  // eslint-disable-next-line implicit-arrow-linebreak
-  console.log(req);
-  return res.json(req.user);
+/* POST login. */
+router.post("/login", (req, res, next) => {
+  passport.authenticate("local", { session: false }, (err, user, info) => {
+    if (err || !user) {
+      console.log({ err, user });
+
+      return res.status(400).json({
+        message: "Something is not right",
+        user
+      });
+    }
+    req.login(user, { session: false }, err => {
+      if (err) {
+        res.send(err);
+      }
+      const payload = { id: user.id, name: user.name };
+      const token = jwt.sign(
+        payload,
+        process.env.JWT_SECRET,
+        {
+          expiresIn: 3600
+        },
+        (err, token) => res.json({ user, token: `Bearer ${token}` })
+      );
+    });
+  })(req, res);
 });
 
 router.post("/register", (req, res) => {
@@ -31,11 +56,14 @@ router.post("/register", (req, res) => {
     }
     const newUser = new User({
       name: req.body.name,
-      username: req.body.username,
+      locals: {
+        username: req.body.username,
+        password: req.body.password
+      },
       email: req.body.email,
-      password: req.body.password
+      gender: "Male"
     });
-    User.createUser(newUser, (err, user) => {
+    User.createHash(newUser, (err, user) => {
       if (err) throw err;
       return res.json(user);
     });

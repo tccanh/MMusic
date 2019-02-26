@@ -11,18 +11,12 @@ const UserSchema = new Schema({
   name: {
     type: String
   },
-  username: {
-    type: String
-  },
   email: {
     type: String
   },
   gender: {
     type: String,
     enum: ["Male", "Female", "Other"]
-  },
-  password: {
-    type: String
   },
   avatar: {
     type: String
@@ -32,6 +26,10 @@ const UserSchema = new Schema({
     default: "USER",
     enum: ["USER", "ADMIN", "MOD"],
     required: true
+  },
+  locals: {
+    username: String,
+    password: String
   },
   facebook: {
     id: String,
@@ -49,18 +47,13 @@ const UserSchema = new Schema({
 
 const User = mongoose.model("User", UserSchema);
 module.exports = User;
-module.exports.createUser = function(newUser, callback) {
+module.exports.createHash = function(newUser, callback) {
   bcrypt.genSalt(10, (err, salt) => {
-    bcrypt.hash(newUser.password, salt, (err, hash) => {
-      newUser.password = hash;
+    bcrypt.hash(newUser.locals.password, salt, (err, hash) => {
+      newUser.locals.password = hash;
       newUser.save(callback);
     });
   });
-};
-
-module.exports.getUserByUsername = function(username, callback) {
-  const query = { username };
-  User.findOne(query, callback);
 };
 
 module.exports.getUserById = function(id, callback) {

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable consistent-return */
 /* eslint-disable no-shadow */
@@ -5,6 +6,10 @@
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const FacebookStrategy = require("passport-facebook").Strategy;
 const LocalStrategy = require("passport-local").Strategy;
+const passportJWT = require("passport-jwt");
+
+const JWTStrategy = passportJWT.Strategy;
+const ExtractJWT = passportJWT.ExtractJwt;
 const CONFIGS = require("./configs");
 
 const User = require("../models/User");
@@ -100,20 +105,57 @@ module.exports = passport => {
     )
   );
   passport.use(
-    new LocalStrategy((username, password, done) => {
-      User.getUserByUsername(username, (err, user) => {
-        if (err) throw err;
-        if (!user) {
-          return done(null, false, { message: "Unknown User" });
-        }
-        User.comparePassword(password, user.password, (err, isMatch) => {
-          if (err) throw err;
-          if (isMatch) {
-            return done(null, user);
-          }
-          return done(null, false, { message: "Invalid password" });
-        });
-      });
-    })
+    new LocalStrategy(
+      {
+        usernameField: "username",
+        passwordField: "password"
+      },
+      (username, password, cb) =>
+        // this one is typically a DB call. Assume that the returned user object is pre-formatted and ready for storing in JWT
+        User.findOne({ "locals.username": username })
+          .then(user => {
+            if (!user) {
+              return cb(null, false, {
+                message: "Incorrect email."
+              });
+            }
+            User.comparePassword(
+              password,
+              user.locals.password,
+              (err, isMatch) => {
+                if (err) {
+                  return cb(err, null);
+                }
+                if (!isMatch) {
+                  return cb(null, false, {
+                    message: "Incorrect password."
+                  });
+                }
+              }
+            );
+            return cb(null, user, { message: "Logged In Successfully" });
+          })
+          .catch(err => cb(err))
+    )
+  );
+  passport.use(
+    new JWTStrategy(
+      {
+        jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+        secretOrKey: process.env.JWT_SECRET
+      },
+      (JWTpayload, done) => {
+        User.findById(JWTpayload.id)
+          .then(user => {
+            if (user) {
+              return done(null, user);
+            }
+            return done(null, false);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    )
   );
 };

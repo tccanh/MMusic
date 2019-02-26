@@ -12,7 +12,8 @@ const mongoose = require("mongoose");
 const cloudinary = require("cloudinary");
 
 const indexRouter = require("./routes/index");
-const usersRouter = require("./routes/users/profiles");
+const profileRouter = require("./routes/users/profiles");
+const usersRouter = require("./routes/users/users");
 const authRouter = require("./routes/users/auths");
 
 const app = express();
@@ -63,7 +64,12 @@ cloudinary.config({
 });
 
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use("/profile", profileRouter);
+app.use(
+  "/users",
+  passport.authenticate("jwt", { session: false }),
+  usersRouter
+);
 app.use("/auth", authRouter);
 
 // catch 404 and forward to error handler
