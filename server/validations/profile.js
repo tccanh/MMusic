@@ -15,7 +15,7 @@ module.exports = function validateProfile(data) {
     errors.username = "User is invalid";
   }
 
-  if (!Validator.isEmail(data.email)) {
+  if (!Validator.isEmail(data.email) && !isEmpty(data.email)) {
     errors.email = "Email invalid.";
   }
   return {
