@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 // eslint-disable-next-line import/no-extraneous-dependencies
 require("dotenv").config();
 const createError = require("http-errors");
@@ -11,10 +12,12 @@ const passport = require("passport");
 const mongoose = require("mongoose");
 const cloudinary = require("cloudinary");
 
+const CONFIGS = require("./configs/configs");
 const indexRouter = require("./routes/index");
 const profileRouter = require("./routes/users/profiles");
 const usersRouter = require("./routes/users/users");
 const authRouter = require("./routes/users/auths");
+const middleware = require("./configs/middleware");
 
 const app = express();
 
@@ -34,9 +37,13 @@ app.use(
   session({
     secret: process.env.SESSION_KEY,
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: { secure: false }
   })
 );
+
+// Please note that secure: true is a recommended option. However, it requires an https-enabled website, i.e., HTTPS is necessary for secure cookies. If secure is set, and you access your site over HTTP, the cookie will not be set. If you have your node.js behind a proxy and are using secure: true, you need to set "trust proxy" in express:
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -57,17 +64,14 @@ mongoose.connect(process.env.MONGOOSE_URL, { useNewUrlParser: true }, err => {
   }
 });
 // Config cloudinary
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.CLOUD_KEY,
-  api_secret: process.env.CLOUD_SECRET
-});
+cloudinary.config(CONFIGS.CLODINARY_CONFIG);
 
 app.use("/", indexRouter);
 app.use("/profile", profileRouter);
 app.use(
   "/users",
-  passport.authenticate("jwt", { session: false }),
+  // passport.authenticate("jwt", { session: false }) ||
+  middleware.isAuthenticated,
   usersRouter
 );
 app.use("/auth", authRouter);
