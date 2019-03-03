@@ -14,23 +14,17 @@ const PlayListSchema = new Schema({
     type: String,
     required: true
   },
-  public: {
+  publics: {
     type: Boolean,
     required: true,
-    default: false
+    default: true
   },
-  likes: [
-    {
-      user: {
-        type: Schema.Types.ObjectId,
-        ref: "users"
-      }
-    }
-  ],
   tracks: [
     {
-      type: Schema.Types.ObjectId,
-      ref: "tracks"
+      track: {
+        type: Schema.Types.ObjectId,
+        ref: "tracks"
+      }
     }
   ],
   update: {

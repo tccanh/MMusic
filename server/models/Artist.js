@@ -15,13 +15,10 @@ const ArtistSchema = new Schema({
       ref: "albums"
     }
   ],
-  genres: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "genres",
-      required: true
-    }
-  ],
+  genres: {
+    type: [String],
+    required: true
+  },
   likes: [
     {
       user: {

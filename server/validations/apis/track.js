@@ -4,7 +4,8 @@ const isEmpty = require("../is-empty");
 
 module.exports = function validateTrack(data) {
   const errors = {};
-  data.track = !isEmpty(data.name) ? data.name : "";
+  data.name = !isEmpty(data.name) ? data.name.trim() : "";
+  data.country = !isEmpty(data.country) ? data.country.trim() : "";
 
   if (Validator.isEmpty(data.name)) {
     errors.track = "Track name field is required";

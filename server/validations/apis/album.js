@@ -4,7 +4,7 @@ const isEmpty = require("../is-empty");
 
 module.exports = function validateAlbum(data) {
   const errors = {};
-  data.album = !isEmpty(data.name) ? data.name : "";
+  data.name = !isEmpty(data.name) ? data.name.trim() : "";
 
   if (Validator.isEmpty(data.name)) {
     errors.album = "Album name field is required";

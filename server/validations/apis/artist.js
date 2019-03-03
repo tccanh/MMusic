@@ -2,14 +2,16 @@
 const Validator = require("validator");
 const isEmpty = require("../is-empty");
 
-module.exports = function validateGenre(data) {
+module.exports = function validateArtist(data) {
   const errors = {};
   data.name = !isEmpty(data.name) ? data.name.trim() : "";
+  data.description = !isEmpty(data.description) ? data.description.trim() : "";
+  data.genres = !isEmpty(data.genres) ? data.genres.trim() : "";
 
   if (Validator.isEmpty(data.name)) {
-    errors.genre = "Genre name field is required";
+    errors.artist = "Artist name field is required";
   } else if (!Validator.isLength(data.name, { min: 3, max: 20 })) {
-    errors.genre = "Genre name is at least 3 characters";
+    errors.artist = "Artist name is at least 3 characters";
   }
   return {
     errors,
