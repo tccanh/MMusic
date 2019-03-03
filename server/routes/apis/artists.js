@@ -9,6 +9,7 @@ const Artist = require("../../models/Artist");
 const Album = require("../../models/Album");
 const User = require("../../models/User");
 const { fileFilter, storage } = require("../../configs/upload");
+const formatText = require("../../validations/formatText");
 
 const upload = multer({ storage, fileFilter });
 const validateArtist = require("../../validations/apis/artist");
@@ -47,10 +48,7 @@ router.post("/", upload.single("image"), async (req, res, next) => {
     newArtist.albums = AlbumIDs;
   }
   if (genres) {
-    const listGenres = genres.split(",").map(gen => {
-      const temp = gen.trim().toLowerCase();
-      return temp.charAt(0).toUpperCase() + temp.substr(1);
-    });
+    const listGenres = genres.split(",").map(genr => formatText(genr));
     newArtist.genres = listGenres;
   }
   if (name) {

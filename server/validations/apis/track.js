@@ -1,11 +1,12 @@
 /* eslint-disable no-param-reassign */
 const Validator = require("validator");
 const isEmpty = require("../is-empty");
+const formatText = require("../formatText");
 
 module.exports = function validateTrack(data) {
   const errors = {};
-  data.name = !isEmpty(data.name) ? data.name.trim() : "";
-  data.country = !isEmpty(data.country) ? data.country.trim() : "";
+  data.name = !isEmpty(data.name) ? formatText(data.name) : "";
+  data.country = !isEmpty(data.country) ? formatText(data.country) : "";
 
   if (Validator.isEmpty(data.name)) {
     errors.track = "Track name field is required";

@@ -1,10 +1,11 @@
 /* eslint-disable no-param-reassign */
 const Validator = require("validator");
 const isEmpty = require("../is-empty");
+const formatText = require("../formatText");
 
 module.exports = function validatePlayList(data) {
   const errors = {};
-  data.name = !isEmpty(data.name) ? data.name.trim() : "";
+  data.name = !isEmpty(data.name) ? formatText(data.name) : "";
   data.description = !isEmpty(data.description) ? data.description.trim() : "";
 
   if (Validator.isEmpty(data.name)) {
