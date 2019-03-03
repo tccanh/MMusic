@@ -1,8 +1,4 @@
 const express = require("express");
-const cloudinary = require("cloudinary");
-const multer = require("multer");
-const validateProfile = require("../../validations/profile");
-const User = require("../../models/User");
 const middleware = require("../../configs/middleware");
 
 const router = express.Router();

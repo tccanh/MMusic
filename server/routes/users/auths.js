@@ -11,7 +11,7 @@ const providers = ["google", "facebook"];
 const callbacksURL = providers.map(provider => `/${provider}/callback`);
 const [googleURL, facebookURL] = callbacksURL;
 // Validate
-const validateRegister = require("../../validations/register");
+const validateRegister = require("../../validations/users/register");
 
 // Local
 /* POST login. */

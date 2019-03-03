@@ -1,27 +1,17 @@
+/* eslint-disable consistent-return */
+/* eslint-disable no-unused-vars */
 // routes/user.js
 const express = require("express");
 const cloudinary = require("cloudinary");
 const multer = require("multer");
-const validateProfile = require("../../validations/profile");
+const validateProfile = require("../../validations/users/profile");
 const User = require("../../models/User");
+const { fileFilter, storage } = require("../../configs/upload");
+
+const upload = multer({ storage, fileFilter });
 
 const router = express.Router();
 
-// Storage image=================================================================================
-const storage = multer.diskStorage({
-  filename(req, file, next) {
-    next(null, Date.now() + file.originalname);
-  }
-});
-const fileFilter = (req, file, cb) => {
-  // accept image files only
-  if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
-    return cb(new Error("Only image files are allowed!"), false);
-  }
-  cb(null, true);
-};
-const upload = multer({ storage, fileFilter });
-// Storage image=================================================================================
 /* GET users listing. */
 router.get("/", (req, res, next) => {
   res.send("respond with a resource");
@@ -41,16 +31,15 @@ router.post("/update", upload.single("image"), async (req, res, next) => {
   if (req.body.name) oldProfile.name = req.body.name;
   if (req.body.email) oldProfile.email = req.body.email;
   if (req.body.gender) oldProfile.gender = req.body.gender;
+  // eslint-disable-next-line no-console
   console.log(`HEllo: ${image}`);
 
   // Upload avatar
   // if (req.body.image) {
   // eslint-disable-next-line no-undef
-  if (true) {
-    await cloudinary.uploader.upload(req.file.path, res => {
-      oldProfile.avatar = res.secure_url;
-    });
-  }
+  await cloudinary.uploader.upload(req.file.path, _res => {
+    oldProfile.avatar = _res.secure_url;
+  });
 
   await User.findByIdAndUpdate(
     // eslint-disable-next-line no-underscore-dangle
@@ -63,5 +52,10 @@ router.post("/update", upload.single("image"), async (req, res, next) => {
     .then(_user => res.json(_user))
     .catch(err => res.json(err));
 });
-
+router.delete("/", (req, res) => {
+  // Cần thêm check role middleware đê lấy quyền xoá
+  User.findOneAndRemove({ _id: req.user.id }).then(() => {
+    res.json({ success: true });
+  });
+});
 module.exports = router;

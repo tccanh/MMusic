@@ -12,6 +12,7 @@
     "arrow-parens": "off",
     "function-paren-newline": "off",
     "no-shadow": "warn",
-    "consistent-return": "warn"
+    "consistent-return": "warn",
+    "implicit-arrow-linebreak": "off"
   }
 }
