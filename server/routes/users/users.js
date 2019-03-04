@@ -6,7 +6,7 @@ const cloudinary = require("cloudinary");
 const multer = require("multer");
 const validateProfile = require("../../validations/users/profile");
 const User = require("../../models/User");
-const { fileFilter, storage } = require("../../configs/upload");
+const { fileFilter, storage } = require("../../configs/uploadImage");
 
 const upload = multer({ storage, fileFilter });
 

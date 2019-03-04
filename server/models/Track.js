@@ -16,21 +16,25 @@ const TrackSchema = new Schema({
   },
   artists: [
     {
-      type: Schema.Types.ObjectId,
-      ref: "artists"
+      artist: {
+        type: Schema.Types.ObjectId,
+        ref: "artists"
+      },
+      name: String
     }
   ],
-  album: {
-    type: Schema.Types.ObjectId,
-    ref: "albums"
+  albums: {
+    album: { type: Schema.Types.ObjectId, ref: "albums" },
+    name: String
   },
   link: {
-    type: String,
-    required: true
+    type: String
+    // required: true
   },
   duration: {
     type: String,
-    required: true
+    required: true,
+    default: 0
   },
   lyric: [
     {
@@ -38,10 +42,9 @@ const TrackSchema = new Schema({
       ref: "lyrics"
     }
   ],
-  genre: {
-    type: Schema.Types.ObjectId,
-    ref: "genres",
-    required: true
+  genres: {
+    genre: { type: Schema.Types.ObjectId, ref: "genres", required: true },
+    name: String
   },
   country: {
     type: String,

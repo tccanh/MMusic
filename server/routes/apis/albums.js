@@ -4,7 +4,7 @@ const router = require("express").Router();
 const cloudinary = require("cloudinary");
 const multer = require("multer");
 const Album = require("../../models/Album");
-const { fileFilter, storage } = require("../../configs/upload");
+const { fileFilter, storage } = require("../../configs/uploadImage");
 
 const upload = multer({ storage, fileFilter });
 const validateAlbum = require("../../validations/apis/album");
@@ -26,10 +26,13 @@ router.post("/", upload.single("image"), async (req, res, next) => {
   if (!isValid) {
     return res.status(400).json(errors);
   }
-
-  await cloudinary.uploader.upload(req.file.path, _res => {
-    newAlbum.image = _res.secure_url;
-  });
+  try {
+    await cloudinary.uploader.upload(req.file.path, _res => {
+      newAlbum.image = _res.secure_url;
+    });
+  } catch (error) {
+    res.json(error);
+  }
 
   Album.findOne({ name }).then(album => {
     if (album) {

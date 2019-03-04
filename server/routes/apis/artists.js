@@ -8,8 +8,9 @@ const multer = require("multer");
 const Artist = require("../../models/Artist");
 const Album = require("../../models/Album");
 const User = require("../../models/User");
-const { fileFilter, storage } = require("../../configs/upload");
+const { fileFilter, storage } = require("../../configs/uploadImage");
 const formatText = require("../../validations/formatText");
+const isEmpty = require("../../validations/is-empty");
 
 const upload = multer({ storage, fileFilter });
 const validateArtist = require("../../validations/apis/artist");
@@ -32,41 +33,54 @@ router.post("/", upload.single("image"), async (req, res, next) => {
     return res.status(400).json(errors);
   }
   if (description) newArtist.description = description;
-  await cloudinary.uploader.upload(req.file.path, _res => {
-    newArtist.image = _res.secure_url;
-  });
+  try {
+    await cloudinary.uploader.upload(req.file.path, _res => {
+      newArtist.image = _res.secure_url;
+    });
+  } catch (error) {
+    res.status(400).json({ ErrorUploadImage: error });
+  }
+
   if (albums) {
-    const listAlbums = albums.split(",").map(album => album.trim());
+    const listAlbums = albums.split(",").map(album => formatText(album));
+    newArtist.albums = [];
     const AlbumIDs = await listAlbums.map(_alb => {
       Album.findOne({ name: _alb })
-        .then(__alb => __alb.id)
+        .then(__alb => {
+          console.log("hello: ", __alb);
+          if (!isEmpty(__alb)) {
+            newArtist.albums.unshift({
+              id: __alb.id,
+              name: __alb.name
+            });
+          }
+        })
         .catch(err => {
-          errors.Albums = `Album ${_alb} not found.`;
+          errors.Albums = `Album ${_alb} not found: ${err}`;
           return res.status(400).json(errors);
         });
     });
-    newArtist.albums = AlbumIDs;
   }
   if (genres) {
     const listGenres = genres.split(",").map(genr => formatText(genr));
     newArtist.genres = listGenres;
   }
-  if (name) {
-    await Artist.findOne({ name }).then(art => {
-      if (art) {
-        Artist.findOneAndUpdate(
-          { id: art.id },
-          {
-            $set: newArtist
-          },
-          { new: true }
-        )
-          .then(artist => res.json(artist))
-          .catch(err => {
-            errors.UpdateArtist = err;
-            return errors;
-          });
-      }
+
+  Artist.findOne({ name: formatText(name) }).then(art => {
+    if (art) {
+      Artist.findOneAndUpdate(
+        { _id: art.id },
+        {
+          $set: newArtist
+        },
+        { new: true }
+      )
+        .then(artist => res.json(artist))
+        .catch(err => {
+          errors.UpdateArtist = err;
+          return errors;
+        });
+    } else {
       newArtist.name = name;
       new Artist(newArtist)
         .save()
@@ -75,8 +89,8 @@ router.post("/", upload.single("image"), async (req, res, next) => {
           errors.CreateArtist = err;
           return errors;
         });
-    });
-  }
+    }
+  });
 });
 
 router.post("/like/:id", (req, res, next) => {

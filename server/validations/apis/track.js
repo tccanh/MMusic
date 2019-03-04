@@ -6,7 +6,9 @@ const formatText = require("../formatText");
 module.exports = function validateTrack(data) {
   const errors = {};
   data.name = !isEmpty(data.name) ? formatText(data.name) : "";
+  data.artists = !isEmpty(data.artists) ? formatText(data.artists) : "";
   data.country = !isEmpty(data.country) ? formatText(data.country) : "";
+  data.genre = !isEmpty(data.genre) ? formatText(data.genre) : "";
 
   if (Validator.isEmpty(data.name)) {
     errors.track = "Track name field is required";

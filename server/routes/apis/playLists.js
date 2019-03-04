@@ -9,7 +9,7 @@ const PlayList = require("../../models/PlayList");
 const Album = require("../../models/Album");
 const User = require("../../models/User");
 const Track = require("../../models/Track");
-const { fileFilter, storage } = require("../../configs/upload");
+const { fileFilter, storage } = require("../../configs/uploadImage");
 
 const upload = multer({ storage, fileFilter });
 const validatePlayList = require("../../validations/apis/playList");
@@ -52,7 +52,7 @@ router.post("/add/:id/:track_id", (req, res, next) => {
     .then(playList => {
       Track.findById(req.params.track_id)
         .then(track => {
-          playList.tracks.unshift({ track: req.user.id });
+          playList.tracks.unshift({ track: track.id });
           playList.save().then(__playList => res.json(__playList));
         })
         .catch(err => {
@@ -67,10 +67,10 @@ router.post("/remove/:id/:track_id", (req, res, next) => {
   PlayList.findById(req.params.id)
     .then(playList => {
       const removeIndex = playList.tracks
-        .map(value => value.track.toString())
+        .map(value => value.track.id)
         .indexOf(req.params.track_id);
       // Remove out array likes
-      playList.likes.splice(removeIndex, 1);
+      playList.tracks.splice(removeIndex, 1);
       playList.save().then(pl => res.json(pl));
     })
     .catch(err => {

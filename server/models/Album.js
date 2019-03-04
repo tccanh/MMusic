@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
-const ArtistSchema = new Schema({
+const AlbumSchema = new Schema({
   image: {
     type: String
   },
@@ -14,5 +14,5 @@ const ArtistSchema = new Schema({
     default: Date.now()
   }
 });
-const Artist = mongoose.model("artists", ArtistSchema);
-module.exports = Artist;
+const Album = mongoose.model("albums", AlbumSchema);
+module.exports = Album;

@@ -11,6 +11,6 @@ module.exports = {
     if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
       return cb(new Error("Only image files are allowed!"), false);
     }
-    cb(null, true);
+    return cb(null, true);
   }
 };

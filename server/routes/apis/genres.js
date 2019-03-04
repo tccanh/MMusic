@@ -4,7 +4,7 @@ const router = require("express").Router();
 const cloudinary = require("cloudinary");
 const multer = require("multer");
 const Genre = require("../../models/Genre");
-const { fileFilter, storage } = require("../../configs/upload");
+const { fileFilter, storage } = require("../../configs/uploadImage");
 
 const upload = multer({ storage, fileFilter });
 const validateGenre = require("../../validations/apis/genre");

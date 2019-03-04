@@ -9,7 +9,10 @@ const Track = require("../../models/Track");
 const Artist = require("../../models/Artist");
 const User = require("../../models/User");
 const Album = require("../../models/Album");
-const { fileFilter, storage } = require("../../configs/upload");
+const Genre = require("../../models/Genre");
+const { fileFilter, storage } = require("../../configs/uploadImage");
+const formatText = require("../../validations/formatText");
+const isEmpty = require("../../validations/is-empty");
 
 const upload = multer({ storage, fileFilter });
 const validateTrack = require("../../validations/apis/track");
@@ -37,21 +40,28 @@ router.post("/", upload.single("image"), async (req, res, next) => {
     newTrack.image = _res.secure_url;
   });
   if (artists) {
-    const listArtists = artists.split(",").map(arts => arts.trim());
-    const ArtistsIDs = await listArtists.map(_art => {
-      Artist.findOne({ name: _art })
-        .then(__art => __art.id)
+    const listArtists = artists.split(",").map(arts => formatText(arts));
+    newTrack.artists = [];
+    await listArtists.map(_arts => {
+      Artist.findOne({ name: _arts })
+        .then(__arts => {
+          if (!isEmpty(__arts)) {
+            newTrack.artists.unshift({
+              artist: __arts.id,
+              name: __arts.name
+            });
+          }
+        })
         .catch(err => {
-          errors.Artist = `Artist ${_art} not found.`;
+          errors.Albums = `Artist ${_arts} not found: ${err}`;
           return res.status(400).json(errors);
         });
     });
-    newTrack.artists = ArtistsIDs;
   }
   if (album) {
     await Album.findOne({ name: album })
-      .then(_album => {
-        newTrack.album = _album.id;
+      .then(_arts => {
+        newTrack.albums = { album: _arts.id, name: _arts.name };
       })
       .catch(err => {
         errors.album = `Album ${album} not found`;
@@ -66,9 +76,9 @@ router.post("/", upload.single("image"), async (req, res, next) => {
   //   }
   if (duration) newTrack.duration = duration;
   if (genre) {
-    await Album.findOne({ name: genre })
+    await Genre.findOne({ name: genre })
       .then(_genre => {
-        newTrack.album = _genre.id;
+        newTrack.genres = { genre: _genre.id, name: _genre.name };
       })
       .catch(err => {
         errors.genre = `Genre ${genre} not found`;
@@ -101,9 +111,9 @@ router.post("/comment/:id", (req, res, next) => {
   Track.findById(req.params.id)
     .then(track => {
       const newComment = {
-        user: req.user.id,
         text: req.body.text,
-        name: req.body.name,
+        user: req.user.id,
+        name: req.user.name,
         avatar: req.body.avatar
       };
       // Add to comments array
