@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 /* eslint-disable max-len */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable consistent-return */
@@ -20,9 +21,13 @@ module.exports = passport => {
   });
 
   passport.deserializeUser((id, done) => {
-    User.getUserById(id, (err, user) => {
-      done(err, user);
-    });
+    User.findById(id)
+      .then(user => {
+        if (user) {
+          return done(null, user);
+        }
+      })
+      .catch(er => done(er, false));
   });
   passport.use(
     new GoogleStrategy(
@@ -30,38 +35,21 @@ module.exports = passport => {
         ...CONFIGS.GOOGLE_CONFIG
       },
       (accessToken, refreshToken, profile, done) => {
-        User.findOne({ "google.id": profile.id }, (err, user) => {
+        User.findOne({ googleID: profile.id }, (err, user) => {
           if (err) return done(err);
           if (user) return done(null, user);
-
           // if there is no user found with that google id, create them
-          const newUser = new User();
-          const fullName = `${profile.name.familyName} ${
-            profile.name.givenName
-          }`;
-          // set all of the google information in our user model
-          newUser.google.id = profile.id;
-          newUser.google.token = accessToken;
-          newUser.google.name = fullName;
-          const smallAvatar = profile._json.image.url;
-          newUser.avatar = smallAvatar.substr(
-            0,
-            smallAvatar.lastIndexOf("?sz=50")
-          );
-          newUser.name = fullName;
-          if (
-            // eslint-disable-next-line operator-linebreak
-            typeof profile.emails !== "undefined" &&
-            profile.emails.length > 0
-          ) {
-            newUser.google.email = profile.emails[0].value;
-          }
-
-          // save our user to the database
-          newUser.save(err => {
-            if (err) throw err;
-            return done(null, newUser);
-          });
+          const newUser = {};
+          newUser.googleID = profile.id;
+          newUser.name = `${profile.name.familyName} ${profile.name.givenName}`;
+          const Avatar_ = profile._json.image.url;
+          newUser.avatar = Avatar_.substr(0, Avatar_.lastIndexOf("?sz=50"));
+          newUser.email = profile._json.emails[0].value;
+          newUser.gender = profile.gender;
+          new User(newUser)
+            .save()
+            .then(user => done(null, user))
+            .catch(err => done(err, false));
         });
       }
     )
@@ -72,67 +60,48 @@ module.exports = passport => {
         ...CONFIGS.FACEBOOK_CONFIG
       },
       (accessToken, refreshToken, profile, done) => {
-        User.findOne({ "facebook.id": profile.id }, (err, user) => {
+        User.findOne({ facebookID: profile.id }, (err, user) => {
           if (err) return done(err);
           if (user) return done(null, user);
+          const newUser = {};
+          newUser.facebookID = profile.id;
+          newUser.name = profile.displayName;
+          newUser.email = profile.emails[0].value;
 
-          // if there is no user found with that facebook id, create them
-          const newUser = new User();
-
-          // set all of the facebook information in our user model
-          newUser.facebook.id = profile.id;
-          newUser.facebook.token = accessToken;
-          newUser.facebook.name = profile.displayName;
           newUser.avatar = `http://graph.facebook.com/${
             profile.id
           }/picture?type=large`;
-          newUser.name = profile.displayName;
-          if (
-            // eslint-disable-next-line operator-linebreak
-            typeof profile.emails !== "undefined" &&
-            profile.emails.length > 0
-          ) {
-            newUser.facebook.email = profile.emails[0].value;
-          }
 
-          // save our user to the database
-          newUser.save(err => {
-            if (err) throw err;
-            return done(null, newUser);
-          });
+          new User(newUser).save().then(user => done(null, user));
         });
       }
     )
   );
+
   passport.use(
     new LocalStrategy(
       {
-        usernameField: "username",
+        usernameField: "email",
         passwordField: "password"
       },
-      (username, password, cb) =>
-        // this one is typically a DB call. Assume that the returned user object is pre-formatted and ready for storing in JWT
-        User.findOne({ "locals.username": username })
+      (email, password, cb) =>
+        User.findOne({ email })
           .then(user => {
             if (!user) {
               return cb(null, false, {
                 message: "Incorrect email."
               });
             }
-            User.comparePassword(
-              password,
-              user.locals.password,
-              (err, isMatch) => {
-                if (err) {
-                  return cb(err, null);
-                }
-                if (!isMatch) {
-                  return cb(null, false, {
-                    message: "Incorrect password."
-                  });
-                }
+            User.comparePassword(password, user.password, (err, isMatch) => {
+              if (err) {
+                return cb(err, null);
               }
-            );
+              if (!isMatch) {
+                return cb(null, false, {
+                  message: "Incorrect password."
+                });
+              }
+            });
             return cb(null, user, { message: "Logged In Successfully" });
           })
           .catch(err => cb(err))
@@ -153,7 +122,7 @@ module.exports = passport => {
             return done(null, false);
           })
           .catch(err => {
-            console.log(err);
+            done(err, false);
           });
       }
     )

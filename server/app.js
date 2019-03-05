@@ -55,7 +55,6 @@ app.use(bodyParser.json());
 require("./configs/passport")(passport);
 
 app.use(passport.initialize());
-app.use(passport.session());
 
 // Config database
 mongoose.connect(process.env.MONGOOSE_URL2, { useNewUrlParser: true }, err => {

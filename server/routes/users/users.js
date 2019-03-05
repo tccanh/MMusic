@@ -52,6 +52,39 @@ router.post("/update", upload.single("image"), async (req, res, next) => {
     .then(_user => res.json(_user))
     .catch(err => res.json(err));
 });
+// router.post("/update/password", (req, res, next) => {
+//   const { errors, isValid } = validatePassword(req.body);
+//   // Check Validation
+//   if (!isValid) {
+//     return res.status(400).json(errors);
+//   }
+//   const Package = {};
+//   bcrypt.genSalt(10, (err, salt) => {
+//     bcrypt.hash(req.body.password, salt, (err, hash) => {
+//       Package.password = hash;
+//       console.log({ user: req.user });
+
+//       User.findByIdAndUpdate(req.user, { $set: Package }, { new: true })
+//         .then(user => {
+//           req.login(user, { session: false }, err => {
+//             if (err) {
+//               res.send(err);
+//             }
+//             const payload = { id: user.id, name: user.name };
+//             const token = jwt.sign(
+//               payload,
+//               process.env.JWT_SECRET,
+//               {
+//                 expiresIn: 3600
+//               },
+//               (err, token) => res.json({ user, token: `Bearer ${token}` })
+//             );
+//           });
+//         })
+//         .catch(err => res.json({ ERRFindUSER: err }));
+//     });
+//   });
+// });
 router.delete("/", (req, res) => {
   // Cần thêm check role middleware đê lấy quyền xoá
   User.findOneAndRemove({ _id: req.user.id }).then(() => {

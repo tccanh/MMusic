@@ -9,17 +9,20 @@ const bcrypt = require("bcryptjs");
 const { Schema } = mongoose;
 const UserSchema = new Schema({
   name: {
-    type: String
+    type: String,
+    required: true
   },
   email: {
+    type: String,
+    required: true
+  },
+  avatar: {
     type: String
   },
   gender: {
     type: String,
-    enum: ["Male", "Female", "Other"]
-  },
-  avatar: {
-    type: String
+    enum: ["male", "female", "other"],
+    default: "other"
   },
   role: {
     type: String,
@@ -27,38 +30,12 @@ const UserSchema = new Schema({
     enum: ["USER", "ADMIN", "MOD"],
     required: true
   },
-  locals: {
-    username: String,
-    password: String
-  },
-  facebook: {
-    id: String,
-    token: String,
-    email: String,
-    name: String
-  },
-  google: {
-    id: String,
-    token: String,
-    email: String,
-    name: String
-  }
+  googleID: String,
+  facebookID: String
 });
 
 const User = mongoose.model("User", UserSchema);
 module.exports = User;
-module.exports.createHash = function(newUser, callback) {
-  bcrypt.genSalt(10, (err, salt) => {
-    bcrypt.hash(newUser.locals.password, salt, (err, hash) => {
-      newUser.locals.password = hash;
-      newUser.save(callback);
-    });
-  });
-};
-
-module.exports.getUserById = function(id, callback) {
-  User.findById(id, callback);
-};
 
 module.exports.comparePassword = function(candidatePassword, hash, callback) {
   bcrypt.compare(candidatePassword, hash, (err, isMatch) => {

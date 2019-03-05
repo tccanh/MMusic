@@ -15,7 +15,15 @@ exports.GOOGLE_CONFIG = {
 exports.FACEBOOK_CONFIG = {
   clientID: process.env.FACEBOOK_KEY,
   clientSecret: process.env.FACEBOOK_SECRET,
-  profileFields: ["id", "name", "displayName", "birthday", "gender", "picture"],
+  profileFields: [
+    "id",
+    "name",
+    "displayName",
+    "birthday",
+    "gender",
+    "picture",
+    "email"
+  ],
   callbackURL: facebookURL
 };
 exports.CLODINARY_CONFIG = {

@@ -3,23 +3,16 @@
 const router = require("express").Router();
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
-
+const gravatar = require("gravatar");
 const User = require("../../models/User");
 
-// Define route callback
-const providers = ["google", "facebook"];
-const callbacksURL = providers.map(provider => `/${provider}/callback`);
-const [googleURL, facebookURL] = callbacksURL;
-// Validate
 const validateRegister = require("../../validations/users/register");
 
 // Local
 /* POST login. */
-router.post("/login", (req, res, next) => {
-  passport.authenticate("local", { session: false }, (err, user, info) => {
+router.post("/login", (req, res) => {
+  passport.authenticate("local", { session: false }, (err, user) => {
     if (err || !user) {
-      console.log({ err, user });
-
       return res.status(400).json({
         message: "Something is not right",
         user
@@ -30,7 +23,7 @@ router.post("/login", (req, res, next) => {
         res.send(err);
       }
       const payload = { id: user.id, name: user.name };
-      const token = jwt.sign(
+      jwt.sign(
         payload,
         process.env.JWT_SECRET,
         {
@@ -42,26 +35,29 @@ router.post("/login", (req, res, next) => {
   })(req, res);
 });
 
-router.post("/register", (req, res) => {
+router.post("/register", async (req, res) => {
   const { errors, isValid } = validateRegister(req.body);
 
   // Check Validation
   if (!isValid) {
     return res.status(400).json(errors);
   }
-  User.findOne({ username: req.body.username }).then(user => {
+  User.findOne({ email: req.body.email }).then(user => {
     if (user) {
-      errors.email = "Username already exists";
+      errors.email = "Email already exists";
       return res.status(400).json(errors);
     }
+    const avatar = gravatar.url(req.body.email, {
+      s: "200", // Size
+      r: "pg", // Rating
+      d: "mm" // Default
+    });
+
     const newUser = new User({
       name: req.body.name,
-      locals: {
-        username: req.body.username,
-        password: req.body.password
-      },
+      password: req.body.password,
       email: req.body.email,
-      gender: "Male"
+      avatar
     });
     User.createHash(newUser, (err, user) => {
       if (err) throw err;
@@ -69,7 +65,6 @@ router.post("/register", (req, res) => {
     });
   });
 });
-
 /* Handle Logout */
 router.get("/logout", (req, res) => {
   req.logout();
@@ -77,26 +72,64 @@ router.get("/logout", (req, res) => {
 });
 
 // Google
-router.get("/google", passport.authenticate("google", { scope: ["profile"] }));
 router.get(
-  googleURL,
+  "/google",
+  passport.authenticate("google", {
+    scope: ["https://www.googleapis.com/auth/userinfo.email"]
+  })
+);
+router.get(
+  "/google/callback",
   passport.authenticate("google", { failureRedirect: "/login" }),
-  // Successful authentication, redirect home.
-  (req, res) => res.redirect("/")
+  (req, res) => {
+    // ----------------------------------------------------------
+    req.login(req.user, { session: false }, err => {
+      if (err) {
+        res.send(err);
+      }
+      const payload = { id: req.user.id, name: req.user.name };
+      jwt.sign(
+        payload,
+        process.env.JWT_SECRET,
+        {
+          expiresIn: 3600
+        },
+        (err, token) => res.json({ user: req.user, token: `Bearer ${token}` })
+      );
+    });
+    // ----------------------------------------------------------
+    // return res.redirect("/");
+  }
 );
 
 // Facebook
 router.get(
   "/facebook",
-  passport.authenticate("facebook", {
-    scope: ["public_profile"]
-  })
+  passport.authenticate("facebook", { scope: "public_profile" })
 );
+
 router.get(
-  facebookURL,
+  "/facebook/callback",
   passport.authenticate("facebook", { failureRedirect: "/login" }),
-  // Successful authentication, redirect home.
-  (req, res) => res.redirect("/")
+  (req, res) => {
+    // ----------------------------------------------------------
+    req.login(req.user, { session: false }, err => {
+      if (err) {
+        res.send(err);
+      }
+      const payload = { id: req.user.id, name: req.user.name };
+      jwt.sign(
+        payload,
+        process.env.JWT_SECRET,
+        {
+          expiresIn: 3600
+        },
+        (err, token) => res.json({ user: req.user, token: `Bearer ${token}` })
+      );
+    });
+    // ----------------------------------------------------------
+    // return res.redirect("/");
+  }
 );
 
 module.exports = router;
