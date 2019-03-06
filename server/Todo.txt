@@ -1,0 +1,2 @@
+sửa oauth: khi xét user qua uer id nếu cói email rồi thì liên kết và add nó vào GG và facebookID chứ không tạo thêm người dùng mới vào
+( Vấn đề là nếu người dùng k đồng bộ email thì sẽ 2 người cùng dùng chung 1 tài khoản, otherwise, 2 người dùng 2 tài khoản nhưng 2 tài khoản đó lại chung email )

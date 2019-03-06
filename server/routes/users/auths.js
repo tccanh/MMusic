@@ -4,6 +4,7 @@ const router = require("express").Router();
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const gravatar = require("gravatar");
+const bcrypt = require("bcryptjs");
 const User = require("../../models/User");
 
 const validateRegister = require("../../validations/users/register");
@@ -52,17 +53,20 @@ router.post("/register", async (req, res) => {
       r: "pg", // Rating
       d: "mm" // Default
     });
-
-    const newUser = new User({
+    const newUser = {
       name: req.body.name,
-      password: req.body.password,
       email: req.body.email,
       avatar
+    };
+    bcrypt.genSalt(10, (err, salt) => {
+      bcrypt.hash(req.body.password, salt, (err, hash) => {
+        newUser.password = hash;
+      });
     });
-    User.createHash(newUser, (err, user) => {
-      if (err) throw err;
-      return res.json(user);
-    });
+    new User(newUser)
+      .save()
+      .then(user => res.json(user))
+      .catch(err => res.status(400).json(err));
   });
 });
 /* Handle Logout */
