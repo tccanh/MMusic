@@ -8,6 +8,7 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const FacebookStrategy = require("passport-facebook").Strategy;
 const LocalStrategy = require("passport-local").Strategy;
 const passportJWT = require("passport-jwt");
+const bcrypt = require("bcryptjs");
 
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
@@ -81,30 +82,26 @@ module.exports = passport => {
   passport.use(
     new LocalStrategy(
       {
-        usernameField: "email",
+        usernameField: "username",
         passwordField: "password"
       },
-      (email, password, cb) =>
-        User.findOne({ email })
-          .then(user => {
-            if (!user) {
-              return cb(null, false, {
-                message: "Incorrect email."
-              });
-            }
-            User.comparePassword(password, user.password, (err, isMatch) => {
-              if (err) {
-                return cb(err, null);
-              }
-              if (!isMatch) {
-                return cb(null, false, {
-                  message: "Incorrect password."
-                });
-              }
+      (username, password, cb) =>
+        User.findOne({ username }).then(user => {
+          if (!user) {
+            return cb(null, false, {
+              message: "Incorrect username."
             });
-            return cb(null, user, { message: "Logged In Successfully" });
-          })
-          .catch(err => cb(err))
+          }
+          bcrypt.compare(password, user.password, (err, isMath) => {
+            if (err) return cb(err, false, { message: err });
+            if (isMath) {
+              return cb(null, user, { message: "Logged In Successfully" });
+            }
+            return cb(null, false, {
+              message: "Incorrect password."
+            });
+          });
+        })
     )
   );
   passport.use(

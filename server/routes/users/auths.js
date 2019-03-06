@@ -14,10 +14,10 @@ const validateRegister = require("../../validations/users/register");
 router.post("/login", (req, res) => {
   passport.authenticate("local", { session: false }, (err, user) => {
     if (err || !user) {
-      return res.status(400).json({
-        message: "Something is not right",
-        user
-      });
+      const errors = {};
+
+      errors.login = "Username of password incorrect.";
+      return res.status(400).json(errors);
     }
     req.login(user, { session: false }, err => {
       if (err) {
@@ -36,37 +36,40 @@ router.post("/login", (req, res) => {
   })(req, res);
 });
 
-router.post("/register", async (req, res) => {
+router.post("/register", (req, res, next) => {
   const { errors, isValid } = validateRegister(req.body);
 
   // Check Validation
   if (!isValid) {
     return res.status(400).json(errors);
   }
-  User.findOne({ email: req.body.email }).then(user => {
+  User.findOne({ username: req.body.username }).then(user => {
     if (user) {
-      errors.email = "Email already exists";
+      errors.username = "Username already exists";
       return res.status(400).json(errors);
     }
-    const avatar = gravatar.url(req.body.email, {
+    const newUser = {};
+    newUser.avatar = gravatar.url(req.body.email, {
       s: "200", // Size
       r: "pg", // Rating
       d: "mm" // Default
     });
-    const newUser = {
-      name: req.body.name,
-      email: req.body.email,
-      avatar
-    };
+    newUser.name = req.body.name;
+    newUser.username = req.body.username;
+    newUser.email = req.body.email;
+    newUser.password = req.body.password;
+    newUser.gender = req.body.gender;
+
     bcrypt.genSalt(10, (err, salt) => {
-      bcrypt.hash(req.body.password, salt, (err, hash) => {
+      bcrypt.hash(newUser.password, salt, (err, hash) => {
+        if (err) next(err);
         newUser.password = hash;
+        new User(newUser)
+          .save()
+          .then(user => res.json(user))
+          .catch(err => res.status(400).json(err));
       });
     });
-    new User(newUser)
-      .save()
-      .then(user => res.json(user))
-      .catch(err => res.status(400).json(err));
   });
 });
 /* Handle Logout */
