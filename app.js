@@ -57,13 +57,13 @@ require("./configs/passport")(passport);
 app.use(passport.initialize());
 
 // Config database
-mongoose.connect(process.env.MONGOOSE_URL2, { useNewUrlParser: true }, err => {
+mongoose.connect(process.env.MONGOOSE_URL, { useNewUrlParser: true }, err => {
   if (err) {
     // eslint-disable-next-line no-console
     console.log(err);
   } else {
     // eslint-disable-next-line no-console
-    console.log("MongoDB2 Connected!");
+    console.log("MongoDB Connected!");
   }
 });
 // Config cloudinary

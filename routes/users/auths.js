@@ -23,14 +23,14 @@ router.post("/login", (req, res) => {
       if (err) {
         res.send(err);
       }
-      const payload = { id: user.id, name: user.name };
+      const payload = { id: user.id, name: user.name, avatar: user.avatar };
       jwt.sign(
         payload,
         process.env.JWT_SECRET,
         {
           expiresIn: 3600
         },
-        (err, token) => res.json({ user, token: `Bearer ${token}` })
+        (err, token) => res.json({ success: true, token: "Bearer " + token })
       );
     });
   })(req, res);
@@ -72,11 +72,6 @@ router.post("/register", (req, res, next) => {
     });
   });
 });
-/* Handle Logout */
-router.get("/logout", (req, res) => {
-  req.logout();
-  res.redirect("/");
-});
 
 // Google
 router.get(
@@ -94,14 +89,14 @@ router.get(
       if (err) {
         res.send(err);
       }
-      const payload = { id: req.user.id, name: req.user.name };
+      const payload = { id: user.id, name: user.name, avatar: user.avatar };
       jwt.sign(
         payload,
         process.env.JWT_SECRET,
         {
           expiresIn: 3600
         },
-        (err, token) => res.json({ user: req.user, token: `Bearer ${token}` })
+        (err, token) => res.json({ success: true, token: "Bearer " + token })
       );
     });
     // ----------------------------------------------------------
@@ -124,14 +119,14 @@ router.get(
       if (err) {
         res.send(err);
       }
-      const payload = { id: req.user.id, name: req.user.name };
+      const payload = { id: user.id, name: user.name, avatar: user.avatar };
       jwt.sign(
         payload,
         process.env.JWT_SECRET,
         {
           expiresIn: 3600
         },
-        (err, token) => res.json({ user: req.user, token: `Bearer ${token}` })
+        (err, token) => res.json({ success: true, token: "Bearer " + token })
       );
     });
     // ----------------------------------------------------------
