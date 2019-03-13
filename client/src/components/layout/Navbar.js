@@ -1,13 +1,23 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { logoutUser } from "../../actions/authActions";
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
+import { logoutUser, OauthRegisterFB } from '../../actions/authActions';
 class Navbar extends Component {
   onLogoutClick(e) {
     e.preventDefault();
     this.props.logoutUser();
+  }
+  responseFacebook(res) {
+    const newUser = {
+      name: res.name,
+      email: res.email,
+      facebookID: res.id
+      // avatar:
+    };
+    this.props.OauthRegisterFB(newUser, this.props.history);
   }
   render() {
     const { isAuthenticated, user } = this.props.auth;
@@ -23,9 +33,9 @@ class Navbar extends Component {
               className="rounded-circle"
               src={user.avatar}
               alt={user.name}
-              style={{ width: "25px", marginRight: "5px" }}
+              style={{ width: '25px', marginRight: '5px' }}
               title="You must have a Gravatar connected to your email to display an image"
-            />{" "}
+            />{' '}
             Logout
           </a>
         </li>
@@ -33,18 +43,34 @@ class Navbar extends Component {
     );
 
     const guestLinks = (
-      <ul className="navbar-nav ml-auto">
-        <li className="nav-item">
-          <Link className="nav-link" to="/register">
-            Sign Up
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link className="nav-link" to="/login">
-            Login
-          </Link>
-        </li>
-      </ul>
+      <>
+        <ul className="navbar-nav ml-auto">
+          <li className="nav-item">
+            <Link className="nav-link" to="/register">
+              Sign Up
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/login">
+              Login
+            </Link>
+          </li>
+        </ul>
+        <FacebookLogin
+          appId="791562577888846"
+          autoLoad={false}
+          fields="name,email,picture"
+          callback={this.responseFacebook.bind(this)}
+          render={renderProps => (
+            <button onClick={renderProps.onClick}>
+              This is my custom FB button
+            </button>
+            // <a href="" onClick={renderProps.onClick}>
+            //   <img src="img/fb.png" alt="" />
+            // </a>
+          )}
+        />
+      </>
     );
     return (
       <nav className="navbar navbar-expand-sm navbar-dark bg-dark mb-4">
@@ -65,7 +91,7 @@ class Navbar extends Component {
             <ul className="navbar-nav mr-auto">
               <li className="nav-item">
                 <Link className="nav-link" to="/profiles">
-                  {" "}
+                  {' '}
                   Developers
                 </Link>
               </li>
@@ -80,13 +106,14 @@ class Navbar extends Component {
 
 Navbar.propTypes = {
   logoutUser: PropTypes.func.isRequired,
+  OauthRegisterFB: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired
 };
 const mapStateToProps = state => ({
   auth: state.auth
 });
 
-const mapDispatchToProps = { logoutUser };
+const mapDispatchToProps = { logoutUser, OauthRegisterFB };
 
 export default connect(
   mapStateToProps,

@@ -1,8 +1,8 @@
 /* eslint-disable arrow-body-style */
-const providers = ["google", "facebook"];
+const providers = ['google', 'facebook'];
 
 const callbacks = providers.map(
-  provider => `http://localhost:3000/auth/${provider}/callback`
+  provider => `http://localhost:5000/auth/${provider}/callback`
 );
 const [googleURL, facebookURL] = callbacks;
 
@@ -16,13 +16,13 @@ exports.FACEBOOK_CONFIG = {
   clientID: process.env.FACEBOOK_KEY,
   clientSecret: process.env.FACEBOOK_SECRET,
   profileFields: [
-    "id",
-    "name",
-    "displayName",
-    "birthday",
-    "gender",
-    "picture",
-    "email"
+    'id',
+    'name',
+    'displayName',
+    'birthday',
+    'gender',
+    'picture',
+    'email'
   ],
   callbackURL: facebookURL
 };
