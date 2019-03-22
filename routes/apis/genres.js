@@ -1,35 +1,41 @@
-/* eslint-disable consistent-return */
-/* eslint-disable no-unused-vars */
-const router = require("express").Router();
-const cloudinary = require("cloudinary");
-const multer = require("multer");
-const Genre = require("../../models/Genre");
-const { fileFilter, storage } = require("../../configs/uploadImage");
+//DONE
+const router = require('express').Router();
+const cloudinary = require('cloudinary');
+const multer = require('multer');
+const Genre = require('../../models/Genre');
+const { fileFilter, storage } = require('../../configs/uploadImage');
 
 const upload = multer({ storage, fileFilter });
-const validateGenre = require("../../validations/apis/genre");
+const validateGenre = require('../../validations/apis/genre');
 // Get list genre
-router.get("/", (req, res, next) => {
+router.get('/', (req, res, next) => {
   Genre.find()
-    .sort({ date: -1 })
+    .sort({ name: 1 })
     .then(genre => res.json(genre))
     .catch(err =>
       res.status(404).json({ nogenreFounds: `No genres found: ${err}` })
     );
 });
+router.get('/countAll', (req, res, next) => {
+  Genre.countDocuments({}, (err, count) => {
+    if (err) {
+      return res.status(404).json({ countGenres: `No genres found: ${err}` });
+    }
+    return res.json(count);
+  });
+});
 
 // Post create or update image
-router.post("/", upload.single("image"), async (req, res, next) => {
+router.post('/', upload.single('image'), async (req, res, next) => {
   const { errors, isValid } = validateGenre(req.body);
   const { name } = req.body;
   const newGenre = {};
   if (!isValid) {
     return res.status(400).json(errors);
   }
-
-  await cloudinary.uploader.upload(req.file.path, _res => {
-    newGenre.image = _res.secure_url;
-  });
+  await cloudinary.v2.uploader
+    .upload(req.file.path, { folder: 'images/genres' })
+    .then(res => (newGenre.image = res.secure_url));
 
   Genre.findOne({ name }).then(genre => {
     if (genre) {
@@ -51,7 +57,7 @@ router.post("/", upload.single("image"), async (req, res, next) => {
   });
 });
 
-router.delete("/delete/:genre_id", (req, res, next) => {
+router.delete('/delete/:genre_id', (req, res, next) => {
   Genre.findByIdAndRemove(req.params.genre_id)
     .then((haha, hihi) => res.json({ Success: true }))
     .catch(err => res.status(400).json(`Genre not found: ${err}`));

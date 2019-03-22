@@ -2,22 +2,22 @@
 /* eslint-disable object-curly-newline */
 /* eslint-disable consistent-return */
 /* eslint-disable no-unused-vars */
-const router = require("express").Router();
-const cloudinary = require("cloudinary");
-const multer = require("multer");
-const Track = require("../../models/Track");
-const Artist = require("../../models/Artist");
-const User = require("../../models/User");
-const Album = require("../../models/Album");
-const Genre = require("../../models/Genre");
-const { fileFilter, storage } = require("../../configs/uploadImage");
-const formatText = require("../../validations/formatText");
-const isEmpty = require("../../validations/is-empty");
+const router = require('express').Router();
+const cloudinary = require('cloudinary');
+const multer = require('multer');
+const Track = require('../../models/Track');
+const Artist = require('../../models/Artist');
+const User = require('../../models/User');
+const Album = require('../../models/Album');
+const Genre = require('../../models/Genre');
+const { fileFilter, storage } = require('../../configs/uploadImage');
+const formatText = require('../../validations/formatText');
+const isEmpty = require('../../validations/is-empty');
 
 const upload = multer({ storage, fileFilter });
-const validateTrack = require("../../validations/apis/track");
+const validateTrack = require('../../validations/apis/track');
 // Get list track
-router.get("/", (req, res, next) => {
+router.get('/', (req, res, next) => {
   Track.find()
     .sort({ date: -1 })
     .then(track => res.json(track))
@@ -27,7 +27,7 @@ router.get("/", (req, res, next) => {
 });
 
 // Track create or update image
-router.post("/", upload.single("image"), async (req, res, next) => {
+router.post('/', upload.single('image'), async (req, res, next) => {
   const { errors, isValid } = validateTrack(req.body);
   const { name, artists, album, duration, genre, country } = req.body;
   if (!isValid) {
@@ -36,11 +36,15 @@ router.post("/", upload.single("image"), async (req, res, next) => {
   const newTrack = {};
   newTrack.owner = req.user.id;
   if (name) newTrack.name = name;
-  await cloudinary.uploader.upload(req.file.path, _res => {
-    newTrack.image = _res.secure_url;
-  });
+  try {
+    await cloudinary.v2.uploader
+      .upload(req.file.path, { folder: 'images/tracks' })
+      .then(res => (newTrack.image = res.secure_url));
+  } catch (error) {
+    res.status(400).json({ ErrorUploadImage: error });
+  }
   if (artists) {
-    const listArtists = artists.split(",").map(arts => formatText(arts));
+    const listArtists = artists.split(',').map(arts => formatText(arts));
     newTrack.artists = [];
     await listArtists.map(_arts => {
       Artist.findOne({ name: _arts })
@@ -95,13 +99,7 @@ router.post("/", upload.single("image"), async (req, res, next) => {
     });
 });
 
-router.delete("/delete/:track_id", (req, res, next) => {
-  Track.findByIdAndRemove(req.params.track_id)
-    .then((haha, hihi) => res.json({ Success: true }))
-    .catch(err => res.status(400).json(`Track not found: ${err}`));
-});
-
-router.post("/comment/:id", (req, res, next) => {
+router.post('/comment/:id', (req, res, next) => {
   //   const { errors, isValid } = validateCMT(req.body);
   // Check Validation
   //   if (!isValid) {
@@ -120,9 +118,9 @@ router.post("/comment/:id", (req, res, next) => {
       track.comments.unshift(newComment);
       track.save().then(_post => res.json(_post));
     })
-    .catch(err => res.json({ noTrackFound: "Not post found." }));
+    .catch(err => res.json({ noTrackFound: 'Not post found.' }));
 });
-router.delete("/comment/:id/:cmt_id", (req, res, next) => {
+router.delete('/comment/:id/:cmt_id', (req, res, next) => {
   User.findById(req.user.id)
     .then(_user => {
       Track.findById(req.params.id)
@@ -134,7 +132,7 @@ router.delete("/comment/:id/:cmt_id", (req, res, next) => {
           ) {
             return res
               .status(404)
-              .json({ commentNotExist: "Comment is not exists" });
+              .json({ commentNotExist: 'Comment is not exists' });
           }
           // Get remove
           const removeIndex = track.comments
@@ -144,13 +142,13 @@ router.delete("/comment/:id/:cmt_id", (req, res, next) => {
           track.save().then(post => res.json(post));
         })
         .catch(err => {
-          res.status(404).json({ noPostFound: "Not post found." });
+          res.status(404).json({ noPostFound: 'Not post found.' });
         });
     })
-    .catch(err => res.status(400).json({ UserErrors: "USER not found" }));
+    .catch(err => res.status(400).json({ UserErrors: 'USER not found' }));
 });
 
-router.post("/like/:id", (req, res, next) => {
+router.post('/like/:id', (req, res, next) => {
   User.findById(req.user.id)
     .then(_user => {
       Track.findById(req.params.id)
@@ -161,18 +159,18 @@ router.post("/like/:id", (req, res, next) => {
           ) {
             return res
               .status(400)
-              .json({ alreadyLike: "User already liked this post" });
+              .json({ alreadyLike: 'User already liked this post' });
           }
           track.likes.unshift({ user: req.user.id });
           track.save().then(__track => res.json(__track));
         })
         .catch(err => {
-          res.status(404).json({ noPostFound: "Not post found" });
+          res.status(404).json({ noPostFound: 'Not post found' });
         });
     })
-    .catch(err => res.status(400).json({ UserErrors: "USER not found" }));
+    .catch(err => res.status(400).json({ UserErrors: 'USER not found' }));
 });
-router.post("/unlike/:id", (req, res, next) => {
+router.post('/unlike/:id', (req, res, next) => {
   User.findById(req.user.id)
     .then(_user => {
       Track.findById(req.params.id)
@@ -183,7 +181,7 @@ router.post("/unlike/:id", (req, res, next) => {
           ) {
             return res
               .status(400)
-              .json({ notLike: "You has not like this post yet." });
+              .json({ notLike: 'You has not like this post yet.' });
           }
           const removeIndex = track.likes
             .map(value => value.user.toString())
@@ -193,13 +191,13 @@ router.post("/unlike/:id", (req, res, next) => {
           track.save().then(post => res.json(post));
         })
         .catch(err => {
-          res.status(404).json({ noPostFound: "Not post found." });
+          res.status(404).json({ noPostFound: 'Not post found.' });
         });
     })
-    .catch(err => res.status(400).json({ UserErrors: "USER not found" }));
+    .catch(err => res.status(400).json({ UserErrors: 'USER not found' }));
 });
 
-router.delete("/delete/:track_id", (req, res, next) => {
+router.delete('/:track_id', (req, res, next) => {
   Track.findByIdAndRemove(req.params.track_id)
     .then((haha, hihi) => res.json({ Success: true }))
     .catch(err => res.status(400).json(`Track not found: ${err}`));

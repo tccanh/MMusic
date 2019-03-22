@@ -2,20 +2,20 @@
 /* eslint-disable object-curly-newline */
 /* eslint-disable consistent-return */
 /* eslint-disable no-unused-vars */
-const router = require("express").Router();
-const cloudinary = require("cloudinary");
-const multer = require("multer");
-const Artist = require("../../models/Artist");
-const Album = require("../../models/Album");
-const User = require("../../models/User");
-const { fileFilter, storage } = require("../../configs/uploadImage");
-const formatText = require("../../validations/formatText");
-const isEmpty = require("../../validations/is-empty");
+const router = require('express').Router();
+const cloudinary = require('cloudinary');
+const multer = require('multer');
+const Artist = require('../../models/Artist');
+const Album = require('../../models/Album');
+const User = require('../../models/User');
+const { fileFilter, storage } = require('../../configs/uploadImage');
+const formatText = require('../../validations/formatText');
+const isEmpty = require('../../validations/is-empty');
 
 const upload = multer({ storage, fileFilter });
-const validateArtist = require("../../validations/apis/artist");
+const validateArtist = require('../../validations/apis/artist');
 // Get list artist
-router.get("/", (req, res, next) => {
+router.get('/', (req, res, next) => {
   Artist.find()
     .sort({ date: -1 })
     .then(artist => res.json(artist))
@@ -23,9 +23,17 @@ router.get("/", (req, res, next) => {
       res.status(404).json({ noartistFounds: `No artists found: ${err}` })
     );
 });
+router.get('/countAll', (req, res, next) => {
+  Artist.countDocuments({}, (err, count) => {
+    if (err) {
+      return res.status(404).json({ countArtists: `No artists found: ${err}` });
+    }
+    return res.json(count);
+  });
+});
 
 // Post create or update image
-router.post("/", upload.single("image"), async (req, res, next) => {
+router.post('/', upload.single('image'), async (req, res, next) => {
   const { errors, isValid } = validateArtist(req.body);
   const { name, genres, description, albums } = req.body;
   const newArtist = {};
@@ -34,20 +42,20 @@ router.post("/", upload.single("image"), async (req, res, next) => {
   }
   if (description) newArtist.description = description;
   try {
-    await cloudinary.uploader.upload(req.file.path, _res => {
-      newArtist.image = _res.secure_url;
-    });
+    await cloudinary.v2.uploader
+      .upload(req.file.path, { folder: 'images/artists' })
+      .then(res => (newArtist.image = res.secure_url));
   } catch (error) {
     res.status(400).json({ ErrorUploadImage: error });
   }
 
   if (albums) {
-    const listAlbums = albums.split(",").map(album => formatText(album));
+    const listAlbums = albums.split(',').map(album => formatText(album));
     newArtist.albums = [];
     const AlbumIDs = await listAlbums.map(_alb => {
       Album.findOne({ name: _alb })
         .then(__alb => {
-          console.log("hello: ", __alb);
+          console.log('hello: ', __alb);
           if (!isEmpty(__alb)) {
             newArtist.albums.unshift({
               id: __alb.id,
@@ -62,7 +70,7 @@ router.post("/", upload.single("image"), async (req, res, next) => {
     });
   }
   if (genres) {
-    const listGenres = genres.split(",").map(genr => formatText(genr));
+    const listGenres = genres.split(',').map(genr => formatText(genr));
     newArtist.genres = listGenres;
   }
 
@@ -93,7 +101,7 @@ router.post("/", upload.single("image"), async (req, res, next) => {
   });
 });
 
-router.post("/like/:id", (req, res, next) => {
+router.post('/like/:id', (req, res, next) => {
   User.findById(req.user.id)
     .then(_user => {
       Artist.findById(req.params.id)
@@ -104,18 +112,18 @@ router.post("/like/:id", (req, res, next) => {
           ) {
             return res
               .status(400)
-              .json({ alreadyLike: "User already liked this post" });
+              .json({ alreadyLike: 'User already liked this post' });
           }
           artist.likes.unshift({ user: req.user.id });
           artist.save().then(__artist => res.json(__artist));
         })
         .catch(err => {
-          res.status(404).json({ noPostFound: "Not post found" });
+          res.status(404).json({ noPostFound: 'Not post found' });
         });
     })
-    .catch(err => res.status(400).json({ UserErrors: "USER not found" }));
+    .catch(err => res.status(400).json({ UserErrors: 'USER not found' }));
 });
-router.post("/unlike/:id", (req, res, next) => {
+router.post('/unlike/:id', (req, res, next) => {
   User.findById(req.user.id)
     .then(_user => {
       Artist.findById(req.params.id)
@@ -126,7 +134,7 @@ router.post("/unlike/:id", (req, res, next) => {
           ) {
             return res
               .status(400)
-              .json({ notLike: "You has not like this post yet." });
+              .json({ notLike: 'You has not like this post yet.' });
           }
           const removeIndex = artist.likes
             .map(value => value.user.toString())
@@ -136,13 +144,13 @@ router.post("/unlike/:id", (req, res, next) => {
           artist.save().then(post => res.json(post));
         })
         .catch(err => {
-          res.status(404).json({ noPostFound: "Not post found." });
+          res.status(404).json({ noPostFound: 'Not post found.' });
         });
     })
-    .catch(err => res.status(400).json({ UserErrors: "USER not found" }));
+    .catch(err => res.status(400).json({ UserErrors: 'USER not found' }));
 });
 
-router.delete("/delete/:artist_id", (req, res, next) => {
+router.delete('/delete/:artist_id', (req, res, next) => {
   Artist.findByIdAndRemove(req.params.artist_id)
     .then((haha, hihi) => res.json({ Success: true }))
     .catch(err => res.status(400).json(`Artist not found: ${err}`));

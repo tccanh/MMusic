@@ -19,6 +19,7 @@
     "express": "~4.16.0",
     "express-session": "^1.15.6",
     "gravatar": "^1.8.0",
+    "helmet": "^3.16.0",
     "http-errors": "~1.6.2",
     "https": "^1.0.0",
     "jsonwebtoken": "^8.5.0",
