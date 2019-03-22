@@ -3,7 +3,7 @@ const multer = require('multer');
 module.exports = {
   storage: multer.diskStorage({
     filename(req, file, next) {
-      next(null, Date.now() + file.originalname);
+      next(null, `${Date.now()}.${file.originalname}`);
     }
   }),
   fileFilter: (req, file, cb) => {

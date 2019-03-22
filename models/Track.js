@@ -1,10 +1,10 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 const TrackSchema = new Schema({
   owner: {
     type: Schema.Types.ObjectId,
-    ref: "users",
+    ref: 'users',
     required: true
   },
   image: {
@@ -18,32 +18,35 @@ const TrackSchema = new Schema({
     {
       artist: {
         type: Schema.Types.ObjectId,
-        ref: "artists"
+        ref: 'artists'
       },
       name: String
     }
   ],
   albums: {
-    album: { type: Schema.Types.ObjectId, ref: "albums" },
+    album: { type: Schema.Types.ObjectId, ref: 'albums' },
     name: String
   },
   link: {
-    type: String
-    // required: true
+    type: String,
+    required: true
   },
   duration: {
     type: String,
-    required: true,
-    default: 0
+    required: true
+  },
+  format: {
+    type: String,
+    required: true
   },
   lyric: [
     {
       type: Schema.Types.ObjectId,
-      ref: "lyrics"
+      ref: 'lyrics'
     }
   ],
   genres: {
-    genre: { type: Schema.Types.ObjectId, ref: "genres", required: true },
+    genre: { type: Schema.Types.ObjectId, ref: 'genres', required: true },
     name: String
   },
   country: {
@@ -54,7 +57,7 @@ const TrackSchema = new Schema({
     {
       user: {
         type: Schema.Types.ObjectId,
-        ref: "users"
+        ref: 'users'
       }
     }
   ],
@@ -62,7 +65,7 @@ const TrackSchema = new Schema({
     {
       user: {
         type: Schema.Types.ObjectId,
-        ref: "users"
+        ref: 'users'
       },
       text: {
         type: String,
@@ -90,5 +93,5 @@ const TrackSchema = new Schema({
     default: Date.now()
   }
 });
-const Track = mongoose.model("tracks", TrackSchema);
+const Track = mongoose.model('tracks', TrackSchema);
 module.exports = Track;

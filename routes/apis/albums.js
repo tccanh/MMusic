@@ -1,15 +1,15 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-unused-vars */
-const router = require("express").Router();
-const cloudinary = require("cloudinary");
-const multer = require("multer");
-const Album = require("../../models/Album");
-const { fileFilter, storage } = require("../../configs/uploadImage");
+const router = require('express').Router();
+const cloudinary = require('cloudinary');
+const multer = require('multer');
+const Album = require('../../models/Album');
+const { fileFilter, storage } = require('../../configs/uploadImage');
 
 const upload = multer({ storage, fileFilter });
-const validateAlbum = require("../../validations/apis/album");
+const validateAlbum = require('../../validations/apis/album');
 // Get list album
-router.get("/", (req, res, next) => {
+router.get('/', (req, res, next) => {
   Album.find()
     .sort({ date: -1 })
     .then(album => res.json(album))
@@ -19,19 +19,25 @@ router.get("/", (req, res, next) => {
 });
 
 // Post create or update image
-router.post("/", upload.single("image"), async (req, res, next) => {
+router.post('/', upload.single('image'), async (req, res, next) => {
   const { errors, isValid } = validateAlbum(req.body);
   const { name } = req.body;
   const newAlbum = {};
   if (!isValid) {
     return res.status(400).json(errors);
   }
-  try {
-    await cloudinary.uploader.upload(req.file.path, _res => {
-      newAlbum.image = _res.secure_url;
-    });
-  } catch (error) {
-    res.json(error);
+  if (!req.file) {
+    errors.FileUpload = 'Invalid file upload.';
+    return res.status(400).json(errors);
+  } else {
+    try {
+      await cloudinary.v2.uploader
+        .upload(req.file.path, { folder: 'images/albums' })
+        .then(res => (newAlbum.image = res.secure_url));
+    } catch (error) {
+      errors.FileUpload = 'Error Upload Image';
+      return res.status(400).json(errors);
+    }
   }
 
   Album.findOne({ name }).then(album => {
@@ -54,7 +60,7 @@ router.post("/", upload.single("image"), async (req, res, next) => {
   });
 });
 
-router.delete("/delete/:album_id", (req, res, next) => {
+router.delete('/delete/:album_id', (req, res, next) => {
   Album.findByIdAndRemove(req.params.album_id)
     .then((haha, hihi) => res.json({ Success: true }))
     .catch(err => res.status(400).json(`Album not found: ${err}`));

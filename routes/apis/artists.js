@@ -41,12 +41,18 @@ router.post('/', upload.single('image'), async (req, res, next) => {
     return res.status(400).json(errors);
   }
   if (description) newArtist.description = description;
-  try {
-    await cloudinary.v2.uploader
-      .upload(req.file.path, { folder: 'images/artists' })
-      .then(res => (newArtist.image = res.secure_url));
-  } catch (error) {
-    res.status(400).json({ ErrorUploadImage: error });
+  if (!req.file) {
+    errors.FileUpload = 'Invalid file upload.';
+    return res.status(400).json(errors);
+  } else {
+    try {
+      await cloudinary.v2.uploader
+        .upload(req.file.path, { folder: 'images/artists' })
+        .then(res => (newArtist.image = res.secure_url));
+    } catch (error) {
+      errors.FileUpload = 'Error Upload Image';
+      return res.status(400).json(errors);
+    }
   }
 
   if (albums) {

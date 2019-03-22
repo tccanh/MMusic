@@ -33,10 +33,19 @@ router.post('/', upload.single('image'), async (req, res, next) => {
   if (!isValid) {
     return res.status(400).json(errors);
   }
-  await cloudinary.v2.uploader
-    .upload(req.file.path, { folder: 'images/genres' })
-    .then(res => (newGenre.image = res.secure_url));
-
+  if (!req.file) {
+    errors.FileUpload = 'Invalid file upload.';
+    return res.status(400).json(errors);
+  } else {
+    try {
+      await cloudinary.v2.uploader
+        .upload(req.file.path, { folder: 'images/genres' })
+        .then(res => (newGenre.image = res.secure_url));
+    } catch (error) {
+      errors.FileUpload = 'Error Upload Image';
+      return res.status(400).json(errors);
+    }
+  }
   Genre.findOne({ name }).then(genre => {
     if (genre) {
       // Update

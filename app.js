@@ -100,7 +100,7 @@ app.use(
 );
 app.use(
   '/api/track',
-  passport.authenticate('jwt', { session: false }),
+  // passport.authenticate('jwt', { session: false }),
   trackRouter
 );
 
