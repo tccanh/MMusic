@@ -23,6 +23,8 @@ const artistRouter = require('./routes/apis/artists');
 const genreRouter = require('./routes/apis/genres');
 const playlistRouter = require('./routes/apis/playLists');
 const trackRouter = require('./routes/apis/tracks');
+// Common API
+const searchRouter = require('./routes/common/searchAPI');
 
 const app = express();
 
@@ -60,15 +62,19 @@ require('./configs/passport')(passport);
 app.use(passport.initialize());
 
 // Config database
-mongoose.connect(process.env.MONGOOSE_URL2, { useNewUrlParser: true }, err => {
-  if (err) {
-    // eslint-disable-next-line no-console
-    console.log(err);
-  } else {
-    // eslint-disable-next-line no-console
-    console.log('MongoDB Connected!');
+mongoose.connect(
+  process.env.MONGOOSE_URL2,
+  { useNewUrlParser: true, useCreateIndex: true },
+  err => {
+    if (err) {
+      // eslint-disable-next-line no-console
+      console.log(err);
+    } else {
+      // eslint-disable-next-line no-console
+      console.log('MongoDB Connected!');
+    }
   }
-});
+);
 // Config cloudinary
 cloudinary.config(CONFIGS.CLODINARY_CONFIG);
 
@@ -105,6 +111,7 @@ app.use(
 );
 
 app.use('/auth', authRouter);
+app.use('/api/search', searchRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

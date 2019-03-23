@@ -1,27 +1,24 @@
-/* eslint-disable consistent-return */
-/* eslint-disable no-unused-vars */
-// routes/user.js
-const express = require("express");
-const cloudinary = require("cloudinary");
-const multer = require("multer");
-const validateProfile = require("../../validations/users/profile");
-const User = require("../../models/User");
-const { fileFilter, storage } = require("../../configs/uploadImage");
+const express = require('express');
+const cloudinary = require('cloudinary');
+const multer = require('multer');
+const validateProfile = require('../../validations/users/profile');
+const User = require('../../models/User');
+const { fileFilter, storage } = require('../../configs/uploadImage');
 
 const upload = multer({ storage, fileFilter });
 
 const router = express.Router();
 
 /* GET users listing. */
-router.get("/", (req, res, next) => {
-  res.send("respond with a resource");
+router.get('/', (req, res, next) => {
+  res.send('respond with a resource');
 });
 
 /* GET user profile. */
-router.get("/profile", (req, res, next) => {
+router.get('/profile', (req, res, next) => {
   res.json(req.user);
 });
-router.post("/update", upload.single("image"), async (req, res, next) => {
+router.post('/update', upload.single('image'), async (req, res, next) => {
   const { errors, isValid } = validateProfile(req.body);
   if (!isValid) {
     return res.status(400).json(errors);
@@ -85,7 +82,7 @@ router.post("/update", upload.single("image"), async (req, res, next) => {
 //     });
 //   });
 // });
-router.delete("/", (req, res) => {
+router.delete('/', (req, res) => {
   // Cần thêm check role middleware đê lấy quyền xoá
   User.findOneAndRemove({ _id: req.user.id }).then(() => {
     res.json({ success: true });

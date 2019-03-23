@@ -1,5 +1,4 @@
-/* eslint-disable array-callback-return */
-/* eslint-disable object-curly-newline */
+/* eslint-disable no-return-assign */
 /* eslint-disable consistent-return */
 /* eslint-disable no-unused-vars */
 const router = require('express').Router();
@@ -44,15 +43,14 @@ router.post('/', upload.single('image'), async (req, res, next) => {
   if (!req.file) {
     errors.FileUpload = 'Invalid file upload.';
     return res.status(400).json(errors);
-  } else {
-    try {
-      await cloudinary.v2.uploader
-        .upload(req.file.path, { folder: 'images/artists' })
-        .then(res => (newArtist.image = res.secure_url));
-    } catch (error) {
-      errors.FileUpload = 'Error Upload Image';
-      return res.status(400).json(errors);
-    }
+  }
+  try {
+    await cloudinary.v2.uploader
+      .upload(req.file.path, { folder: 'images/artists' })
+      .then(res_ => (newArtist.image = res_.secure_url));
+  } catch (error) {
+    errors.FileUpload = 'Error Upload Image';
+    return res.status(400).json(errors);
   }
 
   if (albums) {
@@ -61,7 +59,6 @@ router.post('/', upload.single('image'), async (req, res, next) => {
     const AlbumIDs = await listAlbums.map(_alb => {
       Album.findOne({ name: _alb })
         .then(__alb => {
-          console.log('hello: ', __alb);
           if (!isEmpty(__alb)) {
             newArtist.albums.unshift({
               id: __alb.id,

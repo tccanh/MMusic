@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 const GenreSchema = new Schema({
@@ -10,5 +10,5 @@ const GenreSchema = new Schema({
     required: true
   }
 });
-const Genre = mongoose.model("genres", GenreSchema);
+const Genre = mongoose.model('genres', GenreSchema);
 module.exports = Genre;

@@ -1,10 +1,10 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 const LyricSchema = new Schema({
   owner: {
     type: Schema.Types.ObjectId,
-    ref: "users",
+    ref: 'users',
     required: true
   },
   language: {
@@ -21,5 +21,5 @@ const LyricSchema = new Schema({
     default: false
   }
 });
-const Lyric = mongoose.model("lyrics", LyricSchema);
+const Lyric = mongoose.model('lyrics', LyricSchema);
 module.exports = Lyric;

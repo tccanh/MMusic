@@ -2,7 +2,6 @@
   "extends": "airbnb-base",
   "rules": {
     "semi": ["error", "always"],
-    "quotes": ["error", "double"],
     "no-unused-vars": [
       "warn",
       { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }
@@ -13,6 +12,8 @@
     "function-paren-newline": "off",
     "no-shadow": "warn",
     "consistent-return": "warn",
-    "implicit-arrow-linebreak": "off"
+    "implicit-arrow-linebreak": "off",
+    "object-curly-newline": "off",
+    "array-callback-return": "warn"
   }
 }

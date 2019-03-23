@@ -1,9 +1,9 @@
-const [USER, ADMIN, MOD] = ["USER", "ADMIN", "MOD"];
+const [USER, ADMIN, MOD] = ['USER', 'ADMIN', 'MOD'];
 const errors = {};
 
 const isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) return next();
-  errors.login = "You need login before";
+  errors.login = 'You need login before';
   return res.json(errors);
 };
 
@@ -16,7 +16,7 @@ const isADMIN = (req, res, next) => {
     errors.ROLE = "You don't have permission to access";
     return res.json(errors);
   }
-  errors.login = "You need login before";
+  errors.login = 'You need login before';
   return res.json(errors);
 };
 
@@ -29,7 +29,7 @@ const isMOD = (req, res, next) => {
     errors.ROLE = "You don't have permission to access";
     return res.json(errors);
   }
-  errors.login = "You need login before";
+  errors.login = 'You need login before';
   return res.json(errors);
 };
 
@@ -42,7 +42,7 @@ const isUSER = (req, res, next) => {
     errors.ROLE = "You don't have permission to access";
     return res.json(errors);
   }
-  errors.login = "You need login before";
+  errors.login = 'You need login before';
   return res.json(errors);
 };
 module.exports = {

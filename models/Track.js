@@ -93,5 +93,14 @@ const TrackSchema = new Schema({
     default: Date.now()
   }
 });
+
+// TrackSchema.index({ '$**': 'text' });
+TrackSchema.index(
+  {
+    name: 'text',
+    'genres.name': 'text'
+  },
+  { weights: { name: 2, 'genres.name': 1 } }
+);
 const Track = mongoose.model('tracks', TrackSchema);
 module.exports = Track;

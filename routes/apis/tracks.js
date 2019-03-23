@@ -1,7 +1,7 @@
-/* eslint-disable array-callback-return */
-/* eslint-disable object-curly-newline */
-/* eslint-disable consistent-return */
 /* eslint-disable no-unused-vars */
+/* eslint-disable consistent-return */
+/* eslint-disable array-callback-return */
+/* eslint-disable no-return-assign */
 const router = require('express').Router();
 const cloudinary = require('cloudinary');
 const multer = require('multer');
@@ -17,7 +17,7 @@ const isEmpty = require('../../validations/is-empty');
 const upload = multer({ storage, fileFilterPlus });
 const validateTrack = require('../../validations/apis/track');
 // Get list track
-router.get('/', (req, res, next) => {
+router.get('/', (req, res) => {
   Track.find()
     .sort({ date: -1 })
     .then(track => res.json(track))
@@ -33,9 +33,9 @@ router.post(
     { name: 'image', maxCount: 1 },
     { name: 'track', maxCount: 1 }
   ]),
-  async (req, res, next) => {
+  async (req, res) => {
     const { errors, isValid } = validateTrack(req.body);
-    const { name, artists, album, duration, genre, country } = req.body;
+    const { name, artists, album, genre, country } = req.body;
     if (!isValid) {
       return res.status(400).json(errors);
     }
@@ -82,42 +82,42 @@ router.post(
         });
     }
     if (country) newTrack.country = country;
-    if (!req.files['track']) {
+    if (!req.files.track) {
       errors.FileUpload = 'Invalid file upload.';
       return res.status(400).json(errors);
-    } else {
-      try {
-        await cloudinary.v2.uploader
-          .upload(req.files['track'][0].path, {
-            resource_type: 'video',
-            folder: 'media/music'
-          })
-          .then(res_ => {
-            newTrack.link = res_.secure_url;
-            newTrack.duration = res_.duration;
-            newTrack.format = res_.format;
-          });
-      } catch (error) {
-        errors.FileUpload = 'Error Upload Image';
-        return res.status(400).json(errors);
-      }
     }
-    if (!req.files['image']) {
+    try {
+      await cloudinary.v2.uploader
+        .upload(req.files.track[0].path, {
+          resource_type: 'video',
+          folder: 'media/music'
+        })
+        .then(res_ => {
+          newTrack.link = res_.secure_url;
+          newTrack.duration = res_.duration;
+          newTrack.format = res_.format;
+        });
+    } catch (error) {
+      errors.FileUpload = 'Error Upload Image';
+      return res.status(400).json(errors);
+    }
+
+    if (!req.files.image) {
       errors.FileUpload = 'Invalid file upload.';
       return res.status(400).json(errors);
-    } else {
-      try {
-        await cloudinary.v2.uploader
-          .upload(req.files['image'][0].path, {
-            folder: 'images/tracks',
-            width: 400
-          })
-          .then(res => (newTrack.image = res.secure_url));
-      } catch (error) {
-        errors.FileUpload = 'Error Upload Image';
-        return res.status(400).json(errors);
-      }
     }
+    try {
+      await cloudinary.v2.uploader
+        .upload(req.files.image[0].path, {
+          folder: 'images/tracks',
+          width: 400
+        })
+        .then(res_ => (newTrack.image = res_.secure_url));
+    } catch (error) {
+      errors.FileUpload = 'Error Upload Image';
+      return res.status(400).json(errors);
+    }
+
     new Track(newTrack)
       .save()
       .then(__track => res.json(__track))
@@ -128,7 +128,7 @@ router.post(
   }
 );
 
-router.post('/comment/:id', (req, res, next) => {
+router.post('/comment/:id', (req, res) => {
   //   const { errors, isValid } = validateCMT(req.body);
   // Check Validation
   //   if (!isValid) {
@@ -149,7 +149,7 @@ router.post('/comment/:id', (req, res, next) => {
     })
     .catch(err => res.json({ noTrackFound: 'Not post found.' }));
 });
-router.delete('/comment/:id/:cmt_id', (req, res, next) => {
+router.delete('/comment/:id/:cmt_id', (req, res) => {
   User.findById(req.user.id)
     .then(_user => {
       Track.findById(req.params.id)
@@ -177,7 +177,7 @@ router.delete('/comment/:id/:cmt_id', (req, res, next) => {
     .catch(err => res.status(400).json({ UserErrors: 'USER not found' }));
 });
 
-router.post('/like/:id', (req, res, next) => {
+router.post('/like/:id', (req, res) => {
   User.findById(req.user.id)
     .then(_user => {
       Track.findById(req.params.id)
@@ -232,22 +232,21 @@ router.delete('/:track_id', (req, res, next) => {
     .catch(err => res.status(400).json(`Track not found: ${err}`));
 });
 
-//TEST upload
+// TEST upload
 router.post(
   '/testupload1',
   upload.fields([
     { name: 'image', maxCount: 1 },
     { name: 'track', maxCount: 1 }
   ]),
-  (req, res, next) => {
-    return res.json({
-      image: req.files['image'],
-      track: req.files['track'],
+  (req, res, next) =>
+    res.json({
+      image: req.files.image,
+      track: req.files.track,
       hehe: 'hello'
-    });
-  }
+    })
 );
-router.post('/testupload2', upload.single('image'), (req, res, next) => {
-  return res.json(req.file);
-});
+router.post('/testupload2', upload.single('image'), (req, res) =>
+  res.json(req.file)
+);
 module.exports = router;

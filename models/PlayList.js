@@ -1,10 +1,10 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 const PlayListSchema = new Schema({
   owner: {
     type: Schema.Types.ObjectId,
-    ref: "users",
+    ref: 'users',
     required: true
   },
   image: {
@@ -23,7 +23,7 @@ const PlayListSchema = new Schema({
     {
       track: {
         type: Schema.Types.ObjectId,
-        ref: "tracks"
+        ref: 'tracks'
       }
     }
   ],
@@ -35,5 +35,5 @@ const PlayListSchema = new Schema({
     type: String
   }
 });
-const PlayList = mongoose.model("playlists", PlayListSchema);
+const PlayList = mongoose.model('playlists', PlayListSchema);
 module.exports = PlayList;

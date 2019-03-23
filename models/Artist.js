@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 const ArtistSchema = new Schema({
@@ -13,7 +13,7 @@ const ArtistSchema = new Schema({
     {
       id: {
         type: Schema.Types.ObjectId,
-        ref: "albums"
+        ref: 'albums'
       },
       name: String
     }
@@ -26,7 +26,7 @@ const ArtistSchema = new Schema({
     {
       user: {
         type: Schema.Types.ObjectId,
-        ref: "users"
+        ref: 'users'
       }
     }
   ],
@@ -34,5 +34,5 @@ const ArtistSchema = new Schema({
     type: String
   }
 });
-const Artist = mongoose.model("artists", ArtistSchema);
+const Artist = mongoose.model('artists', ArtistSchema);
 module.exports = Artist;

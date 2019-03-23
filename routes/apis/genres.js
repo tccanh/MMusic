@@ -1,4 +1,7 @@
-//DONE
+/* eslint-disable no-return-assign */
+/* eslint-disable consistent-return */
+/* eslint-disable no-unused-vars */
+// DONE
 const router = require('express').Router();
 const cloudinary = require('cloudinary');
 const multer = require('multer');
@@ -36,16 +39,16 @@ router.post('/', upload.single('image'), async (req, res, next) => {
   if (!req.file) {
     errors.FileUpload = 'Invalid file upload.';
     return res.status(400).json(errors);
-  } else {
-    try {
-      await cloudinary.v2.uploader
-        .upload(req.file.path, { folder: 'images/genres' })
-        .then(res => (newGenre.image = res.secure_url));
-    } catch (error) {
-      errors.FileUpload = 'Error Upload Image';
-      return res.status(400).json(errors);
-    }
   }
+  try {
+    await cloudinary.v2.uploader
+      .upload(req.file.path, { folder: 'images/genres' })
+      .then(res_ => (newGenre.image = res_.secure_url));
+  } catch (error) {
+    errors.FileUpload = 'Error Upload Image';
+    return res.status(400).json(errors);
+  }
+
   Genre.findOne({ name }).then(genre => {
     if (genre) {
       // Update

@@ -1,3 +1,4 @@
+/* eslint-disable no-return-assign */
 /* eslint-disable array-callback-return */
 /* eslint-disable object-curly-newline */
 /* eslint-disable consistent-return */
@@ -38,16 +39,16 @@ router.post('/', upload.single('image'), async (req, res, next) => {
   if (!req.file) {
     errors.FileUpload = 'Invalid file upload.';
     return res.status(400).json(errors);
-  } else {
-    try {
-      await cloudinary.v2.uploader
-        .upload(req.file.path, { folder: 'images/playlists' })
-        .then(res => (newPlayList.image = res.secure_url));
-    } catch (error) {
-      errors.FileUpload = 'Error Upload Image';
-      return res.status(400).json(errors);
-    }
   }
+  try {
+    await cloudinary.v2.uploader
+      .upload(req.file.path, { folder: 'images/playlists' })
+      .then(res_ => (newPlayList.image = res_.secure_url));
+  } catch (error) {
+    errors.FileUpload = 'Error Upload Image';
+    return res.status(400).json(errors);
+  }
+
   new PlayList(newPlayList)
     .save()
     .then(playList => res.json(playList))

@@ -30,7 +30,7 @@ router.post('/login', (req, res) => {
         {
           expiresIn: 3600
         },
-        (err, token) => res.json({ success: true, token: 'Bearer ' + token })
+        (err, token) => res.json({ success: true, token: `Bearer ${token}` })
       );
     });
   })(req, res);
@@ -95,7 +95,7 @@ router.post('/oauth', (req, res, next) => {
           {
             expiresIn: 3600
           },
-          (err, token) => res.json({ success: true, token: 'Bearer ' + token })
+          (err, token) => res.json({ success: true, token: `Bearer ${token}` })
         );
       });
     }
@@ -121,7 +121,7 @@ router.post('/oauth', (req, res, next) => {
               expiresIn: 3600
             },
             (err, token) =>
-              res.json({ success: true, token: 'Bearer ' + token })
+              res.json({ success: true, token: `Bearer ${token}` })
           );
         });
       })
