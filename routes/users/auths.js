@@ -28,7 +28,7 @@ router.post('/login', (req, res) => {
         payload,
         process.env.JWT_SECRET,
         {
-          expiresIn: 3600
+          expiresIn: 86400
         },
         (err, token) => res.json({ success: true, token: `Bearer ${token}` })
       );

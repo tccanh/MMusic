@@ -46,7 +46,12 @@ router.post('/', upload.single('image'), async (req, res, next) => {
   }
   try {
     await cloudinary.v2.uploader
-      .upload(req.file.path, { folder: 'images/artists' })
+      .upload(req.file.path, {
+        folder: 'images/artists',
+        aspect_ratio: 1.1,
+        gravity: 'face',
+        crop: 'lfill'
+      })
       .then(res_ => (newArtist.image = res_.secure_url));
   } catch (error) {
     errors.FileUpload = 'Error Upload Image';
@@ -56,6 +61,7 @@ router.post('/', upload.single('image'), async (req, res, next) => {
   if (albums) {
     const listAlbums = albums.split(',').map(album => formatText(album));
     newArtist.albums = [];
+    // eslint-disable-next-line array-callback-return
     const AlbumIDs = await listAlbums.map(_alb => {
       Album.findOne({ name: _alb })
         .then(__alb => {

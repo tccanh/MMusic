@@ -42,7 +42,12 @@ router.post('/', upload.single('image'), async (req, res, next) => {
   }
   try {
     await cloudinary.v2.uploader
-      .upload(req.file.path, { folder: 'images/genres' })
+      .upload(req.file.path, {
+        folder: 'images/genres',
+        width: 500,
+        aspect_ratio: 1.1,
+        crop: 'lfill'
+      })
       .then(res_ => (newGenre.image = res_.secure_url));
   } catch (error) {
     errors.FileUpload = 'Error Upload Image';

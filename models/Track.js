@@ -83,6 +83,11 @@ const TrackSchema = new Schema({
       }
     }
   ],
+  views: {
+    type: Number,
+    default: 0,
+    required: true
+  },
   public: {
     type: Boolean,
     required: true,

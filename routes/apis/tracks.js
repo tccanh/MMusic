@@ -25,6 +25,18 @@ router.get('/', (req, res) => {
       res.status(404).json({ notrackFounds: `No tracks found: ${err}` })
     );
 });
+// View track and increase view 1 more
+router.get('/:id', (req, res) => {
+  Track.findById(req.params.id)
+    .then(track => {
+      // eslint-disable-next-line no-param-reassign
+      track.views += 1;
+      track.save().then(track_ => res.json(track_));
+    })
+    .catch(err =>
+      res.status(404).json({ notrackFounds: `No tracks found: ${err}` })
+    );
+});
 
 // Track create or update image
 router.post(
@@ -110,7 +122,9 @@ router.post(
       await cloudinary.v2.uploader
         .upload(req.files.image[0].path, {
           folder: 'images/tracks',
-          width: 400
+          width: 500,
+          aspect_ratio: 1.1,
+          crop: 'lfill'
         })
         .then(res_ => (newTrack.image = res_.secure_url));
     } catch (error) {
@@ -232,21 +246,4 @@ router.delete('/:track_id', (req, res, next) => {
     .catch(err => res.status(400).json(`Track not found: ${err}`));
 });
 
-// TEST upload
-router.post(
-  '/testupload1',
-  upload.fields([
-    { name: 'image', maxCount: 1 },
-    { name: 'track', maxCount: 1 }
-  ]),
-  (req, res, next) =>
-    res.json({
-      image: req.files.image,
-      track: req.files.track,
-      hehe: 'hello'
-    })
-);
-router.post('/testupload2', upload.single('image'), (req, res) =>
-  res.json(req.file)
-);
 module.exports = router;
