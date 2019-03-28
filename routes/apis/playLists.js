@@ -99,4 +99,53 @@ router.delete('/delete/:playList_id', (req, res, next) => {
     .then((haha, hihi) => res.json({ Success: true }))
     .catch(err => res.status(400).json(`PlayList not found: ${err}`));
 });
+
+router.post('/like/:id', (req, res, next) => {
+  User.findById(req.user.id)
+    .then(_user => {
+      PlayList.findById(req.params.id)
+        .then(playlist => {
+          if (
+            playlist.likes.filter(like => like.user.toString() === req.user.id)
+              .length > 0
+          ) {
+            return res
+              .status(400)
+              .json({ alreadyLike: 'User already liked this post' });
+          }
+          playlist.likes.unshift({ user: req.user.id });
+          playlist.save().then(__playlist => res.json(__playlist));
+        })
+        .catch(err => {
+          res.status(404).json({ noPostFound: 'Not post found' });
+        });
+    })
+    .catch(err => res.status(400).json({ UserErrors: 'USER not found' }));
+});
+router.post('/unlike/:id', (req, res, next) => {
+  User.findById(req.user.id)
+    .then(_user => {
+      PlayList.findById(req.params.id)
+        .then(playlist => {
+          if (
+            playlist.likes.filter(like => like.user.toString() === req.user.id)
+              .length === 0
+          ) {
+            return res
+              .status(400)
+              .json({ notLike: 'You has not like this post yet.' });
+          }
+          const removeIndex = playlist.likes
+            .map(value => value.user.toString())
+            .indexOf(req.params.id);
+          // Remove out array likes
+          playlist.likes.splice(removeIndex, 1);
+          playlist.save().then(post => res.json(post));
+        })
+        .catch(err => {
+          res.status(404).json({ noPostFound: 'Not post found.' });
+        });
+    })
+    .catch(err => res.status(400).json({ UserErrors: 'USER not found' }));
+});
 module.exports = router;

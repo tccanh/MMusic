@@ -97,6 +97,11 @@ const TrackSchema = new Schema({
     type: Date,
     default: Date.now()
   }
+  // point: {
+  //   type: Number,
+  //   required: true,
+  //   default: 0
+  // }
 });
 
 // TrackSchema.index({ '$**': 'text' });
@@ -107,5 +112,11 @@ TrackSchema.index(
   },
   { weights: { name: 2, 'genres.name': 1 } }
 );
+
+// TrackSchema.pre('save', function() {
+//   this.point =
+//     this.views * 1 + this.likes.length * 2 + this.comments.length * 3;
+// });
+
 const Track = mongoose.model('tracks', TrackSchema);
 module.exports = Track;

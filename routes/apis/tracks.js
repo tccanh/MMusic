@@ -25,6 +25,31 @@ router.get('/', (req, res) => {
       res.status(404).json({ notrackFounds: `No tracks found: ${err}` })
     );
 });
+router.get('/top50', (req, res, next) => {
+  // sort by views of tracks
+  if (req.query.view === '1') {
+    Track.find()
+      .sort({ views: -1 })
+      .sort({ likes: -1 })
+      .limit(50)
+      .then(list => res.json(list))
+      .catch(err =>
+        res.status(404).json({ notrackFounds: `No tracks found: ${err}` })
+      );
+  } else {
+    // Sort by liked of tracks
+    // So array fields are sorted by the array length by default?
+
+    Track.find()
+      .sort({ likes: -1 })
+      .sort({ views: -1 })
+      .limit(50)
+      .then(list => res.json(list))
+      .catch(err =>
+        res.status(404).json({ notrackFounds: `No tracks found: ${err}` })
+      );
+  }
+});
 // View track and increase view 1 more
 router.get('/:id', (req, res) => {
   Track.findById(req.params.id)

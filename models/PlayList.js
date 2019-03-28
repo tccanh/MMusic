@@ -33,7 +33,15 @@ const PlayListSchema = new Schema({
   },
   description: {
     type: String
-  }
+  },
+  likes: [
+    {
+      user: {
+        type: Schema.Types.ObjectId,
+        ref: 'users'
+      }
+    }
+  ]
 });
 const PlayList = mongoose.model('playlists', PlayListSchema);
 module.exports = PlayList;
