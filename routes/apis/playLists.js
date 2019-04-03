@@ -17,10 +17,47 @@ const validatePlayList = require('../../validations/apis/playList');
 // Get list playList
 router.get('/', (req, res, next) => {
   PlayList.find()
-    .sort({ date: -1 })
+    .sort({ name: -1 })
     .then(playList => res.json(playList))
     .catch(err =>
       res.status(404).json({ noplayListFounds: `No playLists found: ${err}` })
+    );
+});
+router.get('/owner', (req, res, next) => {
+  PlayList.find({ owner: req.user.id })
+    .sort({ name: -1 })
+    .then(playList => res.json(playList))
+    .catch(err =>
+      res.status(404).json({ noplayListFounds: `No playLists found: ${err}` })
+    );
+});
+router.get('/public', (req, res, next) => {
+  PlayList.find({ publics: true })
+    .sort({ name: -1 })
+    .then(playList => res.json(playList))
+    .catch(err =>
+      res.status(404).json({ noplayListFounds: `No playLists found: ${err}` })
+    );
+});
+router.get('/', (req, res, next) => {
+  PlayList.find({ owner: req.user.id })
+    .sort({ name: -1 })
+    .then(playList => res.json(playList))
+    .catch(err =>
+      res.status(404).json({ noplayListFounds: `No playLists found: ${err}` })
+    );
+});
+// chuyển playlist sang public hoặc ngược lại phụ thuộc vào query
+router.post('/toPublic/:id', (req, res) => {
+  PlayList.findById(req.params.id)
+    .then(playlist => {
+      const isPublic = req.query.public === '1';
+      // eslint-disable-next-line no-param-reassign
+      playlist.publics = isPublic;
+      playlist.save().then(playlist_ => res.json(playlist_));
+    })
+    .catch(err =>
+      res.status(404).json({ noplaylistFounds: `No playlists found: ${err}` })
     );
 });
 
@@ -66,6 +103,11 @@ router.post('/', upload.single('image'), async (req, res, next) => {
 router.post('/add/:id/:track_id', (req, res, next) => {
   PlayList.findById(req.params.id)
     .then(playList => {
+      if (req.user.id !== playList.owner) {
+        return res.status(404).json({
+          PerrmissionErr: "You don't have perrmission to access this."
+        });
+      }
       Track.findById(req.params.track_id)
         .then(track => {
           playList.tracks.unshift({ track: track.id });
@@ -82,6 +124,11 @@ router.post('/add/:id/:track_id', (req, res, next) => {
 router.post('/remove/:id/:track_id', (req, res, next) => {
   PlayList.findById(req.params.id)
     .then(playList => {
+      if (req.user.id !== playList.owner) {
+        return res.status(404).json({
+          PerrmissionErr: "You don't have perrmission to access this."
+        });
+      }
       const removeIndex = playList.tracks
         .map(value => value.track.id)
         .indexOf(req.params.track_id);

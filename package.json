@@ -11,7 +11,7 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
-    "cloudinary": "^1.13.2",
+    "cloudinary": "^1.14.0",
     "concurrently": "^4.1.0",
     "cookie-parser": "~1.4.4",
     "debug": "~4.1.1",
@@ -23,7 +23,7 @@
     "http-errors": "~1.7.2",
     "https": "^1.0.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.4.19",
+    "mongoose": "^5.4.20",
     "morgan": "~1.9.1",
     "multer": "^1.4.1",
     "passport": "^0.4.0",
@@ -35,9 +35,6 @@
   },
   "devDependencies": {
     "dotenv": "^7.0.0",
-    "eslint": "^5.15.3",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.16.0",
     "nodemon": "^1.18.10"
   }
 }

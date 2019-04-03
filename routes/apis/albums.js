@@ -12,7 +12,7 @@ const validateAlbum = require('../../validations/apis/album');
 // Get list album
 router.get('/', (req, res, next) => {
   Album.find()
-    .sort({ date: -1 })
+    .sort({ name: -1 })
     .then(album => res.json(album))
     .catch(err =>
       res.status(404).json({ noalbumFounds: `No albums found: ${err}` })

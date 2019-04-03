@@ -1,5 +1,7 @@
+// app.use('/auth', authRouter);
 /* eslint-disable no-shadow */
 /* eslint-disable consistent-return */
+
 const router = require('express').Router();
 const passport = require('passport');
 const jwt = require('jsonwebtoken');

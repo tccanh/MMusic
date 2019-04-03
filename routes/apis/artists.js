@@ -16,7 +16,7 @@ const validateArtist = require('../../validations/apis/artist');
 // Get list artist
 router.get('/', (req, res, next) => {
   Artist.find()
-    .sort({ date: -1 })
+    .sort({ name: -1 })
     .then(artist => res.json(artist))
     .catch(err =>
       res.status(404).json({ noartistFounds: `No artists found: ${err}` })
