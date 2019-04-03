@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import classnames from 'classnames';
 import { loginUser } from '../../actions/auth.action';
+import InputAuth from '../../HOC/inputAuth';
 export class Login extends Component {
   constructor() {
     super();
@@ -11,24 +13,28 @@ export class Login extends Component {
       password: '',
       errors: {}
     };
+
+    this.onChange = this.onChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
   componentWillReceiveProps(nextPops) {
     if (nextPops.auth.isAuthenticated) {
-      this.props.history.push('/');
-      alert('done1');
+      const { history } = this.props;
+      history.push('/dashboard');
     }
     if (nextPops.errors) {
       this.setState({ errors: nextPops.errors });
-      alert('done2');
     }
   }
 
-  componentDidMount() {
-    if (this.props.auth.isAuthenticated) {
-      alert('done3');
-      this.props.history.push('/');
-    }
-  }
+  // componentDidMount() {
+  //   if (this.props.auth.isAuthenticated) {
+  //     // this.props.history.push('/dashboard');
+  //     const { history } = this.context;
+  //     history.push('/dashboard');
+  //   }
+  // }
+
   onSubmit(e) {
     e.preventDefault();
 
@@ -86,44 +92,31 @@ export class Login extends Component {
                 </div>
               </div>
               <div className="modal-body">
-                <form className="form" method="" action="">
+                <form noValidate onSubmit={this.onSubmit}>
                   <div className="card-body">
-                    <div className="form-group bmd-form-group">
-                      <div className="input-group">
-                        <div className="input-group-prepend">
-                          <div className="input-group-text">
-                            <i className="material-icons">face</i>
-                          </div>
-                        </div>
-                        <input
-                          type="text"
-                          name="username"
-                          value={this.state.username}
-                          onChange={e => this.onChange(e)}
-                          className="form-control"
-                          placeholder="Username..."
-                          error={errors.login}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="form-group bmd-form-group">
-                      <div className="input-group">
-                        <div className="input-group-prepend">
-                          <div className="input-group-text">
-                            <i className="material-icons">lock_outline</i>
-                          </div>
-                        </div>
-                        <input
-                          type="password"
-                          name="password"
-                          value={this.state.password}
-                          onChange={e => this.onChange(e)}
-                          placeholder="Password..."
-                          className="form-control"
-                        />
-                      </div>
-                    </div>
+                    <InputAuth
+                      type="username"
+                      className={classnames('form-control', {
+                        'text-danger': errors.login
+                      })}
+                      placeholder="Username..."
+                      name="username"
+                      value={this.state.username}
+                      onChange={this.onChange}
+                      icon="face"
+                    />
+                    <InputAuth
+                      type="password"
+                      className={classnames('form-control', {
+                        'text-danger': errors.login
+                      })}
+                      placeholder="Password..."
+                      name="password"
+                      value={this.state.password}
+                      onChange={this.onChange}
+                      icon="lock_outline"
+                      error={errors.login}
+                    />
                   </div>
                   <div className="modal-footer justify-content-center">
                     <input
@@ -154,4 +147,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Login);
+)(withRouter(Login));

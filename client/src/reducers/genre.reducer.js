@@ -1,21 +1,21 @@
-import { GET_ALBUMS, ALBUM_LOADING } from '../actions/actionTypes';
+import { GENRE_LOADING, GET_GENRES } from '../actions/actionTypes';
 const initialState = {
-  albums: [],
-  album: {},
+  genres: [],
+  genre: {},
   loading: false
 };
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
-    case ALBUM_LOADING:
+    case GENRE_LOADING:
       return {
         ...state,
         loading: true
       };
-    case GET_ALBUMS:
+    case GET_GENRES:
       return {
         ...state,
-        albums: payload,
+        genres: payload,
         loading: false
       };
 

@@ -6,7 +6,7 @@ import { GET_ERRORS, SET_CURRENT_USER } from './actionTypes';
 export const registerUser = (userData, history) => dispatch => {
   axios
     .post('/auth/register', userData)
-    .then(res => history.push('./login'))
+    .then(res => history.push('/login'))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
@@ -19,24 +19,25 @@ export const loginUser = userData => dispatch => {
   axios
     .post('/auth/login', userData)
     .then(res => {
-      //save to LocalStorage
-      // const { token } = res.data;
-      // //set token to ls
-      // localStorage.setItem('jwtToken', token);
-      // // set token to Auth header
-      // setAuthToken(token);
-      // // Decode token to get user data
-      // const decoded = jwt_decode(token);
-      // //Set Current user
-      // dispatch(setCurrentUser(decoded));
-      console.log('hellores ', res);
+      // save to LocalStorage
+      const { token } = res.data;
+      //set token to ls
+      localStorage.setItem('jwtToken', token);
+      // set token to Auth header
+      setAuthToken(token);
+      // Decode token to get user data
+      const decoded = jwt_decode(token);
+      //Set Current user
+      dispatch(setCurrentUser(decoded));
     })
-    .catch(err =>
-      dispatch({
+    .catch(err => {
+      console.log(err);
+
+      return dispatch({
         type: GET_ERRORS,
         payload: err.response.data
-      })
-    );
+      });
+    });
 };
 export const setCurrentUser = decoded => {
   return {

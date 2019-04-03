@@ -90,7 +90,7 @@ app.use(
 );
 app.use(
   '/api/album',
-  passport.authenticate('jwt', { session: false }),
+  // passport.authenticate('jwt', { session: false }),
   albumRouter
 );
 app.use(
@@ -105,7 +105,7 @@ app.use(
 );
 app.use(
   '/api/playlist',
-  passport.authenticate('jwt', { session: false }),
+  // passport.authenticate('jwt', { session: false }),
   playlistRouter
 );
 app.use(

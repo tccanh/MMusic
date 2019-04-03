@@ -1,7 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from 'react';
-
-export default class navBar extends Component {
+import PropTypes from 'prop-types';
+import { NavLink } from 'react-router-dom';
+import { connect } from 'react-redux';
+import './NavBar.css';
+export class NavBar extends Component {
   render() {
     return (
       <nav className="navbar navbar-expand-lg bg-dark text-white">
@@ -33,46 +36,30 @@ export default class navBar extends Component {
           </div>
           <div className="collapse navbar-collapse">
             <ul className="navbar-nav">
-              <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#"
-                  id="navbarDropdownMenuLink"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/chart">
                   Charts
-                </a>
-                <div
-                  className="dropdown-menu"
-                  aria-labelledby="navbarDropdownMenuLink"
-                >
-                  <a className="dropdown-item" href="#">
-                    Action
-                  </a>
-                  <a className="dropdown-item" href="#">
-                    Another action
-                  </a>
-                  <a className="dropdown-item" href="#">
-                    Something else here
-                  </a>
-                </div>
-              </li>
-              <li className="nav-item active">
-                <a className="nav-link" href="#">
-                  Artists {/* <span className="sr-only">(current)</span> */}
-                </a>
+                </NavLink>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">
+                <NavLink className="nav-link" to="/playlist">
+                  Playlist
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/artist">
+                  Artists
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/album">
                   Albums
-                </a>
+                </NavLink>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">
-                  For you
-                </a>
+                <NavLink className="nav-link" to="/genre">
+                  Genres
+                </NavLink>
               </li>
             </ul>
           </div>
@@ -120,33 +107,30 @@ export default class navBar extends Component {
                   <i className="material-icons">notifications</i>
                 </a>
               </li>
-              <li className="dropdown nav-item">
+              <li class="dropdown nav-item">
                 <a
                   href="#pablo"
-                  className="dropdown-toggle nav-link"
+                  class="profile-photo dropdown-toggle nav-link"
                   data-toggle="dropdown"
                 >
-                  <i className="material-icons">settings</i>
-                  <b className="caret" />
+                  <div class="profile-photo-small">
+                    <img
+                      src="https://res.cloudinary.com/dx6o8ihdt/image/upload/v1553359686/images/tracks/bw8yk7p3jurxxfsgzdpf.jpg"
+                      alt="Circle Image"
+                      class="rounded-circle img-fluid"
+                    />
+                  </div>
                 </a>
-                <div className="dropdown-menu dropdown-menu-right">
-                  <h6 className="dropdown-header">Dropdown header</h6>
-                  <a href="#pablo" className="dropdown-item">
-                    Action
+                <div class="dropdown-menu dropdown-menu-right">
+                  <h6 class="dropdown-header">Dropdown header</h6>
+                  <a href="#pablo" class="dropdown-item">
+                    Me
                   </a>
-                  <a href="#pablo" className="dropdown-item">
-                    Another action
+                  <a href="#pablo" class="dropdown-item">
+                    Settings and other stuff
                   </a>
-                  <a href="#pablo" className="dropdown-item">
-                    Something else here
-                  </a>
-                  <div className="dropdown-divider" />
-                  <a href="#pablo" className="dropdown-item">
-                    Separated link
-                  </a>
-                  <div className="dropdown-divider" />
-                  <a href="#pablo" className="dropdown-item">
-                    Logout
+                  <a href="#pablo" class="dropdown-item">
+                    Sign out
                   </a>
                 </div>
               </li>
@@ -157,3 +141,12 @@ export default class navBar extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({});
+
+const mapDispatchToProps = {};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NavBar);

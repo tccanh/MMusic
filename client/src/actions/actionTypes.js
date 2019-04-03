@@ -7,3 +7,15 @@ export const PROFILE_NOT_FOUND = 'PROFILE_NOT_FOUND';
 export const CLEAR_CURRENT_PROFILE = 'CLEAR_CURRENT_PROFILE';
 export const GET_PROFILES = 'GET_PROFILES';
 export const POST_LOADING = 'POST_LOADING';
+//Albums
+export const GET_ALBUMS = 'GET_ALBUMS';
+export const ALBUM_LOADING = 'ALBUM_LOADING';
+//Genre
+export const GET_GENRES = 'GET_GENRES';
+export const GENRE_LOADING = 'GENRE_LOADING';
+//Artist
+export const GET_ARTISTS = 'GET_ARTISTS';
+export const ARTIST_LOADING = 'ARTIST_LOADING';
+//Playlist
+export const GET_PLAYLISTS = 'GET_PLAYLISTS';
+export const PLAYLIST_LOADING = 'PLAYLIST_LOADING';
