@@ -20,21 +20,21 @@ import Artists from './components/artists/Artists';
 import Playlists from './components/playlists/Playlists';
 //=================================================
 //Check for token
-// if (localStorage.jwtToken) {
-//   setAuthToken(localStorage.jwtToken);
-//   const decoded = jwt_decode(localStorage.jwtToken);
-//   // Set user is authenticated
-//   store.dispatch(setCurrentUser(decoded));
-//   // Check for expried token
-//   const currentTime = Date.now() / 1000;
-//   if (decoded.exp < currentTime) {
-//     store.dispatch(logoutUser());
-//     // clear current profile
-//     // store.dispatch(clearCurrentProfile());
-//     //redirect to login
-//     window.location.href = '/login';
-//   }
-// }
+if (localStorage.jwtToken) {
+  setAuthToken(localStorage.jwtToken);
+  const decoded = jwt_decode(localStorage.jwtToken);
+  // Set user is authenticated
+  store.dispatch(setCurrentUser(decoded));
+  // Check for expried token
+  const currentTime = Date.now() / 1000;
+  if (decoded.exp < currentTime) {
+    store.dispatch(logoutUser());
+    // clear current profile
+    // store.dispatch(clearCurrentProfile());
+    //redirect to login
+    window.location.href = '/login';
+  }
+}
 //=================================================
 class App extends Component {
   render() {
@@ -42,7 +42,7 @@ class App extends Component {
       <Provider store={store}>
         <BrowserRouter>
           <NavBar />
-          <Login />
+          {/* <Login /> */}
           {/* <Register /> */}
           <Route exact path="/" component={Landing} />
           <Route exact path="/login" component={mainLogin} />

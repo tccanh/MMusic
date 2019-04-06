@@ -1,11 +1,60 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './NavBar.css';
+import { logoutUser } from '../../actions/auth.action';
 export class NavBar extends Component {
+  onLogoutClick(e) {
+    e.preventDefault();
+    // this.props.clearCurrentProfile();
+    this.props.logoutUser();
+  }
+
   render() {
+    const { isAuthenticated, user } = this.props.auth;
+    const isAuthButton = isAuthenticated ? (
+      <li class="dropdown nav-item">
+        <a
+          href="#pablo"
+          class="profile-photo dropdown-toggle nav-link"
+          data-toggle="dropdown"
+        >
+          <div class="profile-photo-small">
+            <img
+              className="rounded-circle"
+              src={user.avatar}
+              alt={user.name}
+              style={{ width: '35px' }}
+              title="You must have a Gravatar connected to your email to display an image"
+            />
+          </div>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right">
+          <h6 class="dropdown-header">Dropdown header</h6>
+          <a href="#pablo" class="dropdown-item">
+            Me
+          </a>
+          <a href="#pablo" class="dropdown-item">
+            Settings and other stuff
+          </a>
+          <a
+            href=""
+            onClick={this.onLogoutClick.bind(this)}
+            class="dropdown-item"
+          >
+            Sign out
+          </a>
+        </div>
+      </li>
+    ) : (
+      <li className="nav-item">
+        <Link className="nav-link" to="/login">
+          <i className="material-icons">input</i> Login
+        </Link>
+      </li>
+    );
     return (
       <nav className="navbar navbar-expand-lg bg-dark text-white">
         <div className="container">
@@ -79,22 +128,22 @@ export class NavBar extends Component {
               <i className="material-icons">search</i>
             </button>
           </form>
-          <div className="navbar-collapse">
-            <button
-              className="btn btn-dark btn-raised btn-fab btn-round btn-sm"
-              data-toggle="modal"
-              data-target="#registerModal"
-            >
-              <i className="material-icons">person_add</i>
-            </button>
-            <button
-              className="btn btn-dark btn-raised btn-fab btn-round btn-sm"
-              data-toggle="modal"
-              data-target="#loginModal"
-            >
-              <i className="material-icons">how_to_reg</i>
-            </button>
-          </div>
+          {/* <div className="navbar-collapse">
+          <button
+            className="btn btn-dark btn-raised btn-fab btn-round btn-sm"
+            data-toggle="modal"
+            data-target="#registerModal"
+          >
+            <i className="material-icons">person_add</i>
+          </button>
+          <button
+            className="btn btn-dark btn-raised btn-fab btn-round btn-sm"
+            data-toggle="modal"
+            data-target="#loginModal"
+          >
+            <i className="material-icons">how_to_reg</i>
+          </button>
+        </div> */}
           <div className="collapse navbar-collapse">
             <ul className="navbar-nav ml-auto">
               <li className="nav-item">
@@ -107,33 +156,7 @@ export class NavBar extends Component {
                   <i className="material-icons">notifications</i>
                 </a>
               </li>
-              <li class="dropdown nav-item">
-                <a
-                  href="#pablo"
-                  class="profile-photo dropdown-toggle nav-link"
-                  data-toggle="dropdown"
-                >
-                  <div class="profile-photo-small">
-                    <img
-                      src="https://res.cloudinary.com/dx6o8ihdt/image/upload/v1553359686/images/tracks/bw8yk7p3jurxxfsgzdpf.jpg"
-                      alt="Circle Image"
-                      class="rounded-circle img-fluid"
-                    />
-                  </div>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right">
-                  <h6 class="dropdown-header">Dropdown header</h6>
-                  <a href="#pablo" class="dropdown-item">
-                    Me
-                  </a>
-                  <a href="#pablo" class="dropdown-item">
-                    Settings and other stuff
-                  </a>
-                  <a href="#pablo" class="dropdown-item">
-                    Sign out
-                  </a>
-                </div>
-              </li>
+              {isAuthButton}
             </ul>
           </div>
         </div>
@@ -142,9 +165,13 @@ export class NavBar extends Component {
   }
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+  auth: state.auth
+});
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  logoutUser
+};
 
 export default connect(
   mapStateToProps,

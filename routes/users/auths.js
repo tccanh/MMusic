@@ -51,7 +51,7 @@ router.post('/register', (req, res, next) => {
       return res.status(400).json(errors);
     }
     const newUser = {};
-    if (req.body.avatar) {
+    if (req.body.email) {
       newUser.avatar = gravatar.url(req.body.email, {
         s: '200', // Size
         r: 'pg', // Rating
