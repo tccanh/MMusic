@@ -15,13 +15,13 @@ export class NavBar extends Component {
   render() {
     const { isAuthenticated, user } = this.props.auth;
     const isAuthButton = isAuthenticated ? (
-      <li class="dropdown nav-item">
+      <li className="dropdown nav-item">
         <a
           href="#pablo"
-          class="profile-photo dropdown-toggle nav-link"
+          className="profile-photo dropdown-toggle nav-link"
           data-toggle="dropdown"
         >
-          <div class="profile-photo-small">
+          <div className="profile-photo-small">
             <img
               className="rounded-circle"
               src={user.avatar}
@@ -31,18 +31,18 @@ export class NavBar extends Component {
             />
           </div>
         </a>
-        <div class="dropdown-menu dropdown-menu-right">
-          <h6 class="dropdown-header">Dropdown header</h6>
-          <a href="#pablo" class="dropdown-item">
+        <div className="dropdown-menu dropdown-menu-right">
+          <h6 className="dropdown-header">Dropdown header</h6>
+          <a href="#pablo" className="dropdown-item">
             Me
           </a>
-          <a href="#pablo" class="dropdown-item">
+          <a href="#pablo" className="dropdown-item">
             Settings and other stuff
           </a>
           <a
             href=""
             onClick={this.onLogoutClick.bind(this)}
-            class="dropdown-item"
+            className="dropdown-item"
           >
             Sign out
           </a>

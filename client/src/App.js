@@ -7,7 +7,7 @@ import { Provider } from 'react-redux';
 import { Route, BrowserRouter, Switch } from 'react-router-dom';
 import { setCurrentUser, logoutUser } from './actions/auth.action';
 //=================================================
-import Login from './views/modals/Login';
+// import Login from './views/modals/Login';
 // import Register from './views/modals/Register';
 import NavBar from './components/layouts/NavBar';
 import Footer from './components/layouts/Footer';
@@ -18,6 +18,7 @@ import Albums from './components/albums/Albums';
 import Genres from './components/genres/Genres';
 import Artists from './components/artists/Artists';
 import Playlists from './components/playlists/Playlists';
+import Charts from './components/charts/Charts';
 //=================================================
 //Check for token
 if (localStorage.jwtToken) {
@@ -49,8 +50,11 @@ class App extends Component {
           <Route exact path="/album" component={Albums} />
           <Route exact path="/genre" component={Genres} />
           <Route exact path="/artist" component={Artists} />
-          <Route exact path="/playlist" component={Playlists} />
-          <Switch />
+          <Route exact path="/chart" component={Charts} />
+          {/* <Route exact path="/playlist" component={Playlists} /> */}
+          <Switch>
+            <PrivateRoute exact path="/playlist" component={Playlists} />
+          </Switch>
           <Footer />
         </BrowserRouter>
       </Provider>

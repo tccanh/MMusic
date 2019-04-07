@@ -19,7 +19,7 @@ const validateTrack = require('../../validations/apis/track');
 // Get list track
 router.get('/', (req, res) => {
   Track.find()
-    .sort({ date: -1 })
+    .sort({ name: 1 })
     .then(track => res.json(track))
     .catch(err =>
       res.status(404).json({ notrackFounds: `No tracks found: ${err}` })
@@ -30,8 +30,7 @@ router.get('/top50', (req, res, next) => {
   // sort by views of tracks
   if (req.query.view === '1') {
     Track.find()
-      .sort({ views: -1 })
-      .sort({ likes: -1 })
+      .sort({ name: -1 })
       .limit(50)
       .then(list => res.json(list))
       .catch(err =>
@@ -92,6 +91,8 @@ router.post(
     }
     if (artists) {
       const listArtists = artists.split(',').map(arts => formatText(arts));
+      console.log(listArtists);
+
       newTrack.artists = [];
       await listArtists.map(_arts => {
         Artist.findOne({ name: _arts })
