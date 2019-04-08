@@ -18,10 +18,10 @@ class Playlists extends Component {
       PlaylistsContent = <ListPlaylists playlists={playlists} />;
     }
     return (
-      <>
+      <div className="container">
         <h1 className="text-center title">Playlists</h1>
         <div className="row">{PlaylistsContent}</div>
-      </>
+      </div>
     );
   }
 }

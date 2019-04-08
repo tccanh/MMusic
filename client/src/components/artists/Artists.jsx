@@ -18,10 +18,10 @@ class Artists extends Component {
       ArtistsContent = <ListArtists artists={artists} />;
     }
     return (
-      <>
+      <div className="container">
         <h1 className="text-center title">Artists</h1>
         <div className="row">{ArtistsContent}</div>
-      </>
+      </div>
     );
   }
 }

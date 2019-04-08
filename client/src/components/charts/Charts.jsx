@@ -5,9 +5,10 @@ import { Spinner } from '../common/Spinner';
 import { getTracks } from '../../actions/track.action';
 import ListTrack from './ListTrack';
 export class Charts extends Component {
-  // static propTypes = {
-  //   prop: PropTypes
-  // };
+  static propTypes = {
+    getTracks: PropTypes.func.isRequired,
+    track: PropTypes.object.isRequired
+  };
   componentDidMount() {
     this.props.getTracks(); // cập nhật lúc đầu
   }

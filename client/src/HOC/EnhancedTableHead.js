@@ -18,8 +18,8 @@ class EnhancedTableHead extends React.Component {
           {headerRows.map(row => (
             <TableCell
               key={row.id}
-              align={row.numeric ? 'right' : 'left'}
-              padding={row.disablePadding ? 'left' : 'default'}
+              align={row.numeric ? 'right' : 'center'}
+              padding={row.disablePadding ? 'none' : 'default'}
               sortDirection={orderBy === row.id ? order : false}
             >
               <TableSortLabel

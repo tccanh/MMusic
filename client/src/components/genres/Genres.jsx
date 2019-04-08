@@ -18,10 +18,10 @@ class Genres extends Component {
       GenresContent = <ListGenres genres={genres} />;
     }
     return (
-      <>
+      <div className="container">
         <h1 className="text-center title">Genres</h1>
         <div className="row">{GenresContent}</div>
-      </>
+      </div>
     );
   }
 }

@@ -1,5 +1,3 @@
-export const GET_ERRORS = 'GET_ERRORS';
-export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 export const SET_CURRENT_USER = 'SET_CURRENT_USER';
 export const GET_PROFILE = 'GET_PROFILE';
 export const PROFILE_LOADING = 'PROFILE_LOADING';
@@ -21,4 +19,11 @@ export const GET_PLAYLISTS = 'GET_PLAYLISTS';
 export const PLAYLIST_LOADING = 'PLAYLIST_LOADING';
 //Track
 export const GET_TRACKS = 'GET_TRACKS';
+export const ADD_TRACK = 'ADD_TRACK';
 export const TRACK_LOADING = 'TRACK_LOADING';
+//ERROR
+export const CLEAR_ERRORS = 'CLEAR_ERRORS';
+export const GET_ERRORS = 'GET_ERRORS';
+
+export const UPLOAD_SUCCESS = 'UPLOAD_SUCCESS';
+export const UPLOAD_FAIL = 'UPLOAD_FAIL';

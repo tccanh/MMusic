@@ -6,6 +6,10 @@ import { connect } from 'react-redux';
 import './NavBar.css';
 import { logoutUser } from '../../actions/auth.action';
 export class NavBar extends Component {
+  static propTypes = {
+    logoutUser: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired
+  };
   onLogoutClick(e) {
     e.preventDefault();
     // this.props.clearCurrentProfile();
@@ -147,9 +151,9 @@ export class NavBar extends Component {
           <div className="collapse navbar-collapse">
             <ul className="navbar-nav ml-auto">
               <li className="nav-item">
-                <a href="#pablo" className="nav-link">
+                <Link className="nav-link" to="/upload">
                   <i className="material-icons">cloud_upload</i>
-                </a>
+                </Link>
               </li>
               <li className="nav-item">
                 <a href="#pablo" className="nav-link">

@@ -19,6 +19,7 @@ import Genres from './components/genres/Genres';
 import Artists from './components/artists/Artists';
 import Playlists from './components/playlists/Playlists';
 import Charts from './components/charts/Charts';
+import Upload from './components/upload/Upload';
 //=================================================
 //Check for token
 if (localStorage.jwtToken) {
@@ -51,6 +52,7 @@ class App extends Component {
           <Route exact path="/genre" component={Genres} />
           <Route exact path="/artist" component={Artists} />
           <Route exact path="/chart" component={Charts} />
+          <Route exact path="/upload" component={Upload} />
           {/* <Route exact path="/playlist" component={Playlists} /> */}
           <Switch>
             <PrivateRoute exact path="/playlist" component={Playlists} />

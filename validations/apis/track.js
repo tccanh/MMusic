@@ -11,12 +11,15 @@ module.exports = function validateTrack(data) {
   data.genre = !isEmpty(data.genre) ? formatText(data.genre) : '';
 
   if (Validator.isEmpty(data.name)) {
-    errors.track = 'Track name field is required';
+    errors.name = 'Trackname field is required';
   } else if (!Validator.isLength(data.name, { min: 3, max: 20 })) {
-    errors.track = 'Track name is at least 3 characters';
+    errors.name = 'Trackname is at least 3 characters';
   }
   if (Validator.isEmpty(data.country)) {
-    errors.track = 'Country field is required';
+    errors.country = 'Country field is required';
+  }
+  if (Validator.isEmpty(data.artists)) {
+    errors.artists = 'Artists field is required';
   }
   return {
     errors,

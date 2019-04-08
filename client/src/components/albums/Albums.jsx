@@ -18,10 +18,10 @@ class Albums extends Component {
       AlbumsContent = <ListAlbums albums={albums} />;
     }
     return (
-      <>
+      <div className="container">
         <h1 className="text-center title">Albums</h1>
         <div className="row">{AlbumsContent}</div>
-      </>
+      </div>
     );
   }
 }

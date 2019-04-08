@@ -72,7 +72,7 @@ router.post(
   ]),
   async (req, res) => {
     const { errors, isValid } = validateTrack(req.body);
-    const { name, artists, album, genre, country } = req.body;
+    const { name, artists, album, genre, country, released } = req.body;
     if (!isValid) {
       return res.status(400).json(errors);
     }
@@ -116,11 +116,12 @@ router.post(
           newTrack.albums = { album: _arts.id, name: _arts.name };
         })
         .catch(err => {
-          errors.album = `Album ${album} not found`;
-          return res.status(400).json(errors);
+          // errors.album = `Album ${album} not found`;
+          newTrack.albums = { album: null, name: _arts.name };
         });
     }
     if (country) newTrack.country = country;
+    if (released) newTrack.released = released;
     if (!req.files.track) {
       errors.FileUpload = 'Invalid file upload.';
       return res.status(400).json(errors);
