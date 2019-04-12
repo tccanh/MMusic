@@ -11,8 +11,8 @@ const session = require('express-session');
 const passport = require('passport');
 const mongoose = require('mongoose');
 const cloudinary = require('cloudinary');
+const formData = require('express-form-data');
 const helmet = require('helmet');
-
 const CONFIGS = require('./configs/configs');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users/users');
@@ -25,13 +25,14 @@ const playlistRouter = require('./routes/apis/playLists');
 const trackRouter = require('./routes/apis/tracks');
 // Common API
 const searchRouter = require('./routes/common/searchAPI');
+const uploadRouter = require('./routes/common/uploadImage');
 
 const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
+app.use(formData.parse());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -116,6 +117,7 @@ app.use(
 
 app.use('/auth', authRouter);
 app.use('/api/search', searchRouter);
+app.use('/api/upload', uploadRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

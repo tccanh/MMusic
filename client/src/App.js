@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import setAuthToken from './utils/setAuthToken';
 import store from './store';
+import './App.css';
 //=================================================
 import jwt_decode from 'jwt-decode';
 import { Provider } from 'react-redux';
@@ -20,6 +21,7 @@ import Artists from './components/artists/Artists';
 import Playlists from './components/playlists/Playlists';
 import Charts from './components/charts/Charts';
 import Upload from './components/upload/Upload';
+import { GenreCreate } from './components/genres/GenreCreate';
 //=================================================
 //Check for token
 if (localStorage.jwtToken) {
@@ -52,7 +54,7 @@ class App extends Component {
           <Route exact path="/genre" component={Genres} />
           <Route exact path="/artist" component={Artists} />
           <Route exact path="/chart" component={Charts} />
-          <Route exact path="/upload" component={Upload} />
+          <Route exact path="/upload" component={GenreCreate} />
           {/* <Route exact path="/playlist" component={Playlists} /> */}
           <Switch>
             <PrivateRoute exact path="/playlist" component={Playlists} />

@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ListArtists from './ListArtists';
-import { Spinner } from '../common/Spinner';
 import { getArtists } from '../../actions/artist.action';
+import Spinner from '../common/Spinner';
 class Artists extends Component {
   componentDidMount() {
     this.props.getArtists(); // cập nhật lúc đầu

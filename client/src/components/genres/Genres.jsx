@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ListGenres from './ListGenres';
-import { Spinner } from '../common/Spinner';
 import { getGenres } from '../../actions/genre.action';
+import Spinner from '../common/Spinner';
 class Genres extends Component {
   componentDidMount() {
     this.props.getGenres(); // cập nhật lúc đầu

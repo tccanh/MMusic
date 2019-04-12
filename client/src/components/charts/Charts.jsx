@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Spinner } from '../common/Spinner';
 import { getTracks } from '../../actions/track.action';
 import ListTrack from './ListTrack';
+import Spinner from '../common/Spinner';
 export class Charts extends Component {
   static propTypes = {
     getTracks: PropTypes.func.isRequired,

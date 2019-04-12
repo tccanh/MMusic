@@ -1,25 +1,15 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import spinner from './spinner.gif';
-export class Spinner extends Component {
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBowlingBall } from '@fortawesome/free-solid-svg-icons';
+
+export default class Spinner extends Component {
   render() {
     return (
-      <div>
-        <img
-          src={spinner}
-          style={{ width: '200px', margin: 'auto', display: 'block' }}
-          alt="Loading..."
-        />
+      <div className="rolling">
+        <div className="spinner fadein">
+          <FontAwesomeIcon icon={faBowlingBall} size="5x" color="red" />
+        </div>
       </div>
     );
   }
 }
-
-const mapStateToProps = state => ({});
-
-const mapDispatchToProps = {};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Spinner);
