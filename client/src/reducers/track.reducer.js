@@ -21,7 +21,7 @@ export default (state = initialState, { type, payload }) => {
     case ADD_TRACK:
       return {
         ...state,
-        tracks: [payload, ...state.posts]
+        tracks: [payload, ...state.tracks]
       };
 
     default:

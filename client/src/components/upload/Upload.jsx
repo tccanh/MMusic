@@ -153,7 +153,7 @@ export class Upload extends Component {
                 onChange={this.onChange}
               >
                 {genres.map(option => (
-                  <option key={option._id} value={option._id}>
+                  <option key={option._id} value={option.name}>
                     {option.name}
                   </option>
                 ))}

@@ -1,4 +1,4 @@
-import { GENRE_LOADING, GET_GENRES } from '../actions/actionTypes';
+import { GENRE_LOADING, GET_GENRES, ADD_GENRE } from '../actions/actionTypes';
 const initialState = {
   genres: [],
   genre: {},
@@ -18,7 +18,11 @@ export default (state = initialState, { type, payload }) => {
         genres: payload,
         loading: false
       };
-
+    case ADD_GENRE:
+      return {
+        ...state,
+        tracks: [payload, ...state.genres]
+      };
     default:
       return state;
   }

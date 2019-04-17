@@ -9,9 +9,11 @@ export default props =>
         onClick={() => props.removeImage(image.public_id)}
         className="delete"
       >
-        <FontAwesomeIcon icon={faTimesCircle} size="2x" />
+        <FontAwesomeIcon icon={faTimesCircle} size="1x" />
       </div>
       <img
+        width="200px"
+        height="auto"
         src={image.secure_url}
         alt=""
         onError={() => props.onError(image.public_id)}

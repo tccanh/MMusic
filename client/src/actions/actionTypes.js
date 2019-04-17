@@ -11,6 +11,8 @@ export const ALBUM_LOADING = 'ALBUM_LOADING';
 //Genre
 export const GET_GENRES = 'GET_GENRES';
 export const GENRE_LOADING = 'GENRE_LOADING';
+export const ADD_GENRE = 'ADD_GENRE';
+
 //Artist
 export const GET_ARTISTS = 'GET_ARTISTS';
 export const ARTIST_LOADING = 'ARTIST_LOADING';
