@@ -2,12 +2,8 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-unused-vars */
 const router = require('express').Router();
-const cloudinary = require('cloudinary');
-const multer = require('multer');
 const Album = require('../../models/Album');
-const { fileFilter, storage } = require('../../configs/uploadImage');
 
-const upload = multer({ storage, fileFilter });
 const validateAlbum = require('../../validations/apis/album');
 // Get list album
 router.get('/', (req, res, next) => {
@@ -20,30 +16,15 @@ router.get('/', (req, res, next) => {
 });
 
 // Post create or update image
-router.post('/', upload.single('image'), async (req, res, next) => {
+router.post('/', (req, res, next) => {
   const { errors, isValid } = validateAlbum(req.body);
-  const { name } = req.body;
+  const { name, image } = req.body;
   const newAlbum = {};
   if (!isValid) {
     return res.status(400).json(errors);
   }
-  if (!req.file) {
-    errors.FileUpload = 'Invalid file upload.';
-    return res.status(400).json(errors);
-  }
-  try {
-    await cloudinary.v2.uploader
-      .upload(req.file.path, {
-        folder: 'images/albums',
-        width: 500,
-        aspect_ratio: 1.1,
-        crop: 'lfill'
-      })
-      .then(res_ => (newAlbum.image = res_.secure_url));
-  } catch (error) {
-    errors.FileUpload = 'Error Upload Image';
-    return res.status(400).json(errors);
-  }
+  if (name) newAlbum.name = name;
+  if (image) newAlbum.image = image;
 
   Album.findOne({ name }).then(album => {
     if (album) {
@@ -56,7 +37,6 @@ router.post('/', upload.single('image'), async (req, res, next) => {
         .then(profile => res.json(profile))
         .catch(err => res.json(`USER: ${req.user.id}::${err}`));
     } else {
-      if (req.body.name) newAlbum.name = req.body.name;
       new Album(newAlbum)
         .save()
         .then(_album => res.json(_album))

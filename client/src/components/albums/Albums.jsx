@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ListAlbums from './ListAlbums';
+import { Link } from 'react-router-dom';
 import { getAlbums } from '../../actions/album.action';
 import Spinner from '../common/Spinner';
 class Albums extends Component {
@@ -19,7 +20,9 @@ class Albums extends Component {
     }
     return (
       <div className="container">
-        <h1 className="text-center title">Albums</h1>
+        <h1 className="text-center title">
+          Albums <Link to="/create-album"> New</Link>
+        </h1>
         <div className="row">{AlbumsContent}</div>
       </div>
     );

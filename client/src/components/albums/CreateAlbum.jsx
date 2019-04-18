@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import TextFieldGroup2 from '../../HOC/TextFieldGroup2';
-import { createGenre } from '../../actions/genre.action';
+import { createAlbum } from '../../actions/album.action';
 import Notifications, { notify } from 'react-notify-toast';
 import axios from 'axios';
 import Buttons from '../upload/subUpload/Buttons';
@@ -16,13 +16,13 @@ const toastColor = {
   text: '#fff'
 };
 
-class CreateGenre extends Component {
+class CreateAlbum extends Component {
   constructor(props) {
     super(props);
     this.state = {
       name: '',
       image:
-        'https://res.cloudinary.com/dx6o8ihdt/image/upload/c_scale,w_500/v1555581186/images/Common/genredefault.jpg',
+        'https://res.cloudinary.com/dx6o8ihdt/image/upload/c_scale,w_500/v1555579556/images/Common/albumdefault.jpg',
       images: [],
       errors: {}
     };
@@ -40,12 +40,11 @@ class CreateGenre extends Component {
   onSubmit(e) {
     e.preventDefault();
 
-    const genreData = {
+    const albumData = {
       name: this.state.name,
       image: this.state.image
     };
-
-    this.props.createGenre(genreData, this.props.history);
+    this.props.createAlbum(albumData, this.props.history);
   }
 
   onChange(e) {
@@ -57,8 +56,8 @@ class CreateGenre extends Component {
     const errs = [];
     const files = Array.from(e.target.files);
 
-    if (files.length > 3) {
-      const msg = 'Only 3 images can be uploaded at a time';
+    if (files.length > 1) {
+      const msg = 'Only 1 images can be uploaded at a time';
       return this.toast(msg, 'custom', 3000, toastColor);
     }
 
@@ -86,7 +85,7 @@ class CreateGenre extends Component {
 
     axios
       .request({
-        url: '/api/upload/image-upload/genres/500',
+        url: '/api/upload/image-upload/albums/500',
         method: 'POST',
         data: formData,
         onUploadProgress: p => {
@@ -129,25 +128,31 @@ class CreateGenre extends Component {
         case uploading:
           return <Spinner size="3x" />;
         case images.length > 0:
-          return <Images images={images} removeImage={this.removeImage} />;
+          return (
+            <Images
+              images={images}
+              removeImage={this.removeImage}
+              width="350px"
+            />
+          );
         default:
           return <Buttons onChange={this.onChangeIMG} />;
       }
     };
     return (
       <div className="container">
-        <h1 className="text-center title">New Genre</h1>
+        <h1 className="text-center title">New Album</h1>
         <form onSubmit={this.onSubmit}>
           <div className="row">
             <div className="col-md-7">
               <TextFieldGroup2
                 type="text"
-                id="nameGenre"
-                label="Genre name"
+                id="nameAlbum"
+                label="Name of album"
                 className={classnames('form-control form-control-lg', {
                   'is-invalid': errors.name
                 })}
-                placeholder="Indie..."
+                placeholder="Taylor Swift ..."
                 name="name"
                 value={this.state.name}
                 onChange={this.onChange}
@@ -162,9 +167,6 @@ class CreateGenre extends Component {
             </div>
           </div>
           <br />
-          <br />
-          <br />
-          <hr />
           <div className="form-row justify-content-md-center">
             <input
               type="submit"
@@ -178,16 +180,18 @@ class CreateGenre extends Component {
   }
 }
 
-CreateGenre.propTypes = {
+CreateAlbum.propTypes = {
   errors: PropTypes.object.isRequired,
-  createGenre: PropTypes.func.isRequired
+  createAlbum: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   errors: state.errors
 });
-const mapDispatchToProps = { createGenre };
+const mapDispatchToProps = {
+  createAlbum
+};
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(CreateGenre));
+)(withRouter(CreateAlbum));

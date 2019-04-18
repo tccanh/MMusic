@@ -39,17 +39,17 @@ router.post('/', (req, res) => {
     // Return any errors with 400 status
     return res.status(400).json(errors);
   }
-
+  const { name, image } = req.body;
   // Get fields
   const genreFields = {};
-  if (req.body.name) genreFields.name = req.body.name;
-  if (req.body.image) genreFields.image = req.body.image;
+  if (name) genreFields.name = name;
+  if (image) genreFields.image = image;
 
-  Genre.findOne({ name: req.body.name }).then(genre => {
+  Genre.findOne({ name }).then(genre => {
     if (genre) {
       // Update
       Genre.findOneAndUpdate(
-        { name: req.body.name },
+        { name },
         { $set: genreFields },
         { new: true }
       ).then(genre => res.json(genre));

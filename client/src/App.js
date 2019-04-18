@@ -23,6 +23,8 @@ import Charts from './components/charts/Charts';
 import Upload from './components/upload/Upload';
 import CreateGenre from './components/genres/CreateGenre';
 import { UploadImg } from './components/upload/UploadImg';
+import CreateArtist from './components/artists/CreateArtist';
+import CreateAlbum from './components/albums/CreateAlbum';
 //=================================================
 //Check for token
 if (localStorage.jwtToken) {
@@ -64,6 +66,16 @@ class App extends Component {
 
           <Switch>
             <PrivateRoute exact path="/create-genre" component={CreateGenre} />
+          </Switch>
+          <Switch>
+            <PrivateRoute
+              exact
+              path="/create-artist"
+              component={CreateArtist}
+            />
+          </Switch>
+          <Switch>
+            <PrivateRoute exact path="/create-album" component={CreateAlbum} />
           </Switch>
           <Footer />
         </BrowserRouter>

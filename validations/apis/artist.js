@@ -10,9 +10,22 @@ module.exports = function validateArtist(data) {
   data.genres = !isEmpty(data.genres) ? data.genres.trim() : '';
 
   if (Validator.isEmpty(data.name)) {
-    errors.artist = 'Artist name field is required';
+    errors.name = 'Artist name field is required...';
   } else if (!Validator.isLength(data.name, { min: 3, max: 20 })) {
-    errors.artist = 'Artist name is at least 3 characters';
+    errors.name = 'Artist name is at least 3 characters...';
+  }
+  if (
+    !Validator.isEmpty(data.description) &&
+    !Validator.isLength(data.description, { min: 10, max: 500 })
+  ) {
+    errors.description =
+      'Please describe more carefully this artist let us know...';
+  }
+
+  if (Validator.isEmpty(data.image)) {
+    errors.image = 'Image is required';
+  } else if (!Validator.isURL(data.image)) {
+    errors.image = 'Image link invalid';
   }
   return {
     errors,

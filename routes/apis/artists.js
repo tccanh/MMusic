@@ -32,31 +32,15 @@ router.get('/countAll', (req, res, next) => {
 });
 
 // Post create or update image
-router.post('/', upload.single('image'), async (req, res, next) => {
+router.post('/', async (req, res, next) => {
   const { errors, isValid } = validateArtist(req.body);
-  const { name, genres, description, albums } = req.body;
+  const { name, genres, description, albums, image } = req.body;
   const newArtist = {};
   if (!isValid) {
     return res.status(400).json(errors);
   }
   if (description) newArtist.description = description;
-  if (!req.file) {
-    errors.FileUpload = 'Invalid file upload.';
-    return res.status(400).json(errors);
-  }
-  try {
-    await cloudinary.v2.uploader
-      .upload(req.file.path, {
-        folder: 'images/artists',
-        aspect_ratio: 1.1,
-        gravity: 'face',
-        crop: 'lfill'
-      })
-      .then(res_ => (newArtist.image = res_.secure_url));
-  } catch (error) {
-    errors.FileUpload = 'Error Upload Image';
-    return res.status(400).json(errors);
-  }
+  if (image) newArtist.image = image;
 
   if (albums) {
     const listAlbums = albums.split(',').map(album => formatText(album));
@@ -70,6 +54,15 @@ router.post('/', upload.single('image'), async (req, res, next) => {
               id: __alb.id,
               name: __alb.name
             });
+          } else {
+            const newAlbum = {
+              name: _alb,
+              image: image
+            };
+            new Album(newAlbum)
+              .save()
+              .then(_album => res.json(_album))
+              .catch(err => res.json({ CreateAlbumERROR: err }));
           }
         })
         .catch(err => {

@@ -12,7 +12,7 @@ export default props =>
         <FontAwesomeIcon icon={faTimesCircle} size="1x" />
       </div>
       <img
-        width="200px"
+        width={props.width ? props.width : '200px'}
         height="auto"
         src={image.secure_url}
         alt=""

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ListArtists from './ListArtists';
+import { Link } from 'react-router-dom';
 import { getArtists } from '../../actions/artist.action';
 import Spinner from '../common/Spinner';
 class Artists extends Component {
@@ -19,7 +20,9 @@ class Artists extends Component {
     }
     return (
       <div className="container">
-        <h1 className="text-center title">Artists</h1>
+        <h1 className="text-center title">
+          Artists <Link to="create-artist">New</Link>
+        </h1>
         <div className="row">{ArtistsContent}</div>
       </div>
     );

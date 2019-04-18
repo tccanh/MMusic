@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import Notifications, { notify } from 'react-notify-toast';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import Buttons from './Test/Buttons';
-import Images from './Test/Images';
+import Buttons from './subUpload/Buttons';
+import Images from './subUpload/Images';
 import Spinner from '../common/Spinner';
 
 const toastColor = {

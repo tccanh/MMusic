@@ -4,7 +4,8 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import TextFieldGroup2 from '../../HOC/TextFieldGroup2';
-import { createGenre } from '../../actions/genre.action';
+import TextAreaGroup from '../../HOC/TextAreaGroup';
+import { createArtist } from '../../actions/artist.action';
 import Notifications, { notify } from 'react-notify-toast';
 import axios from 'axios';
 import Buttons from '../upload/subUpload/Buttons';
@@ -16,13 +17,16 @@ const toastColor = {
   text: '#fff'
 };
 
-class CreateGenre extends Component {
+class CreateArtist extends Component {
   constructor(props) {
     super(props);
     this.state = {
       name: '',
       image:
-        'https://res.cloudinary.com/dx6o8ihdt/image/upload/c_scale,w_500/v1555581186/images/Common/genredefault.jpg',
+        'https://res.cloudinary.com/dx6o8ihdt/image/upload/v1555578133/images/Common/userdefault.png',
+      description: '',
+      albums: '',
+      genres: '',
       images: [],
       errors: {}
     };
@@ -40,12 +44,14 @@ class CreateGenre extends Component {
   onSubmit(e) {
     e.preventDefault();
 
-    const genreData = {
+    const artistData = {
       name: this.state.name,
-      image: this.state.image
+      image: this.state.image,
+      description: this.state.description,
+      albums: this.state.albums,
+      genres: this.state.genres
     };
-
-    this.props.createGenre(genreData, this.props.history);
+    this.props.createArtist(artistData, this.props.history);
   }
 
   onChange(e) {
@@ -57,8 +63,8 @@ class CreateGenre extends Component {
     const errs = [];
     const files = Array.from(e.target.files);
 
-    if (files.length > 3) {
-      const msg = 'Only 3 images can be uploaded at a time';
+    if (files.length > 1) {
+      const msg = 'Only 1 images can be uploaded at a time';
       return this.toast(msg, 'custom', 3000, toastColor);
     }
 
@@ -86,7 +92,7 @@ class CreateGenre extends Component {
 
     axios
       .request({
-        url: '/api/upload/image-upload/genres/500',
+        url: '/api/upload/image-upload/artists/1000',
         method: 'POST',
         data: formData,
         onUploadProgress: p => {
@@ -129,29 +135,82 @@ class CreateGenre extends Component {
         case uploading:
           return <Spinner size="3x" />;
         case images.length > 0:
-          return <Images images={images} removeImage={this.removeImage} />;
+          return (
+            <Images
+              images={images}
+              removeImage={this.removeImage}
+              width="350px"
+            />
+          );
         default:
           return <Buttons onChange={this.onChangeIMG} />;
       }
     };
     return (
       <div className="container">
-        <h1 className="text-center title">New Genre</h1>
+        <h1 className="text-center title">New Artist</h1>
         <form onSubmit={this.onSubmit}>
           <div className="row">
             <div className="col-md-7">
               <TextFieldGroup2
                 type="text"
-                id="nameGenre"
-                label="Genre name"
+                id="nameArtist"
+                label="Name of artist"
                 className={classnames('form-control form-control-lg', {
                   'is-invalid': errors.name
                 })}
-                placeholder="Indie..."
+                placeholder="Taylor Swift ..."
                 name="name"
                 value={this.state.name}
                 onChange={this.onChange}
                 error={errors.name}
+              />
+              <h5 className="text-info" style={{ textAlign: 'center' }}>
+                <strong>
+                  If 2 fields below have more than 1 items, please separate it
+                  with a comma.
+                </strong>
+              </h5>
+              <TextFieldGroup2
+                type="text"
+                id="albumsArtist"
+                label="Top of albums"
+                className={classnames('form-control form-control-lg', {
+                  'is-invalid': errors.albums
+                })}
+                placeholder="1989, Reputation, ..."
+                name="albums"
+                value={this.state.albums}
+                onChange={this.onChange}
+                error={errors.albums}
+              />
+
+              <TextFieldGroup2
+                type="text"
+                id="genresArtist"
+                label="Style of music / Genres"
+                className={classnames('form-control form-control-lg', {
+                  'is-invalid': errors.genres
+                })}
+                placeholder="Pop, Country, ..."
+                name="genres"
+                value={this.state.genres}
+                onChange={this.onChange}
+                error={errors.genres}
+              />
+
+              <TextAreaGroup
+                id="descriptionArtist"
+                label="Description"
+                className={classnames('form-control form-control-lg', {
+                  'is-invalid': errors.description
+                })}
+                placeholder="A few descriptions of this artist ..."
+                name="description"
+                value={this.state.description}
+                onChange={this.onChange}
+                error={errors.description}
+                rows="5"
               />
             </div>
             <div className="col-md-5">
@@ -162,9 +221,6 @@ class CreateGenre extends Component {
             </div>
           </div>
           <br />
-          <br />
-          <br />
-          <hr />
           <div className="form-row justify-content-md-center">
             <input
               type="submit"
@@ -178,16 +234,18 @@ class CreateGenre extends Component {
   }
 }
 
-CreateGenre.propTypes = {
+CreateArtist.propTypes = {
   errors: PropTypes.object.isRequired,
-  createGenre: PropTypes.func.isRequired
+  createArtist: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   errors: state.errors
 });
-const mapDispatchToProps = { createGenre };
+const mapDispatchToProps = {
+  createArtist
+};
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(CreateGenre));
+)(withRouter(CreateArtist));

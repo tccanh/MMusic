@@ -12,6 +12,11 @@ module.exports = function validateAlbum(data) {
   } else if (!Validator.isLength(data.name, { min: 3, max: 20 })) {
     errors.album = 'Album name is at least 3 characters';
   }
+  if (Validator.isEmpty(data.image)) {
+    errors.image = 'Image is required';
+  } else if (!Validator.isURL(data.image)) {
+    errors.image = 'Image link invalid';
+  }
   return {
     errors,
     isValid: isEmpty(errors)
