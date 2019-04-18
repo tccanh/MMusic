@@ -9,7 +9,7 @@ export default props => (
         <FontAwesomeIcon
           icon={faImage}
           color="#3B5998"
-          size={props.size ? props.size : '5x'}
+          size={props.sizze ? props.sizze : '5x'}
         />
       </label>
       <input type="file" id="single" onChange={props.onChange} />

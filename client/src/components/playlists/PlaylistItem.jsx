@@ -15,7 +15,7 @@ export class PlaylistItem extends Component {
       <p className="text-center text-danger">Private</p>
     );
     return (
-      <div class="col-md-2">
+      <div className="col-md-2">
         <img
           className=" img-thumbnail img-fluid"
           src={playlist.image}

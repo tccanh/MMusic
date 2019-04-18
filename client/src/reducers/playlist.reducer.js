@@ -1,4 +1,8 @@
-import { GET_PLAYLISTS, PLAYLIST_LOADING } from '../actions/actionTypes';
+import {
+  GET_PLAYLISTS,
+  PLAYLIST_LOADING,
+  ADD_PLAYLIST
+} from '../actions/actionTypes';
 const initialState = {
   playlists: [],
   playlist: {},
@@ -17,6 +21,11 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         playlists: payload,
         loading: false
+      };
+    case ADD_PLAYLIST:
+      return {
+        ...state,
+        playlists: [payload, ...state.playlists]
       };
 
     default:

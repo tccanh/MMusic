@@ -19,6 +19,7 @@ export const ARTIST_LOADING = 'ARTIST_LOADING';
 //Playlist
 export const GET_PLAYLISTS = 'GET_PLAYLISTS';
 export const PLAYLIST_LOADING = 'PLAYLIST_LOADING';
+export const ADD_PLAYLIST = 'ADD_PLAYLIST';
 //Track
 export const GET_TRACKS = 'GET_TRACKS';
 export const ADD_TRACK = 'ADD_TRACK';

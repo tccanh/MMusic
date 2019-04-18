@@ -4,15 +4,12 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-unused-vars */
 const router = require('express').Router();
-const cloudinary = require('cloudinary');
-const multer = require('multer');
+
 const PlayList = require('../../models/PlayList');
 const Album = require('../../models/Album');
 const User = require('../../models/User');
 const Track = require('../../models/Track');
-const { fileFilter, storage } = require('../../configs/uploadImage');
 
-const upload = multer({ storage, fileFilter });
 const validatePlayList = require('../../validations/apis/playList');
 // Get list playList
 router.get('/', (req, res, next) => {
@@ -62,9 +59,9 @@ router.post('/toPublic/:id', (req, res) => {
 });
 
 // Post create or update image
-router.post('/', upload.single('image'), async (req, res, next) => {
+router.post('/', async (req, res, next) => {
   const { errors, isValid } = validatePlayList(req.body);
-  const { name, publics, description } = req.body;
+  const { name, publics, description, image } = req.body;
   const newPlayList = {};
   if (!isValid) {
     return res.status(400).json(errors);
@@ -72,24 +69,8 @@ router.post('/', upload.single('image'), async (req, res, next) => {
   newPlayList.owner = req.user.id;
   if (name) newPlayList.name = name;
   if (description) newPlayList.description = description;
-  if (publics) newPlayList.public = publics;
-  if (!req.file) {
-    errors.FileUpload = 'Invalid file upload.';
-    return res.status(400).json(errors);
-  }
-  try {
-    await cloudinary.v2.uploader
-      .upload(req.file.path, {
-        folder: 'images/playlists',
-        width: 500,
-        aspect_ratio: 1.1,
-        crop: 'lfill'
-      })
-      .then(res_ => (newPlayList.image = res_.secure_url));
-  } catch (error) {
-    errors.FileUpload = 'Error Upload Image';
-    return res.status(400).json(errors);
-  }
+  if (image) newPlayList.image = image;
+  if (publics) newPlayList.publics = publics;
 
   new PlayList(newPlayList)
     .save()
