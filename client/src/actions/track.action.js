@@ -3,7 +3,6 @@ import {
   GET_TRACKS,
   CLEAR_ERRORS,
   GET_ERRORS,
-  ADD_TRACK,
   UPLOAD_FAIL,
   UPLOAD_SUCCESS
 } from './actionTypes';
@@ -26,16 +25,10 @@ export const getTracks = () => dispatch => {
       })
     );
 };
-export const addTrack = trackData => dispatch => {
-  dispatch(clearErrors());
+export const createTrack = (data, history) => dispatch => {
   axios
-    .post('/api/track', trackData)
-    .then(res =>
-      dispatch({
-        type: ADD_TRACK,
-        payload: res.data
-      })
-    )
+    .post('/api/track', data)
+    .then(res => history.push('/chart'))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,

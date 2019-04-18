@@ -41,16 +41,15 @@ router.post('/', async (req, res, next) => {
   }
   if (description) newArtist.description = description;
   if (image) newArtist.image = image;
-
   if (albums) {
     const listAlbums = albums.split(',').map(album => formatText(album));
-    newArtist.albums = [];
-    // eslint-disable-next-line array-callback-return
-    const AlbumIDs = await listAlbums.map(_alb => {
+    const newListAlbums = [];
+
+    await listAlbums.map(_alb => {
       Album.findOne({ name: _alb })
         .then(__alb => {
           if (!isEmpty(__alb)) {
-            newArtist.albums.unshift({
+            newListAlbums.unshift({
               id: __alb.id,
               name: __alb.name
             });
@@ -61,10 +60,16 @@ router.post('/', async (req, res, next) => {
             };
             new Album(newAlbum)
               .save()
-              .then(_album => res.json(_album))
+              .then(_album =>
+                newListAlbums.unshift({
+                  id: _album.id,
+                  name: _album.name
+                })
+              )
               .catch(err => res.json({ CreateAlbumERROR: err }));
           }
         })
+        .then(() => (newArtist.albums = newListAlbums))
         .catch(err => {
           errors.Albums = `Album ${_alb} not found: ${err}`;
           return res.status(400).json(errors);
@@ -76,7 +81,7 @@ router.post('/', async (req, res, next) => {
     newArtist.genres = listGenres;
   }
 
-  Artist.findOne({ name: formatText(name) }).then(art => {
+  await Artist.findOne({ name: formatText(name) }).then(art => {
     if (art) {
       Artist.findOneAndUpdate(
         { _id: art.id },

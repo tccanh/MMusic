@@ -58,14 +58,15 @@ class App extends Component {
           <Route exact path="/artist" component={Artists} />
           <Route exact path="/chart" component={Charts} />
           <Route exact path="/imgupload" component={UploadImg} />
-          <Route exact path="/upload" component={Upload} />
-          {/* <Route exact path="/playlist" component={Playlists} /> */}
           <Switch>
             <PrivateRoute exact path="/playlist" component={Playlists} />
           </Switch>
 
           <Switch>
             <PrivateRoute exact path="/create-genre" component={CreateGenre} />
+          </Switch>
+          <Switch>
+            <PrivateRoute exact path="/upload" component={Upload} />
           </Switch>
           <Switch>
             <PrivateRoute

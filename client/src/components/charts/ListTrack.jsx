@@ -22,9 +22,9 @@ const headerRows = [
     disablePadding: true,
     label: 'Name'
   },
-  { id: 'genres', numeric: false, disablePadding: false, label: 'Genres' },
+  { id: 'genre', numeric: false, disablePadding: false, label: 'Genre' },
   { id: 'artists', numeric: false, disablePadding: false, label: 'Artists' },
-  { id: 'likes', numeric: true, disablePadding: false, label: 'Likes' },
+  { id: 'like', numeric: true, disablePadding: false, label: 'Like' },
   { id: 'views', numeric: true, disablePadding: false, label: 'Views' }
 ];
 
@@ -95,7 +95,7 @@ class ListTrack extends Component {
   };
 
   handleChangeRowsPerPage = event => {
-    this.setState({ rowsPerPage: event.target.value });
+    this.setState({ rowsPerPage: parseInt(event.target.value) });
   };
 
   render() {
@@ -117,8 +117,8 @@ class ListTrack extends Component {
             <TableBody>
               {stableSort(tracks, getSorting(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map(value => {
-                  return <ChartItem value={value} />;
+                .map((value, index) => {
+                  return <ChartItem value={value} key={index} />;
                 })}
               {emptyRows > 0 && (
                 <TableRow style={{ height: 49 * emptyRows }}>

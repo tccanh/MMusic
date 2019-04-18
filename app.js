@@ -25,7 +25,8 @@ const playlistRouter = require('./routes/apis/playLists');
 const trackRouter = require('./routes/apis/tracks');
 // Common API
 const searchRouter = require('./routes/common/searchAPI');
-const uploadRouter = require('./routes/common/uploadImage');
+const uploadImageRouter = require('./routes/common/uploadImage');
+const uploadMediaRouter = require('./routes/common/uploadMedia');
 
 const app = express();
 
@@ -117,7 +118,8 @@ app.use(
 
 app.use('/auth', authRouter);
 app.use('/api/search', searchRouter);
-app.use('/api/upload', uploadRouter);
+app.use('/api/upload', uploadImageRouter);
+app.use('/api/upload', uploadMediaRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

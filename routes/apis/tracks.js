@@ -3,18 +3,14 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable no-return-assign */
 const router = require('express').Router();
-const cloudinary = require('cloudinary');
-const multer = require('multer');
 const Track = require('../../models/Track');
 const Artist = require('../../models/Artist');
 const User = require('../../models/User');
 const Album = require('../../models/Album');
 const Genre = require('../../models/Genre');
-const { fileFilterPlus, storage } = require('../../configs/uploadImage');
 const formatText = require('../../validations/formatText');
 const isEmpty = require('../../validations/is-empty');
 
-const upload = multer({ storage, fileFilterPlus });
 const validateTrack = require('../../validations/apis/track');
 // Get list track
 router.get('/', (req, res) => {
@@ -64,111 +60,115 @@ router.get('/:id', (req, res) => {
 });
 
 // Track create or update image
-router.post(
-  '/',
-  upload.fields([
-    { name: 'image', maxCount: 1 },
-    { name: 'track', maxCount: 1 }
-  ]),
-  async (req, res) => {
-    const { errors, isValid } = validateTrack(req.body);
-    const { name, artists, album, genre, country, released } = req.body;
-    if (!isValid) {
-      return res.status(400).json(errors);
-    }
-    const newTrack = {};
-    newTrack.owner = req.user.id;
-    if (name) newTrack.name = name;
-    if (genre) {
-      await Genre.findOne({ name: genre })
-        .then(_genre => {
-          newTrack.genres = { genre: _genre.id, name: _genre.name };
+router.post('/', async (req, res) => {
+  const { errors, isValid } = validateTrack(req.body);
+  const {
+    name,
+    image,
+    artists,
+    authors,
+    album,
+    genre,
+    country,
+    released,
+    link,
+    duration,
+    format,
+    bit_rate,
+    bytes
+  } = req.body;
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+  const newTrack = {};
+  newTrack.owner = req.user.id;
+  if (name) newTrack.name = name;
+  if (image) newTrack.image = image;
+  if (genre) {
+    var genreSplit = genre.split(',');
+    newTrack.genre = genreSplit[0];
+  }
+  if (link) newTrack.link = link;
+  if (format) newTrack.format = format;
+  if (bit_rate) newTrack.bit_rate = bit_rate;
+  if (bytes) newTrack.bytes = bytes;
+  if (duration) newTrack.duration = duration;
+  if (country) newTrack.country = country;
+  if (released) newTrack.released = released;
+  newTrack.authors = authors.split(',').map(auth => formatText(auth));
+
+  if (artists) {
+    const listArtists = artists.split(',').map(arts => formatText(arts));
+    const newListArtists = [];
+    await listArtists.map(_arts => {
+      Artist.findOne({ name: _arts })
+        .then(__arts => {
+          if (!isEmpty(__arts)) {
+            newListArtists.unshift({
+              artist: __arts.id,
+              name: __arts.name
+            });
+          } else {
+            const newArtist = {
+              name: _arts,
+              image: image,
+              genres: [genreSplit[1]]
+            };
+            new Artist(newArtist)
+              .save()
+              .then(__arts => {
+                newListArtists.unshift({
+                  artist: __arts._id,
+                  name: __arts.name
+                });
+              })
+              .catch(err => res.json({ CreateAlbumERROR: err }));
+          }
+        })
+        .then(() => {
+          newTrack.artists = newListArtists;
         })
         .catch(err => {
-          errors.genre = `Genre ${genre} not found`;
+          errors.artists = `Artist ${_arts} not found: ${err}`;
           return res.status(400).json(errors);
         });
-    }
-    if (artists) {
-      const listArtists = artists.split(',').map(arts => formatText(arts));
-      console.log(listArtists);
-
-      newTrack.artists = [];
-      await listArtists.map(_arts => {
-        Artist.findOne({ name: _arts })
-          .then(__arts => {
-            if (!isEmpty(__arts)) {
-              newTrack.artists.unshift({
-                artist: __arts.id,
-                name: __arts.name
-              });
-            }
-          })
-          .catch(err => {
-            errors.Albums = `Artist ${_arts} not found: ${err}`;
-            return res.status(400).json(errors);
-          });
-      });
-    }
-    if (album) {
-      await Album.findOne({ name: album })
-        .then(_arts => {
-          newTrack.albums = { album: _arts.id, name: _arts.name };
-        })
-        .catch(err => {
-          // errors.album = `Album ${album} not found`;
-          newTrack.albums = { album: null, name: _arts.name };
-        });
-    }
-    if (country) newTrack.country = country;
-    if (released) newTrack.released = released;
-    if (!req.files.track) {
-      errors.FileUpload = 'Invalid file upload.';
-      return res.status(400).json(errors);
-    }
-    try {
-      await cloudinary.v2.uploader
-        .upload(req.files.track[0].path, {
-          resource_type: 'video',
-          folder: 'media/music'
-        })
-        .then(res_ => {
-          newTrack.link = res_.secure_url;
-          newTrack.duration = res_.duration;
-          newTrack.format = res_.format;
-        });
-    } catch (error) {
-      errors.FileUpload = 'Error Upload Image';
-      return res.status(400).json(errors);
-    }
-
-    if (!req.files.image) {
-      errors.FileUpload = 'Invalid file upload.';
-      return res.status(400).json(errors);
-    }
-    try {
-      await cloudinary.v2.uploader
-        .upload(req.files.image[0].path, {
-          folder: 'images/tracks',
-          width: 500,
-          aspect_ratio: 1.1,
-          crop: 'lfill'
-        })
-        .then(res_ => (newTrack.image = res_.secure_url));
-    } catch (error) {
-      errors.FileUpload = 'Error Upload Image';
-      return res.status(400).json(errors);
-    }
-
-    new Track(newTrack)
-      .save()
-      .then(__track => res.json(__track))
+    });
+  }
+  if (album) {
+    let albumID;
+    await Album.findOne({ name: album })
+      .then(__alb => {
+        if (!isEmpty(__alb)) {
+          albumID = __alb.id;
+        } else {
+          const newAlbum = {
+            name: album,
+            image: image
+          };
+          new Album(newAlbum)
+            .save()
+            .then(_album => {
+              albumID = _album.id;
+            })
+            .catch(err => res.json({ CreateAlbumERROR: err }));
+        }
+      })
+      .then(() => {
+        newTrack.album = albumID;
+      })
       .catch(err => {
-        errors.genre = `Error create: ${err}`;
+        errors.Albums = `Album ${album} not found: ${err}`;
         return res.status(400).json(errors);
       });
   }
-);
+  await new Track(newTrack)
+    .save()
+    .then(__track => res.json(__track))
+    .catch(err => {
+      errors.track = `FUCK : ${err}`;
+      return res.status(400).json(errors);
+    });
+});
 
 router.post('/comment/:id', (req, res) => {
   //   const { errors, isValid } = validateCMT(req.body);

@@ -7,11 +7,49 @@ const TrackSchema = new Schema({
     ref: 'users',
     required: true
   },
-  image: {
-    type: String
-  },
   name: {
     type: String,
+    required: true
+  },
+  image: {
+    type: String,
+    required: true
+  },
+  genre: {
+    type: Schema.Types.ObjectId,
+    ref: 'genres',
+    required: true
+  },
+  link: {
+    type: String,
+    required: true
+  },
+  format: {
+    type: String,
+    required: true
+  },
+  bit_rate: {
+    type: String,
+    required: true
+  },
+  bytes: {
+    type: String,
+    required: true
+  },
+  duration: {
+    type: String,
+    required: true
+  },
+  country: {
+    type: String,
+    required: true
+  },
+  released: {
+    type: String,
+    required: true
+  },
+  authors: {
+    type: Array,
     required: true
   },
   artists: [
@@ -23,36 +61,19 @@ const TrackSchema = new Schema({
       name: String
     }
   ],
-  albums: {
-    album: { type: Schema.Types.ObjectId, ref: 'albums' },
-    name: String
+
+  album: {
+    type: Schema.Types.ObjectId,
+    ref: 'albums'
   },
-  link: {
-    type: String,
-    required: true
-  },
-  duration: {
-    type: String,
-    required: true
-  },
-  format: {
-    type: String,
-    required: true
-  },
+
   lyric: [
     {
       type: Schema.Types.ObjectId,
       ref: 'lyrics'
     }
   ],
-  genres: {
-    genre: { type: Schema.Types.ObjectId, ref: 'genres', required: true },
-    name: String
-  },
-  country: {
-    type: String,
-    required: true
-  },
+
   likes: [
     {
       user: {
@@ -97,11 +118,6 @@ const TrackSchema = new Schema({
     type: Date,
     default: Date.now()
   }
-  // point: {
-  //   type: Number,
-  //   required: true,
-  //   default: 0
-  // }
 });
 
 // TrackSchema.index({ '$**': 'text' });

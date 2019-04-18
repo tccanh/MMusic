@@ -8,7 +8,7 @@ module.exports = function validateTrack(data) {
   data.name = !isEmpty(data.name) ? formatText(data.name) : '';
   data.artists = !isEmpty(data.artists) ? formatText(data.artists) : '';
   data.country = !isEmpty(data.country) ? formatText(data.country) : '';
-  data.genre = !isEmpty(data.genre) ? formatText(data.genre) : '';
+  data.authors = !isEmpty(data.authors) ? formatText(data.authors) : 'Unknown';
 
   if (Validator.isEmpty(data.name)) {
     errors.name = 'Trackname field is required';

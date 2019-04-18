@@ -22,7 +22,7 @@ export default class ChartItem extends Component {
             <strong />
           </Link>
         </TableCell>
-        <TableCell align="center">{value.genres.name}</TableCell>
+        <TableCell align="center">{value.genre}</TableCell>
         <TableCell align="center">{listArtist}</TableCell>
         <TableCell align="right">{value.likes.length}</TableCell>
         <TableCell align="right">{value.views}</TableCell>
