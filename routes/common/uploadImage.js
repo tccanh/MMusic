@@ -1,15 +1,15 @@
 const express = require('express');
-const cloudinary = require('cloudinary');
+const cloudinary = require('cloudinary').v2;
 const router = express.Router();
 
-router.post('/image-upload', (req, res) => {
-  const values = Object.values(req.files);
-  console.log(req.files);
+router.post('/image-upload/:name', (req, res) => {
+  const where = req.params.name;
+  console.log(where);
 
-  // const promises = values.map(image => cloudinary.uploader.upload(image.path));
+  const values = Object.values(req.files);
   const promises = values.map(image =>
     cloudinary.uploader.upload(image.path, {
-      folder: 'images/hahaha',
+      folder: `images/${where}`,
       width: 500,
       aspect_ratio: 1.1,
       crop: 'lfill'
@@ -18,7 +18,7 @@ router.post('/image-upload', (req, res) => {
 
   Promise.all(promises)
     .then(results => {
-      console.log('Promise: UPLOAD', results);
+      // console.log('Promise: UPLOAD', results);
 
       return res.json(results);
     })

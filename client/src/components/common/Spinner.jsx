@@ -4,10 +4,15 @@ import { faBowlingBall } from '@fortawesome/free-solid-svg-icons';
 
 export default class Spinner extends Component {
   render() {
+    const { size } = this.props;
     return (
       <div className="rolling">
         <div className="spinner fadein">
-          <FontAwesomeIcon icon={faBowlingBall} size="5x" color="red" />
+          <FontAwesomeIcon
+            icon={faBowlingBall}
+            size={size ? size : '5x'}
+            color="red"
+          />
         </div>
       </div>
     );

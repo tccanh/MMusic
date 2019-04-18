@@ -3,8 +3,7 @@ import {
   GET_GENRES,
   GENRE_LOADING,
   GET_ERRORS,
-  CLEAR_ERRORS,
-  ADD_GENRE
+  CLEAR_ERRORS
 } from './actionTypes';
 // Set loading state
 export const setGenresLoading = () => {
@@ -17,16 +16,12 @@ export const clearErrors = () => {
     type: CLEAR_ERRORS
   };
 };
-export const addGenre = genreData => dispatch => {
-  dispatch(clearErrors());
+
+// Create Profile
+export const createGenre = (data, history) => dispatch => {
   axios
-    .post('/api/genre', genreData)
-    .then(res =>
-      dispatch({
-        type: ADD_GENRE,
-        payload: res.data
-      })
-    )
+    .post('/api/genre', data)
+    .then(res => history.push('/genre'))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
@@ -34,6 +29,7 @@ export const addGenre = genreData => dispatch => {
       })
     );
 };
+
 // Get Posts
 export const getGenres = () => dispatch => {
   dispatch(setGenresLoading());

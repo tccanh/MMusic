@@ -58,9 +58,7 @@ export class UploadImg extends Component {
         method: 'POST',
         data: formData,
         onUploadProgress: p => {
-          console.log(p);
-
-          this.setState({ inLoad: p.loaded, inTotal: p.total });
+          // console.log(p);
         }
       })
       .then(images =>

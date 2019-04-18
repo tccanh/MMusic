@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import ListGenres from './ListGenres';
 import { getGenres } from '../../actions/genre.action';
 import Spinner from '../common/Spinner';
+import { Link } from 'react-router-dom';
 class Genres extends Component {
   componentDidMount() {
     this.props.getGenres(); // cập nhật lúc đầu
@@ -19,7 +20,9 @@ class Genres extends Component {
     }
     return (
       <div className="container">
-        <h1 className="text-center title">Genres</h1>
+        <h1 className="text-center title">
+          Genres <Link to="/create-genre"> New</Link>
+        </h1>
         <div className="row">{GenresContent}</div>
       </div>
     );
