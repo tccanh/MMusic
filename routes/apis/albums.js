@@ -1,5 +1,3 @@
-/* eslint-disable no-return-assign */
-/* eslint-disable consistent-return */
 /* eslint-disable no-unused-vars */
 const router = require('express').Router();
 const Album = require('../../models/Album');
@@ -16,6 +14,7 @@ router.get('/', (req, res, next) => {
 });
 
 // Post create or update image
+// eslint-disable-next-line consistent-return
 router.post('/', (req, res, next) => {
   const { errors, isValid } = validateAlbum(req.body);
   const { name, image } = req.body;

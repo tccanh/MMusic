@@ -1,10 +1,6 @@
-/* eslint-disable no-return-assign */
-/* eslint-disable array-callback-return */
-/* eslint-disable object-curly-newline */
 /* eslint-disable consistent-return */
 /* eslint-disable no-unused-vars */
 const router = require('express').Router();
-
 const PlayList = require('../../models/PlayList');
 const Album = require('../../models/Album');
 const User = require('../../models/User');
@@ -59,7 +55,7 @@ router.post('/toPublic/:id', (req, res) => {
 });
 
 // Post create or update image
-router.post('/', async (req, res, next) => {
+router.post('/', (req, res, next) => {
   const { errors, isValid } = validatePlayList(req.body);
   const { name, publics, description, image } = req.body;
   const newPlayList = {};

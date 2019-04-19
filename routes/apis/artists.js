@@ -51,27 +51,27 @@ router.post('/', (req, res, next) => {
     Promise.all(
       listAlbums.map(async _alb => {
         try {
-          let temp = await Album.findOne({ name: _alb });
+          const temp = await Album.findOne({ name: _alb });
           if (!isEmpty(temp)) {
-            console.log('BEFORE: ', temp);
+            // console.log('BEFORE: ', temp);
 
             newListAlbums.unshift({ id: temp.id, name: temp.name });
           } else {
             const newAlb = new Album({
               name: _alb,
-              image: image
+              image
             });
-            let temp2 = await newAlb.save();
-            console.log('AFTER: ', temp2);
+            const temp2 = await newAlb.save();
+            // console.log('AFTER: ', temp2);
             newListAlbums.unshift({ id: temp2.id, name: temp2.name });
           }
         } catch (error) {
-          console.log(error);
+          // console.log(error);
         }
       })
     ).finally(() => {
       newArtist.albums = newListAlbums;
-      console.log('SUMMMM: ', newArtist);
+      // console.log('SUMMMM: ', newArtist);
 
       Artist.findOne({ name: formatText(name) }).then(art => {
         if (art) {

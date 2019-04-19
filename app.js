@@ -41,21 +41,21 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Helmet helps you secure your Express apps by setting various HTTP headers.
-// app.use(helmet());
+app.use(helmet());
 // // Use application-level middleware for common functionality, including
 // // logging, parsing, and session handling.
-// const sess = session({
-//   secret: process.env.SESSION_KEY,
-//   resave: true,
-//   saveUninitialized: true,
-//   cookie: {}
-// });
+const sess = session({
+  secret: process.env.SESSION_KEY,
+  resave: true,
+  saveUninitialized: true,
+  cookie: {}
+});
 // // when setting secure: true, as compliant clients will not send the cookie back to the server in the future if the browser does not have an HTTPS connection.
-// if (app.get('env') === 'production') {
-//   app.set('trust proxy', 1); // trust first proxy
-//   sess.cookie.secure = true; // serve secure cookies
-// }
-// app.use(sess);
+if (app.get('env') === 'production') {
+  app.set('trust proxy', 1); // trust first proxy
+  sess.cookie.secure = true; // serve secure cookies
+}
+app.use(sess);
 
 // Please note that secure: true is a recommended option. However, it requires an https-enabled website, i.e., HTTPS is necessary for secure cookies. If secure is set, and you access your site over HTTP, the cookie will not be set. If you have your node.js behind a proxy and are using secure: true, you need to set "trust proxy" in express:
 

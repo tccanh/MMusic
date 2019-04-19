@@ -1,3 +1,6 @@
+/* eslint-disable no-console */
+/* eslint-disable prefer-destructuring */
+/* eslint-disable camelcase */
 /* eslint-disable no-unused-vars */
 /* eslint-disable consistent-return */
 /* eslint-disable array-callback-return */
@@ -85,7 +88,7 @@ router.post('/', (req, res) => {
   if (name) newTrack.name = name;
   if (image) newTrack.image = image;
   if (genre) {
-    var genreSplit = genre.split(',');
+    const genreSplit = genre.split(',');
     newTrack.genre = genreSplit[0];
   }
   if (link) newTrack.link = link;
@@ -99,39 +102,41 @@ router.post('/', (req, res) => {
 
   if (artists) {
     const listArtists = artists.split(',').map(arts => formatText(arts));
-    let newArtists = [];
+    const newArtists = [];
     let albID;
     Promise.all(
       listArtists.map(async value => {
         try {
-          let temp = await Artist.findOne({ name: value });
+          const temp = await Artist.findOne({ name: value });
           if (!isEmpty(temp)) {
             // console.log('TRƯỚC', temp);
             newArtists.unshift({ artist: temp.id, name: temp.name });
           } else {
             const newArst = new Artist({
               name: value,
-              image: image,
+              image,
+              // eslint-disable-next-line no-undef
               genres: [genreSplit[1]]
             });
-            let newTemp = await newArst.save();
+            const newTemp = await newArst.save();
             // console.log('SAU', newTemp);
             newArtists.unshift({ artist: newTemp.id, name: newTemp.name });
           }
         } catch (error) {
-          err => console.log(error);
+          console.log(error);
         }
       }),
       (async () => {
-        let alb = await Album.findOne({ name: album });
+        const alb = await Album.findOne({ name: album });
         if (!isEmpty(alb)) {
           albID = alb.id;
         } else {
           const newAlb = new Album({
             name: album,
-            image: image
+            image
           });
-          let _alb = await newAlb.save();
+          // eslint-disable-next-line no-underscore-dangle
+          const _alb = await newAlb.save();
           albID = _alb.id;
         }
       })()

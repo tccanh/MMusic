@@ -52,10 +52,10 @@ router.post('/', (req, res) => {
         { name },
         { $set: genreFields },
         { new: true }
-      ).then(genre => res.json(genre));
+      ).then(genre__ => res.json(genre__));
     } else {
       // Create
-      new Genre(genreFields).save().then(genre => res.json(genre));
+      new Genre(genreFields).save().then(genre_ => res.json(genre_));
     }
   });
 });

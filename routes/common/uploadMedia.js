@@ -1,5 +1,6 @@
 const express = require('express');
 const cloudinary = require('cloudinary').v2;
+
 const router = express.Router();
 
 router.post('/media-upload', (req, res) => {
@@ -11,9 +12,7 @@ router.post('/media-upload', (req, res) => {
     })
   );
   Promise.all(promises)
-    .then(results => {
-      return res.json(results);
-    })
+    .then(results => res.json(results))
     .catch(err => res.status(400).json(err));
 });
 module.exports = router;
