@@ -60,7 +60,7 @@ router.get('/:id', (req, res) => {
 });
 
 // Track create or update image
-router.post('/', async (req, res) => {
+router.post('/', (req, res) => {
   const { errors, isValid } = validateTrack(req.body);
   const {
     name,
@@ -99,75 +99,56 @@ router.post('/', async (req, res) => {
 
   if (artists) {
     const listArtists = artists.split(',').map(arts => formatText(arts));
-    const newListArtists = [];
-    await listArtists.map(_arts => {
-      Artist.findOne({ name: _arts })
-        .then(__arts => {
-          if (!isEmpty(__arts)) {
-            newListArtists.unshift({
-              artist: __arts.id,
-              name: __arts.name
-            });
+    let newArtists = [];
+    let albID;
+    Promise.all(
+      listArtists.map(async value => {
+        try {
+          let temp = await Artist.findOne({ name: value });
+          if (!isEmpty(temp)) {
+            // console.log('TRƯỚC', temp);
+            newArtists.unshift({ artist: temp.id, name: temp.name });
           } else {
-            const newArtist = {
-              name: _arts,
+            const newArst = new Artist({
+              name: value,
               image: image,
               genres: [genreSplit[1]]
-            };
-            new Artist(newArtist)
-              .save()
-              .then(__arts => {
-                newListArtists.unshift({
-                  artist: __arts._id,
-                  name: __arts.name
-                });
-              })
-              .catch(err => res.json({ CreateAlbumERROR: err }));
+            });
+            let newTemp = await newArst.save();
+            // console.log('SAU', newTemp);
+            newArtists.unshift({ artist: newTemp.id, name: newTemp.name });
           }
-        })
-        .then(() => {
-          newTrack.artists = newListArtists;
-        })
+        } catch (error) {
+          err => console.log(error);
+        }
+      }),
+      (async () => {
+        let alb = await Album.findOne({ name: album });
+        if (!isEmpty(alb)) {
+          albID = alb.id;
+        } else {
+          const newAlb = new Album({
+            name: album,
+            image: image
+          });
+          let _alb = await newAlb.save();
+          albID = _alb.id;
+        }
+      })()
+    ).finally(() => {
+      newTrack.artists = newArtists;
+      newTrack.album = albID;
+      // console.log(newTrack);
+
+      new Track(newTrack)
+        .save()
+        .then(__track => res.json(__track))
         .catch(err => {
-          errors.artists = `Artist ${_arts} not found: ${err}`;
+          errors.track = `FUCK : ${err}`;
           return res.status(400).json(errors);
         });
     });
   }
-  if (album) {
-    let albumID;
-    await Album.findOne({ name: album })
-      .then(__alb => {
-        if (!isEmpty(__alb)) {
-          albumID = __alb.id;
-        } else {
-          const newAlbum = {
-            name: album,
-            image: image
-          };
-          new Album(newAlbum)
-            .save()
-            .then(_album => {
-              albumID = _album.id;
-            })
-            .catch(err => res.json({ CreateAlbumERROR: err }));
-        }
-      })
-      .then(() => {
-        newTrack.album = albumID;
-      })
-      .catch(err => {
-        errors.Albums = `Album ${album} not found: ${err}`;
-        return res.status(400).json(errors);
-      });
-  }
-  await new Track(newTrack)
-    .save()
-    .then(__track => res.json(__track))
-    .catch(err => {
-      errors.track = `FUCK : ${err}`;
-      return res.status(400).json(errors);
-    });
 });
 
 router.post('/comment/:id', (req, res) => {
