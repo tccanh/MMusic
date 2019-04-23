@@ -10,7 +10,7 @@ export default class Spinner extends Component {
         <div className="spinner fadein">
           <FontAwesomeIcon
             icon={faBowlingBall}
-            size={size ? size : '5x'}
+            size={size ? size : '2x'}
             color="red"
           />
         </div>

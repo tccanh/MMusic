@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './Upload.css';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -248,7 +249,7 @@ class Upload extends Component {
     };
     return (
       <div className="container">
-        <h1 className="text-center title">New Track</h1>
+        <h1 className="text-center title">UPLOAD</h1>
         <form onSubmit={this.onSubmit}>
           <div className="row">
             <div className="col-md-7">
@@ -384,6 +385,7 @@ class Upload extends Component {
               </div>
             </div>
           </div>
+          <br />
           <br />
           <div className="form-row justify-content-md-center">
             <input

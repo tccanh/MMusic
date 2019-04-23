@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
@@ -16,15 +17,23 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 
+import {
+  BarChart,
+  LibraryMusic,
+  PlaylistPlay,
+  Album,
+  MicNone,
+  CloudUpload,
+  ExitToApp,
+  PowerSettingsNew
+} from '@material-ui/icons';
+
+import { logoutUser } from '../../../actions/auth.action';
+import { NavLink, Link } from 'react-router-dom';
 const drawerWidth = 240;
 
 const styles = theme => ({
-  root: {
-    display: 'flex'
-  },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {
@@ -41,7 +50,7 @@ const styles = theme => ({
     })
   },
   menuButton: {
-    marginLeft: 12,
+    marginLeft: 18,
     marginRight: 36
   },
   hide: {
@@ -83,11 +92,54 @@ const styles = theme => ({
   }
 });
 
+const listLinks1 = [
+  {
+    title: 'Chart',
+    to: '/chart',
+    icon: BarChart
+  },
+  {
+    title: 'Album',
+    to: '/album',
+    icon: Album
+  },
+  {
+    title: 'Genres',
+    to: '/genre',
+    icon: LibraryMusic
+  },
+  {
+    title: 'Artist',
+    to: '/artist',
+    icon: MicNone
+  },
+  {
+    title: 'Playlist',
+    to: '/playlist',
+    icon: PlaylistPlay
+  }
+];
+const listLinks2 = [
+  {
+    title: 'Upload',
+    to: '/upload',
+    icon: CloudUpload
+  }
+];
 class SideBar extends React.Component {
-  state = {
-    open: false
-  };
+  constructor(props) {
+    super(props);
 
+    this.state = {
+      open: false
+    };
+    this.onLogoutClick = this.onLogoutClick.bind(this);
+  }
+  onLogoutClick(e) {
+    e.preventDefault();
+    // this.props.clearCurrentProfile();
+    this.props.logoutUser();
+  }
   handleDrawerOpen = () => {
     this.setState({ open: true });
   };
@@ -98,9 +150,26 @@ class SideBar extends React.Component {
 
   render() {
     const { classes, theme } = this.props;
-
+    const { isAuthenticated, user } = this.props.auth;
+    const isAuthRender = isAuthenticated ? (
+      <ListItem button onClick={this.onLogoutClick}>
+        <ListItemIcon>
+          <ExitToApp />
+        </ListItemIcon>
+        <ListItemText primary="Logout" />
+      </ListItem>
+    ) : (
+      <NavLink to="/login">
+        <ListItem>
+          <ListItemIcon>
+            <PowerSettingsNew />
+          </ListItemIcon>
+          <ListItemText primary="Login" />
+        </ListItem>
+      </NavLink>
+    );
     return (
-      <div className={classes.root}>
+      <>
         <CssBaseline />
         <AppBar
           position="fixed"
@@ -120,7 +189,7 @@ class SideBar extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" color="inherit" noWrap>
-              Mini variant drawer
+              Best Places to Upload Your Music
             </Typography>
           </Toolbar>
         </AppBar>
@@ -149,68 +218,55 @@ class SideBar extends React.Component {
           </div>
           <Divider />
           <List>
-            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
+            {listLinks1.map((val, index) => (
+              <NavLink to={val.to}>
+                <ListItem button key={val.title}>
+                  <ListItemIcon>
+                    <val.icon />
+                  </ListItemIcon>
+                  <ListItemText primary={val.title} />
+                </ListItem>
+              </NavLink>
             ))}
           </List>
           <Divider />
           <List>
-            {['All mail', 'Trash', 'Spam'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
+            {listLinks2.map((val, index) => (
+              <NavLink to={val.to}>
+                <ListItem button key={val.title}>
+                  <ListItemIcon>
+                    <val.icon />
+                  </ListItemIcon>
+                  <ListItemText primary={val.title} />
+                </ListItem>
+              </NavLink>
             ))}
           </List>
+          <Divider />
+          {isAuthRender}
         </Drawer>
-        <main className={classes.content}>
-          <div className={classes.toolbar} />
-          <Typography paragraph>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Rhoncus
-            dolor purus non enim praesent elementum facilisis leo vel. Risus at
-            ultrices mi tempus imperdiet. Semper risus in hendrerit gravida
-            rutrum quisque non tellus. Convallis convallis tellus id interdum
-            velit laoreet id donec ultrices. Odio morbi quis commodo odio aenean
-            sed adipiscing. Amet nisl suscipit adipiscing bibendum est ultricies
-            integer quis. Cursus euismod quis viverra nibh cras. Metus vulputate
-            eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo
-            quis imperdiet massa tincidunt. Cras tincidunt lobortis feugiat
-            vivamus at augue. At augue eget arcu dictum varius duis at
-            consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem
-            donec massa sapien faucibus et molestie ac.
-          </Typography>
-          <Typography paragraph>
-            Consequat mauris nunc congue nisi vitae suscipit. Fringilla est
-            ullamcorper eget nulla facilisi etiam dignissim diam. Pulvinar
-            elementum integer enim neque volutpat ac tincidunt. Ornare
-            suspendisse sed nisi lacus sed viverra tellus. Purus sit amet
-            volutpat consequat mauris. Elementum eu facilisis sed odio morbi.
-            Euismod lacinia at quis risus sed vulputate odio. Morbi tincidunt
-            ornare massa eget egestas purus viverra accumsan in. In hendrerit
-            gravida rutrum quisque non tellus orci ac. Pellentesque nec nam
-            aliquam sem et tortor. Habitant morbi tristique senectus et.
-            Adipiscing elit duis tristique sollicitudin nibh sit. Ornare aenean
-            euismod elementum nisi quis eleifend. Commodo viverra maecenas
-            accumsan lacus vel facilisis. Nulla posuere sollicitudin aliquam
-            ultrices sagittis orci a.
-          </Typography>
-        </main>
-      </div>
+      </>
     );
   }
 }
 
 SideBar.propTypes = {
   classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired
+  theme: PropTypes.object.isRequired,
+  logoutUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired
+};
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+const mapDispatchToProps = {
+  logoutUser
 };
 
-export default withStyles(styles, { withTheme: true })(SideBar);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles, { withTheme: true })(SideBar));
+
+// export default withStyles(styles, { withTheme: true })(SideBar);
