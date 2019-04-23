@@ -13,7 +13,11 @@ import axios from 'axios';
 import Buttons from '../upload/subUpload/Buttons';
 import Images from '../upload/subUpload/Images';
 import Spinner from '../common/Spinner';
-
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
 const toastColor = {
   background: 'red',
   text: '#fff'
@@ -146,80 +150,90 @@ class CreatePlaylist extends Component {
             <Images
               images={images}
               removeImage={this.removeImage}
-              width="250px"
+              width="300px"
             />
           );
         default:
           return <Buttons onChange={this.onChangeIMG} sizze="10x" />;
       }
     };
+    const { open, handleClose } = this.props;
     return (
-      <div
-        className="container"
-        style={{
-          border: '2px solid red',
-          padding: '15px',
-          borderRadius: '25px',
-          margin: '10px 20px'
-        }}
-      >
-        <form onSubmit={this.onSubmit}>
-          <div className="row">
-            <div className="col-md-7">
-              <TextFieldGroup2
-                type="text"
-                id="namePlaylist"
-                label="Name of playlist"
-                className={classnames('form-control form-control-lg', {
-                  'is-invalid': errors.name
-                })}
-                placeholder="My favorite songs ..."
-                name="name"
-                value={this.state.name}
-                onChange={this.onChange}
-                error={errors.name}
-              />
-              <TextAreaGroup
-                id="descriptionPlaylist"
-                label="Description"
-                className={classnames('form-control form-control-lg', {
-                  'is-invalid': errors.description
-                })}
-                placeholder="A few descriptions of this playlist ..."
-                name="description"
-                value={this.state.description}
-                onChange={this.onChange}
-                error={errors.description}
-                rows="5"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="publics"
-                    checked={this.state.publics}
-                    onChange={this.handleChange('publics')}
-                    value="publics"
+      <div className="container">
+        <Dialog
+          maxWidth="md"
+          scroll="body"
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="form-dialog-title"
+        >
+          <div className="container">
+            <DialogTitle id="form-dialog-title">New Playlist</DialogTitle>
+            <form onSubmit={this.onSubmit} style={{ marginLeft: '15px' }}>
+              <div className="row">
+                <div className="col-md-7">
+                  <TextFieldGroup2
+                    type="text"
+                    id="namePlaylist"
+                    label="Name of playlist"
+                    className={classnames('form-control form-control-lg', {
+                      'is-invalid': errors.name
+                    })}
+                    placeholder="My favorite songs ..."
+                    name="name"
+                    value={this.state.name}
+                    onChange={this.onChange}
+                    error={errors.name}
                   />
-                }
-                label="Public"
-              />
-            </div>
-            <div className="col-md-5">
-              <Notifications />
-              <div className="buttons" id="imageID">
-                {content()}
+                  <TextAreaGroup
+                    id="descriptionPlaylist"
+                    label="Description"
+                    className={classnames('form-control form-control-lg', {
+                      'is-invalid': errors.description
+                    })}
+                    placeholder="A few descriptions of this playlist ..."
+                    name="description"
+                    value={this.state.description}
+                    onChange={this.onChange}
+                    error={errors.description}
+                    rows="5"
+                  />
+                  <br />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        name="publics"
+                        checked={this.state.publics}
+                        onChange={this.handleChange('publics')}
+                        value="publics"
+                      />
+                    }
+                    label="Public"
+                  />
+                </div>
+                <div className="col-md-5">
+                  <Notifications />
+                  <div className="buttons" id="imageID">
+                    {content()}
+                  </div>
+                </div>
               </div>
-            </div>
+              <br />
+              <div className="form-row justify-content-md-center">
+                <input
+                  type="submit"
+                  value="Submit"
+                  className="btn btn-outline-primary"
+                />
+              </div>
+            </form>
+            <DialogActions>
+              <Button onClick={handleClose} color="primary">
+                Cancel
+              </Button>
+            </DialogActions>
           </div>
-          <br />
-          <div className="form-row justify-content-md-center">
-            <input
-              type="submit"
-              value="Submit"
-              className="btn btn-outline-secondary"
-            />
-          </div>
-        </form>
+        </Dialog>
       </div>
     );
   }

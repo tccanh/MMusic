@@ -10,7 +10,7 @@ export class ArtistItem extends Component {
   render() {
     const { artist } = this.props;
     return (
-      <div class="col-md-2">
+      <div className="col-md-2">
         <img
           className=" img-thumbnail img-fluid"
           src={artist.image}

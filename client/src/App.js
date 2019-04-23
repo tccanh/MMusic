@@ -22,9 +22,10 @@ import Playlists from './components/playlists/Playlists';
 import Charts from './components/charts/Charts';
 import Upload from './components/upload/Upload';
 import CreateGenre from './components/genres/CreateGenre';
-import { UploadImg } from './components/upload/UploadImg';
 import CreateArtist from './components/artists/CreateArtist';
 import CreateAlbum from './components/albums/CreateAlbum';
+import PlaylistDetail from './components/playlists/PlaylistDetail';
+import SideBar from './components/sidebar/SideBar';
 //=================================================
 //Check for token
 if (localStorage.jwtToken) {
@@ -48,7 +49,8 @@ class App extends Component {
     return (
       <Provider store={store}>
         <BrowserRouter>
-          <NavBar />
+          {/* <NavBar /> */}
+          <SideBar />
           {/* <Login /> */}
           {/* <Register /> */}
           <Route exact path="/" component={Landing} />
@@ -57,7 +59,7 @@ class App extends Component {
           <Route exact path="/genre" component={Genres} />
           <Route exact path="/artist" component={Artists} />
           <Route exact path="/chart" component={Charts} />
-          <Route exact path="/imgupload" component={UploadImg} />
+          <Route exact path="/test" component={PlaylistDetail} />
           <Switch>
             <PrivateRoute exact path="/playlist" component={Playlists} />
           </Switch>
