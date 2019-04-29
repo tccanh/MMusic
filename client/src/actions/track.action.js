@@ -4,12 +4,14 @@ import {
   CLEAR_ERRORS,
   GET_ERRORS,
   UPLOAD_FAIL,
-  UPLOAD_SUCCESS
+  UPLOAD_SUCCESS,
+  GET_TRACK,
+  TRACK_LOADING
 } from './actionTypes';
+
 export const getTracks = () => dispatch => {
   //getLoadding
-  //==================
-
+  dispatch(setTrackLoading());
   axios
     .get('/api/track')
     .then(res =>
@@ -25,6 +27,26 @@ export const getTracks = () => dispatch => {
       })
     );
 };
+
+// Get Post
+export const getTrack = id => dispatch => {
+  dispatch(setTrackLoading());
+  axios
+    .get(`/api/track/${id}`)
+    .then(res =>
+      dispatch({
+        type: GET_TRACK,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_TRACK,
+        payload: null
+      })
+    );
+};
+
 export const createTrack = (data, history) => dispatch => {
   axios
     .post('/api/track', data)
@@ -54,3 +76,9 @@ export function uploadFail(error) {
     error
   };
 }
+// Set loading state
+export const setTrackLoading = () => {
+  return {
+    type: TRACK_LOADING
+  };
+};

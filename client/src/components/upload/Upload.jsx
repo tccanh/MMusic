@@ -13,7 +13,7 @@ import Buttons from '../upload/subUpload/Buttons';
 import Images from '../upload/subUpload/Images';
 import Spinner from '../common/Spinner';
 import { faFileAudio } from '@fortawesome/free-solid-svg-icons';
-import MediaControlCard from '../common/MediaControlCard';
+import { MediaCard } from '../common/MediaCard';
 const toastColor = {
   background: 'red',
   text: '#fff'
@@ -230,12 +230,18 @@ class Upload extends Component {
         case media.length > 0:
           return (
             // eslint-disable-next-line react/jsx-no-target-blank
-            <MediaControlCard
+            <MediaCard
               image={this.state.image}
               title={this.state.name}
               link={this.state.link}
               artists={this.state.artists}
             />
+            // <MediaControlCard
+            //   image={this.state.image}
+            //   title={this.state.name}
+            //   link={this.state.link}
+            //   artists={this.state.artists}
+            // />
           );
         default:
           return (

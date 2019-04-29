@@ -30,7 +30,7 @@ import {
 } from '@material-ui/icons';
 
 import { logoutUser } from '../../../actions/auth.action';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 const drawerWidth = 240;
 
 const styles = theme => ({
@@ -150,7 +150,7 @@ class SideBar extends React.Component {
 
   render() {
     const { classes, theme } = this.props;
-    const { isAuthenticated, user } = this.props.auth;
+    const { isAuthenticated } = this.props.auth;
     const isAuthRender = isAuthenticated ? (
       <ListItem button onClick={this.onLogoutClick}>
         <ListItemIcon>
@@ -219,8 +219,8 @@ class SideBar extends React.Component {
           <Divider />
           <List>
             {listLinks1.map((val, index) => (
-              <NavLink to={val.to}>
-                <ListItem button key={val.title}>
+              <NavLink to={val.to} key={val.title}>
+                <ListItem button>
                   <ListItemIcon>
                     <val.icon />
                   </ListItemIcon>
@@ -232,8 +232,8 @@ class SideBar extends React.Component {
           <Divider />
           <List>
             {listLinks2.map((val, index) => (
-              <NavLink to={val.to}>
-                <ListItem button key={val.title}>
+              <NavLink to={val.to} key={val.title}>
+                <ListItem button>
                   <ListItemIcon>
                     <val.icon />
                   </ListItemIcon>

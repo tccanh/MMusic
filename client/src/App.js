@@ -26,6 +26,7 @@ import CreateArtist from './components/artists/CreateArtist';
 import CreateAlbum from './components/albums/CreateAlbum';
 import PlaylistDetail from './components/playlists/PlaylistDetail';
 import SideBar from './components/layouts/sidebar/SideBar';
+import MusicPlayer from './components/MusicPlayer/MusicPlayer';
 //=================================================
 //Check for token
 if (localStorage.jwtToken) {
@@ -76,6 +77,7 @@ class App extends Component {
               <Route exact path="/genre" component={Genres} />
               <Route exact path="/artist" component={Artists} />
               <Route exact path="/chart" component={Charts} />
+              <Route exact path="/track/:id" component={MusicPlayer} />
               <Route exact path="/test" component={PlaylistDetail} />
               <Switch>
                 <PrivateRoute exact path="/playlist" component={Playlists} />
