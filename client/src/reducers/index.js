@@ -7,6 +7,7 @@ import genreReducer from './genre.reducer';
 import trackReducer from './track.reducer';
 import artistReducer from './artist.reducer';
 import playlistReducer from './playlist.reducer';
+import songReducer from './song.reducer';
 export default combineReducers({
   errors: errorReducer,
   auth: authReducer,
@@ -15,5 +16,6 @@ export default combineReducers({
   genre: genreReducer,
   track: trackReducer,
   artist: artistReducer,
-  playlist: playlistReducer
+  playlist: playlistReducer,
+  song: songReducer
 });

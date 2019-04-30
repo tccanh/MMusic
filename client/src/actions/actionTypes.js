@@ -31,3 +31,10 @@ export const GET_ERRORS = 'GET_ERRORS';
 
 export const UPLOAD_SUCCESS = 'UPLOAD_SUCCESS';
 export const UPLOAD_FAIL = 'UPLOAD_FAIL';
+
+// NOW PLAY MUSIC
+export const GET_SONGS = 'GET_SONGS';
+export const SONG_LOADING = 'SONG_LOADING';
+export const ADD_SONG = 'ADD_SONG';
+export const REMOVE_SONG = 'REMOVE_SONG';
+export const REMOVE_ALL = 'REMOVE_ALL';

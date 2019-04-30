@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
+import formatTime from '../../api/formatTime';
+import './AudioControl.css';
 export class AudioControl extends Component {
   static propTypes = {
     prop: PropTypes
@@ -18,11 +19,28 @@ export class AudioControl extends Component {
       src:
         'https://res.cloudinary.com/dx6o8ihdt/video/upload/v1556555057/media/music/k29g5pacrrocjilqal5f.mp3'
     };
+    this.is_progress_dirty = false;
+    this.interval_id = setInterval(this.onUpdate.bind(this), 250);
   }
   componentDidMount() {
     this.ref_Audio.current.src = this.state.src;
     console.log(this.ref_Audio);
   }
+  onUpdate() {
+    if (this.ref_Audio.current) {
+      if (!this.is_progress_dirty) {
+        this.setState({
+          progress:
+            this.ref_Audio.current.currentTime / this.ref_Audio.current.duration
+        });
+      }
+
+      if (this.ref_Audio.current.ended && this.props.onDone) {
+        this.props.onDone(this.props.src);
+      }
+    }
+  }
+
   togglePlay() {
     const currentState = this.state.isPlaying;
     this.setState({ isPlaying: !currentState });
@@ -49,6 +67,8 @@ export class AudioControl extends Component {
     this.setState({ isMuted: !this.state.isMuted });
   }
   render() {
+    let currentTime = 0;
+    let totalTime = 0;
     const { src, isPlaying, volume, isMuted } = this.state;
     if (this.ref_Audio.current) {
       if (this.ref_Audio.current.currentSrc !== src) {
@@ -60,6 +80,9 @@ export class AudioControl extends Component {
         this.ref_Audio.current.pause();
       }
       this.ref_Audio.current.muted = isMuted;
+
+      currentTime = this.ref_Audio.current.currentTime;
+      totalTime = this.ref_Audio.current.duration;
     }
 
     return (
@@ -75,6 +98,14 @@ export class AudioControl extends Component {
           <button onClick={() => this.toggleVolumeMute()}>
             {isMuted ? 'ON' : 'MUTE'}
           </button>
+          <button>
+            {formatTime(currentTime)} / {formatTime(totalTime)}
+          </button>
+          <progress
+            className="media-progress"
+            value={this.state.progress}
+            max="1"
+          />
         </div>
       </div>
     );

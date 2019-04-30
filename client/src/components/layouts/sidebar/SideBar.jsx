@@ -17,7 +17,6 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-
 import {
   BarChart,
   LibraryMusic,
@@ -31,7 +30,7 @@ import {
 
 import { logoutUser } from '../../../actions/auth.action';
 import { NavLink } from 'react-router-dom';
-import { AudioControl } from '../../common/AudioControl';
+import Player from '../../common/Player';
 const drawerWidth = 240;
 
 const styles = theme => ({
@@ -136,6 +135,7 @@ class SideBar extends React.Component {
     };
     this.onLogoutClick = this.onLogoutClick.bind(this);
   }
+
   onLogoutClick(e) {
     e.preventDefault();
     // this.props.clearCurrentProfile();
@@ -150,6 +150,8 @@ class SideBar extends React.Component {
   };
 
   render() {
+    const URL_songs = this.props.song.songs[0];
+    const song_URL = URL_songs ? URL_songs : null;
     const { classes, theme } = this.props;
     const { isAuthenticated } = this.props.auth;
     const isAuthRender = isAuthenticated ? (
@@ -191,8 +193,9 @@ class SideBar extends React.Component {
             </IconButton>
             <Typography variant="h6" color="inherit" noWrap>
               Best Places to Upload Your Music
-              <AudioControl />
             </Typography>
+
+            <Player src={song_URL} />
           </Toolbar>
         </AppBar>
         <Drawer
@@ -256,10 +259,12 @@ SideBar.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
   logoutUser: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
+  song: PropTypes.object.isRequired
 };
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth,
+  song: state.song
 });
 
 const mapDispatchToProps = {

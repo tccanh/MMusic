@@ -1,0 +1,78 @@
+.player {
+  width: 50%;
+  position: inherit;
+  margin-left: auto;
+}
+
+.controls {
+  float: left;
+}
+
+.controls > a {
+  text-decoration: none;
+  height: 50px;
+  width: 34px;
+  box-sizing: border-box;
+  text-align: center;
+  padding: 14px 0px;
+  float: left;
+  cursor: pointer;
+}
+
+.controls > a:hover {
+  color: #b3b3b3;
+  font-size: 20px;
+}
+
+.progress {
+  position: absolute;
+  left: 110px;
+  /* top: 15px; */
+  right: 160px;
+  bottom: 15px;
+  background: black;
+  cursor: pointer;
+}
+.progress > .bar {
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  top: 5px;
+  bottom: 5px;
+}
+
+.progress > .bar > div {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  background: white;
+}
+
+.time {
+  position: absolute;
+  right: 0;
+  width: 100px;
+  color: white;
+  font-size: 12px;
+  padding-top: 16px;
+  text-align: center;
+}
+.volume {
+  position: absolute;
+  right: 58px;
+  width: 100px;
+  color: white;
+  font-size: 10px;
+  padding-top: 15px;
+}
+.volume :hover {
+  color: #fdff71;
+}
+.volume a {
+  color: white;
+}
+.volume a:hover {
+  text-decoration: none;
+}

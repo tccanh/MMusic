@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import { Link } from 'react-router-dom';
-export default class ChartItem extends Component {
+import { PlayArrowRounded } from '@material-ui/icons';
+import { addSong } from '../../actions/song.action';
+class ChartItem extends Component {
+  onToggleListen(link) {
+    this.props.addSong(link);
+    console.log('ADDED');
+  }
   render() {
     const { value } = this.props;
-    // const listArtist = value.artists.map(art => {
-    //   return <Link to={`artist/${art.artist}`}> {art.name}, </Link>;
-    // });
     const listArtist = value.artists
       .map(art => {
         return art.name;
@@ -26,8 +30,24 @@ export default class ChartItem extends Component {
         <TableCell align="center">{listArtist}</TableCell>
         <TableCell align="right">{value.likes.length}</TableCell>
         <TableCell align="right">{value.views}</TableCell>
-        <TableCell align="right">Listen</TableCell>
+        <TableCell align="right">
+          <a onClick={() => this.onToggleListen(value.link)}>
+            <PlayArrowRounded />
+          </a>
+        </TableCell>
       </TableRow>
     );
   }
 }
+const mapStateToProps = state => ({
+  track: state.track
+});
+
+const mapDispatchToProps = {
+  addSong
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ChartItem);
