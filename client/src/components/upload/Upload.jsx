@@ -12,8 +12,8 @@ import axios from 'axios';
 import Buttons from '../upload/subUpload/Buttons';
 import Images from '../upload/subUpload/Images';
 import Spinner from '../common/Spinner';
+import MusicPlay from '../common/MusicPlay';
 import { faFileAudio } from '@fortawesome/free-solid-svg-icons';
-import { MediaCard } from '../common/MediaCard';
 const toastColor = {
   background: 'red',
   text: '#fff'
@@ -229,19 +229,12 @@ class Upload extends Component {
           return <Spinner size="1x" />;
         case media.length > 0:
           return (
-            // eslint-disable-next-line react/jsx-no-target-blank
-            <MediaCard
+            <MusicPlay
               image={this.state.image}
               title={this.state.name}
               link={this.state.link}
               artists={this.state.artists}
             />
-            // <MediaControlCard
-            //   image={this.state.image}
-            //   title={this.state.name}
-            //   link={this.state.link}
-            //   artists={this.state.artists}
-            // />
           );
         default:
           return (

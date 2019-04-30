@@ -33,12 +33,12 @@ export default class MusicPlay extends Component {
     return (
       <div>
         <div className="card">
-          {/* <div className="view">
+          <div className="view">
             <img className="card-img-top" src={image} alt="Card image cap" />
             <a href="/" target="_blank">
               <div className="mask gradient-card" />
             </a>
-          </div> */}
+          </div>
 
           <div className="card-body text-center">
             <h5 className="h5 font-weight-bold">

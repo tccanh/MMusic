@@ -31,6 +31,7 @@ import {
 
 import { logoutUser } from '../../../actions/auth.action';
 import { NavLink } from 'react-router-dom';
+import { AudioControl } from '../../common/AudioControl';
 const drawerWidth = 240;
 
 const styles = theme => ({
@@ -190,6 +191,7 @@ class SideBar extends React.Component {
             </IconButton>
             <Typography variant="h6" color="inherit" noWrap>
               Best Places to Upload Your Music
+              <AudioControl />
             </Typography>
           </Toolbar>
         </AppBar>
