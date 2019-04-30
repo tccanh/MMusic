@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from 'react';
 import './Player.css';
 import {
@@ -116,17 +117,30 @@ class Player extends Component {
     ) : (
       <PauseCircleOutline />
     );
+    const controlBtn = !!this.props.src ? (
+      <div className="controls">
+        <a onClick={this.props.onPrev}>
+          <FastRewind />
+        </a>
+        <a onClick={this.togglePlay.bind(this)}>{btnPlayer}</a>
+        <a onClick={this.props.onNext}>
+          <FastForward />
+        </a>
+      </div>
+    ) : (
+      <div className="controls">
+        <a>
+          <FastRewind />
+        </a>
+        <a>{btnPlayer}</a>
+        <a>
+          <FastForward />
+        </a>
+      </div>
+    );
     return (
       <div className="player">
-        <div className="controls">
-          <a onClick={this.props.onPrev}>
-            <FastRewind />
-          </a>
-          <a onClick={this.togglePlay.bind(this)}>{btnPlayer}</a>
-          <a onClick={this.props.onNext}>
-            <FastForward />
-          </a>
-        </div>
+        {controlBtn}
         <div
           onMouseDown={this.startSetProgress.bind(this)}
           onMouseMove={this.setProgress.bind(this)}

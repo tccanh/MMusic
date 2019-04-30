@@ -6,8 +6,8 @@ import { Link } from 'react-router-dom';
 import { PlayArrowRounded } from '@material-ui/icons';
 import { addSong } from '../../actions/song.action';
 class ChartItem extends Component {
-  onToggleListen(link) {
-    this.props.addSong(link);
+  onToggleListen(song) {
+    this.props.addSong(song);
     console.log('ADDED');
   }
   render() {
@@ -26,12 +26,12 @@ class ChartItem extends Component {
             <strong />
           </Link>
         </TableCell>
-        <TableCell align="center">{value.genre}</TableCell>
+        <TableCell align="center">{value.genre.name}</TableCell>
         <TableCell align="center">{listArtist}</TableCell>
         <TableCell align="right">{value.likes.length}</TableCell>
         <TableCell align="right">{value.views}</TableCell>
         <TableCell align="right">
-          <a onClick={() => this.onToggleListen(value.link)}>
+          <a onClick={() => this.onToggleListen(value)}>
             <PlayArrowRounded />
           </a>
         </TableCell>

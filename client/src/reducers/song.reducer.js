@@ -3,7 +3,8 @@ import {
   GET_SONGS,
   SONG_LOADING,
   REMOVE_ALL,
-  REMOVE_SONG
+  REMOVE_SONG,
+  ADD_SONGS
 } from '../actions/actionTypes';
 const initialState = {
   songs: [],
@@ -29,15 +30,16 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         songs: [payload, ...state.songs]
       };
+    case ADD_SONGS:
+      return {
+        ...state,
+        songs: [...payload]
+      };
     case REMOVE_ALL:
       return {
         ...state,
         songs: []
       };
-    // case REMOVE_SONG:
-    //   return {
-    //     ...state
-    //   };
     default:
       return state;
   }

@@ -131,11 +131,15 @@ class SideBar extends React.Component {
     super(props);
 
     this.state = {
-      open: false
+      open: false,
+      songs: []
     };
     this.onLogoutClick = this.onLogoutClick.bind(this);
   }
-
+  componentWillReceiveProps(newProps) {
+    console.log('NEW PROPS', newProps.song.songs);
+    this.setState({ songs: newProps.song.songs });
+  }
   onLogoutClick(e) {
     e.preventDefault();
     // this.props.clearCurrentProfile();
@@ -150,8 +154,12 @@ class SideBar extends React.Component {
   };
 
   render() {
-    const URL_songs = this.props.song.songs[0];
-    const song_URL = URL_songs ? URL_songs : null;
+    let firstSongLink = '';
+    if (this.props.song.songs.length > 0) {
+      firstSongLink = this.props.song.songs[0];
+      console.log('First SOng Link: ', firstSongLink);
+    }
+
     const { classes, theme } = this.props;
     const { isAuthenticated } = this.props.auth;
     const isAuthRender = isAuthenticated ? (
@@ -192,10 +200,12 @@ class SideBar extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" color="inherit" noWrap>
-              Best Places to Upload Your Music
+              {!!firstSongLink
+                ? firstSongLink.name
+                : 'Best Places to Upload Your Music'}
             </Typography>
 
-            <Player src={song_URL} />
+            <Player src={firstSongLink.link} />
           </Toolbar>
         </AppBar>
         <Drawer

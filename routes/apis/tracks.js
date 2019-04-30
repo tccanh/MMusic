@@ -19,6 +19,7 @@ const validateTrack = require('../../validations/apis/track');
 router.get('/', (req, res) => {
   Track.find()
     .sort({ name: 1 })
+    .populate('genre')
     .then(track => res.json(track))
     .catch(err =>
       res.status(404).json({ notrackFounds: `No tracks found: ${err}` })

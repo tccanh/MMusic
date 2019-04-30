@@ -36,5 +36,6 @@ export const UPLOAD_FAIL = 'UPLOAD_FAIL';
 export const GET_SONGS = 'GET_SONGS';
 export const SONG_LOADING = 'SONG_LOADING';
 export const ADD_SONG = 'ADD_SONG';
+export const ADD_SONGS = 'ADD_SONGS';
 export const REMOVE_SONG = 'REMOVE_SONG';
 export const REMOVE_ALL = 'REMOVE_ALL';
