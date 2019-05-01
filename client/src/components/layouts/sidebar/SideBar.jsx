@@ -137,8 +137,10 @@ class SideBar extends React.Component {
     this.onLogoutClick = this.onLogoutClick.bind(this);
   }
   componentWillReceiveProps(newProps) {
-    console.log('NEW PROPS', newProps.song.songs);
     this.setState({ songs: newProps.song.songs });
+  }
+  onTogglePlaylist() {
+    console.log('PLAYLIST:', this.state.songs.map(val => val.name));
   }
   onLogoutClick(e) {
     e.preventDefault();
@@ -199,7 +201,12 @@ class SideBar extends React.Component {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" color="inherit" noWrap>
+            <Typography
+              variant="h6"
+              color="inherit"
+              onClick={() => this.onTogglePlaylist()}
+              noWrap
+            >
               {!!firstSongLink
                 ? firstSongLink.name
                 : 'Best Places to Upload Your Music'}

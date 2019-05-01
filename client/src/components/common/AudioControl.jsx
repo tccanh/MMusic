@@ -50,7 +50,7 @@ export class AudioControl extends Component {
       this.setState({ volume: 1 });
       this.ref_Audio.current.volume = 1;
     } else {
-      this.setState({ volume: this.state.volume + 0.1 });
+      this.setState(state => ({ volume: state.volume + 0.1 }));
       this.ref_Audio.current.volume += 0.1;
     }
   }
@@ -59,7 +59,7 @@ export class AudioControl extends Component {
       this.setState({ volume: 0 });
       this.ref_Audio.current.volume = 0;
     } else {
-      this.setState({ volume: this.state.volume - 0.1 });
+      this.setState(state => ({ volume: state.volume - 0.1 }));
       this.ref_Audio.current.volume -= 0.1;
     }
   }

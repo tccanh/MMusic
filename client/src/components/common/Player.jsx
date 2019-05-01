@@ -13,6 +13,8 @@ import formatTime from '../../api/formatTime';
 class Player extends Component {
   constructor() {
     super();
+    this._progress_bar = React.createRef();
+    this._player = React.createRef();
 
     this.state = {
       is_playing: false,
@@ -22,17 +24,21 @@ class Player extends Component {
     };
 
     this.is_progress_dirty = false;
+    // this.interval_id = setInterval(this.onUpdate.bind(this), 250);
+  }
+  componentWillReceiveProps() {
     this.interval_id = setInterval(this.onUpdate.bind(this), 250);
   }
   onUpdate() {
-    if (this._player) {
+    if (this._player.current) {
       if (!this.is_progress_dirty) {
         this.setState({
-          progress: this._player.currentTime / this._player.duration
+          progress:
+            this._player.current.currentTime / this._player.current.duration
         });
       }
 
-      if (this._player.ended && this.props.onDone) {
+      if (this._player.current.ended && this.props.onDone) {
         this.props.onDone(this.props.src);
       }
     }
@@ -50,7 +56,7 @@ class Player extends Component {
     if (currState <= 0.1) {
       this.setState({ volume: 0 });
     } else {
-      this.setState({ volume: this.state.volume - 0.1 });
+      this.setState({ volume: currState - 0.1 });
     }
   }
   toggleVolumeMute() {
@@ -75,8 +81,8 @@ class Player extends Component {
   setProgress(evt) {
     if (this.state.in_set_progress_mode) {
       var progress =
-        (evt.clientX - offsetLeft(this._progress_bar)) /
-        this._progress_bar.clientWidth;
+        (evt.clientX - offsetLeft(this._progress_bar.current)) /
+        this._progress_bar.current.clientWidth;
       this.setState({
         progress: progress
       });
@@ -87,30 +93,31 @@ class Player extends Component {
     var currentTime = 0;
     var totalTime = 0;
 
-    if (this._player) {
+    if (this._player.current) {
       if (
-        this._player.currentSrc !== this.props.src &&
+        this._player.current.currentSrc !== this.props.src &&
         this.props.src !== null
       ) {
-        this._player.src = this.props.src;
+        this._player.current.src = this.props.src;
       }
 
-      if (this._player.paused && !this._player.ended) {
+      if (this._player.current.paused && !this._player.current.ended) {
         if (this.state.is_playing) {
-          this._player.play();
+          this._player.current.play();
         }
       } else if (!this.state.is_playing) {
-        this._player.pause();
+        this._player.current.pause();
       }
 
       if (this.is_progress_dirty) {
         this.is_progress_dirty = false;
 
-        this._player.currentTime = this._player.duration * this.state.progress;
+        this._player.current.currentTime =
+          this._player.current.duration * this.state.progress;
       }
-      this._player.volume = this.state.volume;
-      currentTime = this._player.currentTime;
-      totalTime = this._player.duration;
+      this._player.current.volume = this.state.volume;
+      currentTime = this._player.current.currentTime;
+      totalTime = this._player.current.duration;
     }
     const btnPlayer = !this.state.is_playing ? (
       <PlayCircleOutline />
@@ -148,7 +155,7 @@ class Player extends Component {
           onMouseUp={this.stopSetProgress.bind(this)}
           className="progress"
         >
-          <div ref={ref => (this._progress_bar = ref)} className="bar">
+          <div ref={this._progress_bar} className="bar">
             <div style={{ width: this.state.progress * 100 + '%' }} />
           </div>
         </div>
@@ -160,10 +167,7 @@ class Player extends Component {
         <div className="time">
           {formatTime(currentTime)} / {formatTime(totalTime)}
         </div>
-        <audio
-          ref={ref => (this._player = ref)}
-          autoPlay={this.state.is_playing}
-        >
+        <audio ref={this._player} autoPlay={this.state.is_playing}>
           <source src={this.props.src} />
           <source />
         </audio>

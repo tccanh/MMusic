@@ -12,7 +12,7 @@ module.exports = function validateTrack(data) {
 
   if (Validator.isEmpty(data.name)) {
     errors.name = 'Trackname field is required';
-  } else if (!Validator.isLength(data.name, { min: 3, max: 20 })) {
+  } else if (!Validator.isLength(data.name, { min: 3, max: 100 })) {
     errors.name = 'Trackname is at least 3 characters';
   }
   if (Validator.isEmpty(data.country)) {
