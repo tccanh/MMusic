@@ -3,7 +3,6 @@ import {
   GET_SONGS,
   SONG_LOADING,
   REMOVE_ALL,
-  REMOVE_SONG,
   ADD_SONGS
 } from '../actions/actionTypes';
 const initialState = {

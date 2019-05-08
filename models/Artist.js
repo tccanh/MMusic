@@ -11,11 +11,8 @@ const ArtistSchema = new Schema({
   },
   albums: [
     {
-      id: {
-        type: Schema.Types.ObjectId,
-        ref: 'albums'
-      },
-      name: String
+      type: Schema.Types.ObjectId,
+      ref: 'albums'
     }
   ],
   genres: [

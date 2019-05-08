@@ -109,23 +109,15 @@ router.post('/', (req, res) => {
         try {
           const temp = await Artist.findOne({ name: value });
           if (temp) {
-            // console.log('TRƯỚC', temp);
-            console.log('TEMp1', temp);
-
-            newArtists.unshift({ artist: temp.id, name: temp.name });
+            newArtists.unshift(temp.id);
           } else {
-            console.log('TEMp2');
             const newArst = new Artist({
               name: value,
               image,
-              // eslint-disable-next-line no-undef
               genres: [genre]
             });
             const newTemp = await newArst.save();
-            console.log('TEmp3', newTemp);
-
-            // console.log('SAU', newTemp);
-            newArtists.unshift({ artist: newTemp.id, name: newTemp.name });
+            newArtists.unshift(newTemp.id);
           }
         } catch (error) {
           console.log(error);

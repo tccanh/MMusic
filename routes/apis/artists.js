@@ -41,13 +41,14 @@ router.post('/', (req, res, next) => {
   }
   if (description) newArtist.description = description;
   if (image) newArtist.image = image;
+  let listGenres;
   if (genres) {
-    const listGenres = genres.split(',').map(genr => formatText(genr));
-    newArtist.genres = listGenres;
+    listGenres = genres.split(',').map(genr => formatText(genr));
   }
   if (albums) {
     const listAlbums = albums.split(',').map(album => formatText(album));
     const newListAlbums = [];
+    const newListGenres = [];
     Promise.all(
       listAlbums.map(async _alb => {
         try {
@@ -55,7 +56,7 @@ router.post('/', (req, res, next) => {
           if (!isEmpty(temp)) {
             // console.log('BEFORE: ', temp);
 
-            newListAlbums.unshift({ id: temp.id, name: temp.name });
+            newListAlbums.unshift(temp.id);
           } else {
             const newAlb = new Album({
               name: _alb,
@@ -63,15 +64,24 @@ router.post('/', (req, res, next) => {
             });
             const temp2 = await newAlb.save();
             // console.log('AFTER: ', temp2);
-            newListAlbums.unshift({ id: temp2.id, name: temp2.name });
+            newListAlbums.unshift(temp2.id);
           }
         } catch (error) {
           // console.log(error);
         }
+      }),
+      listGenres.map(async _gen => {
+        try {
+          if (!isEmpty(temp)) {
+            newListGenres.push(temp.id);
+          }
+        } catch (error) {
+          console.log(error);
+        }
       })
     ).finally(() => {
       newArtist.albums = newListAlbums;
-      // console.log('SUMMMM: ', newArtist);
+      newArtist.genres = newListGenres;
 
       Artist.findOne({ name: formatText(name) }).then(art => {
         if (art) {

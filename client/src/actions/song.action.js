@@ -1,12 +1,4 @@
-import {
-  GET_SONGS,
-  ADD_SONG,
-  ADD_SONGS,
-  REMOVE_SONG,
-  REMOVE_ALL,
-  SONG_LOADING
-} from './actionTypes';
-import { ExposurePlus1 } from '@material-ui/icons';
+import { ADD_SONG, ADD_SONGS, REMOVE_ALL, SONG_LOADING } from './actionTypes';
 // Set loading state
 export const setSongsLoading = () => {
   return {

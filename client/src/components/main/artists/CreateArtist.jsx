@@ -51,6 +51,8 @@ class CreateArtist extends Component {
       albums: this.state.albums,
       genres: this.state.genres
     };
+    console.log('create new artist:', artistData);
+
     this.props.createArtist(artistData, this.props.history);
   }
 
@@ -92,7 +94,7 @@ class CreateArtist extends Component {
 
     axios
       .request({
-        url: '/api/upload/image-upload/artists/1000',
+        url: '/api/upload/image-upload/artists/500',
         method: 'POST',
         data: formData,
         onUploadProgress: p => {
