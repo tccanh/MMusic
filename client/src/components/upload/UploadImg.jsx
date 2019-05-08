@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import Buttons from './subUpload/Buttons';
 import Images from './subUpload/Images';
-import Spinner from '../common/Spinner';
+import Spinner from '../common/Spinner/Spinner';
 
 const toastColor = {
   background: 'red',

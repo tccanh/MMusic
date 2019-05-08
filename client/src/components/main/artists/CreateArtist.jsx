@@ -3,14 +3,14 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import TextFieldGroup2 from '../../HOC/TextFieldGroup2';
-import TextAreaGroup from '../../HOC/TextAreaGroup';
-import { createArtist } from '../../actions/artist.action';
+import TextFieldGroup2 from '../../hoc/TextFieldGroup2';
+import TextAreaGroup from '../../hoc/TextAreaGroup';
+import { createArtist } from '../../../actions/artist.action';
 import Notifications, { notify } from 'react-notify-toast';
 import axios from 'axios';
-import Buttons from '../upload/subUpload/Buttons';
-import Images from '../upload/subUpload/Images';
-import Spinner from '../common/Spinner';
+import Buttons from '../../upload/subUpload/Buttons';
+import Images from '../../upload/subUpload/Images';
+import Spinner from '../../common/Spinner/Spinner';
 
 const toastColor = {
   background: 'red',

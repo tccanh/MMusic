@@ -9,7 +9,7 @@ import {
   VolumeDown,
   VolumeUp
 } from '@material-ui/icons';
-import formatTime from '../../api/formatTime';
+import formatTime from '../../../apis/formatTime';
 class Player extends Component {
   constructor() {
     super();

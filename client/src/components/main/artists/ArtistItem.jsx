@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 
 export class ArtistItem extends Component {
   static propTypes = {
@@ -21,14 +20,3 @@ export class ArtistItem extends Component {
     );
   }
 }
-
-const mapStateToProps = state => ({
-  auth: state.auth
-});
-
-const mapDispatchToProps = {};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ArtistItem);

@@ -10,23 +10,21 @@ import { Provider } from 'react-redux';
 import { Route, BrowserRouter, Switch } from 'react-router-dom';
 import { setCurrentUser, logoutUser } from './actions/auth.action';
 //=================================================
-
+import Login from './components/main/auths/Login';
+import PrivateRoute from './components/hoc/PrivateRoute';
+import SideBar from './components/layouts/SideBar';
+import Landing from './components/layouts/Landing';
 import Footer from './components/layouts/Footer';
-import Landing from './components/Landing';
-import mainLogin from './views/mainLogin';
-import PrivateRoute from './HOC/PrivateRoute';
-import Albums from './components/albums/Albums';
-import Genres from './components/genres/Genres';
-import Artists from './components/artists/Artists';
-import Playlists from './components/playlists/Playlists';
-import Charts from './components/charts/Charts';
+import Albums from './components/main/albums/Albums';
+import CreateAlbum from './components/main/albums/CreateAlbum';
+import Genres from './components/main/genres/Genres';
+import CreateGenre from './components/main/genres/CreateGenre';
+import Artists from './components/main/artists/Artists';
+import CreateArtist from './components/main/artists/CreateArtist';
+import Tracks from './components/main/tracks/Tracks';
+import Playlists from './components/main/playlists/Playlists';
 import Upload from './components/upload/Upload';
-import CreateGenre from './components/genres/CreateGenre';
-import CreateArtist from './components/artists/CreateArtist';
-import CreateAlbum from './components/albums/CreateAlbum';
-import PlaylistDetail from './components/playlists/PlaylistDetail';
-import SideBar from './components/layouts/sidebar/SideBar';
-import MusicPlayer from './components/MusicPlayer/MusicPlayer';
+
 //=================================================
 //Check for token
 if (localStorage.jwtToken) {
@@ -72,13 +70,11 @@ class App extends Component {
             <main className={classes.content}>
               <div className={classes.toolbar} />
               <Route exact path="/" component={Landing} />
-              <Route exact path="/login" component={mainLogin} />
+              <Route exact path="/login" component={Login} />
               <Route exact path="/album" component={Albums} />
               <Route exact path="/genre" component={Genres} />
               <Route exact path="/artist" component={Artists} />
-              <Route exact path="/chart" component={Charts} />
-              <Route exact path="/track/:id" component={MusicPlayer} />
-              <Route exact path="/test" component={PlaylistDetail} />
+              <Route exact path="/chart" component={Tracks} />
               <Switch>
                 <PrivateRoute exact path="/playlist" component={Playlists} />
               </Switch>

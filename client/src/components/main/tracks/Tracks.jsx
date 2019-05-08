@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { getTracks } from '../../actions/track.action';
-import { addSongs } from '../../actions/song.action';
+import { getTracks } from '../../../actions/track.action';
+import { addSongs } from '../../../actions/song.action';
 import ListTrack from './ListTrack';
-import Spinner from '../common/Spinner';
+import Spinner from '../../common/Spinner/Spinner';
 import { Button } from '@material-ui/core';
-export class Charts extends Component {
+class Tracks extends Component {
   static propTypes = {
     getTracks: PropTypes.func.isRequired,
     addSongs: PropTypes.func.isRequired,
@@ -50,4 +50,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Charts);
+)(Tracks);

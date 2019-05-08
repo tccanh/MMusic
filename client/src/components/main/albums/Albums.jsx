@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ListAlbums from './ListAlbums';
 import { Link } from 'react-router-dom';
-import { getAlbums } from '../../actions/album.action';
-import Spinner from '../common/Spinner';
+import { getAlbums } from '../../../actions/album.action';
+import Spinner from '../../common/Spinner/Spinner';
 class Albums extends Component {
   componentDidMount() {
     this.props.getAlbums(); // cập nhật lúc đầu

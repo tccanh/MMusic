@@ -28,9 +28,9 @@ import {
   PowerSettingsNew
 } from '@material-ui/icons';
 
-import { logoutUser } from '../../../actions/auth.action';
+import { logoutUser } from '../../actions/auth.action';
 import { NavLink } from 'react-router-dom';
-import Player from '../../common/Player';
+import Player from '../common/Player/Player';
 const drawerWidth = 240;
 
 const styles = theme => ({
@@ -39,7 +39,8 @@ const styles = theme => ({
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
-    })
+    }),
+    background: '#212121'
   },
   appBarShift: {
     marginLeft: drawerWidth,

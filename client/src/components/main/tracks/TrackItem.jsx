@@ -4,7 +4,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import { Link } from 'react-router-dom';
 import { PlayArrowRounded } from '@material-ui/icons';
-import { addSong } from '../../actions/song.action';
+import { addSong } from '../../../actions/song.action';
 class ChartItem extends Component {
   onToggleListen(song) {
     this.props.addSong(song);

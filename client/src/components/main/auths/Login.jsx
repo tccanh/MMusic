@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
-import { loginUser } from '../actions/auth.action';
-import TextFieldGroup from '../HOC/TextFieldGroup';
+import { loginUser } from '../../../actions/auth.action';
+import TextFieldGroup from '../../hoc/TextAreaGroup';
 class Login extends Component {
   constructor() {
     super();

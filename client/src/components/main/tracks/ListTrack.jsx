@@ -11,9 +11,9 @@ import {
   Paper
 } from '@material-ui/core';
 
-import EnhancedTableHead from '../../HOC/EnhancedTableHead';
-import TablePaginationActions from '../../HOC/TablePaginationActions';
-import ChartItem from './ChartItem';
+import EnhancedTableHead from '../../hoc/EnhancedTableHead';
+import TablePaginationActions from '../../hoc/TablePaginationActions';
+import TrackItem from './TrackItem';
 
 const headerRows = [
   {
@@ -118,7 +118,7 @@ class ListTrack extends Component {
               {stableSort(tracks, getSorting(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((value, index) => {
-                  return <ChartItem value={value} key={index} />;
+                  return <TrackItem value={value} key={index} />;
                 })}
               {emptyRows > 0 && (
                 <TableRow style={{ height: 49 * emptyRows }}>
