@@ -18,10 +18,12 @@ const ArtistSchema = new Schema({
       name: String
     }
   ],
-  genres: {
-    type: [String],
-    required: true
-  },
+  genres: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'genres'
+    }
+  ],
   likes: [
     {
       user: {

@@ -10,7 +10,7 @@ export class AlbumItem extends Component {
   render() {
     const { album } = this.props;
     return (
-      <div class="col-md-2">
+      <div className="col-md-2">
         <img
           className=" img-thumbnail img-fluid"
           src={album.image}

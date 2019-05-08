@@ -88,10 +88,7 @@ router.post('/', (req, res) => {
   newTrack.owner = req.user.id;
   if (name) newTrack.name = name;
   if (image) newTrack.image = image;
-  if (genre) {
-    const genreSplit = genre.split(',');
-    newTrack.genre = genreSplit[0];
-  }
+  if (genre) newTrack.genre = genre;
   if (link) newTrack.link = link;
   if (format) newTrack.format = format;
   if (bit_rate) newTrack.bit_rate = bit_rate;
@@ -103,23 +100,30 @@ router.post('/', (req, res) => {
 
   if (artists) {
     const listArtists = artists.split(',').map(arts => formatText(arts));
+    console.log('hehe', listArtists);
+
     const newArtists = [];
     let albID;
     Promise.all(
       listArtists.map(async value => {
         try {
           const temp = await Artist.findOne({ name: value });
-          if (!isEmpty(temp)) {
+          if (temp) {
             // console.log('TRƯỚC', temp);
+            console.log('TEMp1', temp);
+
             newArtists.unshift({ artist: temp.id, name: temp.name });
           } else {
+            console.log('TEMp2');
             const newArst = new Artist({
               name: value,
               image,
               // eslint-disable-next-line no-undef
-              genres: [genreSplit[1]]
+              genres: [genre]
             });
             const newTemp = await newArst.save();
+            console.log('TEmp3', newTemp);
+
             // console.log('SAU', newTemp);
             newArtists.unshift({ artist: newTemp.id, name: newTemp.name });
           }

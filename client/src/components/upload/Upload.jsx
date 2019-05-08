@@ -86,7 +86,7 @@ class Upload extends Component {
       bit_rate: this.state.bit_rate,
       bytes: this.state.bytes
     };
-    console.log(trackData);
+    console.log('hehe', trackData);
 
     this.props.createTrack(trackData, this.props.history);
   }
@@ -342,10 +342,7 @@ class Upload extends Component {
                       onChange={this.onChange}
                     >
                       {genres.map(option => (
-                        <option
-                          key={option._id}
-                          value={[option._id, option.name]}
-                        >
+                        <option key={option._id} value={option._id}>
                           {option.name}
                         </option>
                       ))}
