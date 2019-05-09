@@ -25,14 +25,14 @@ const Audio = props => {
     setCurSrc(props.songs[0]);
     setRandom(Math.floor(Math.random() * (props.songs.length - 1)) + 1);
     return () => {
-      console.log('Did UnMount 1');
+      // console.log('Did UnMount 1');
     };
   }, [props.songs]);
   useEffect(() => {
     if (songs) setCurSrc(songs[index]);
-    console.log('Did Mount 2');
+    // console.log('Did Mount 2');
     return () => {
-      console.log('Did UnMount 2');
+      // console.log('Did UnMount 2');
     };
   }, [index, songs]);
   function collapeArtists(artists) {
@@ -111,19 +111,19 @@ const Audio = props => {
         loop={loop === 2}
         onNext={() => {
           const next = suffle ? random : 1;
-          console.log('ran1', next);
+          // console.log('ran1', next);
           return setIndex(pre => (pre + next) % total);
         }}
         onPrev={() => {
           const next = suffle ? random : 1;
-          console.log('ran2', next);
+          // console.log('ran2', next);
           return setIndex(pre => (pre + total - next) % total);
         }}
         onDone={() => {
           const next = suffle ? random : 1;
           if (loop !== 2) {
             if (loop === 1) {
-              console.log('ondone');
+              // console.log('ondone');
               return setIndex(pre => (pre + next) % total);
             }
             if (index !== total - 1) {

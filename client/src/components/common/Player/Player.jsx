@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './Player.css';
 import {
   FastForward,
@@ -43,7 +44,7 @@ class Player extends Component {
     if (currState >= 0.9) {
       this.setState({ volume: 1 });
     } else {
-      this.setState({ volume: currState + 0.1 });
+      this.setState(pre => ({ volume: currState + 0.1 }));
     }
   }
   decreaseVolume() {
@@ -56,7 +57,7 @@ class Player extends Component {
   }
   // PLAY
   togglePlay() {
-    this.setState({ is_playing: !this.state.is_playing });
+    this.setState(pre => ({ is_playing: !pre.is_playing }));
   }
 
   startSetProgress(evt) {
@@ -85,26 +86,20 @@ class Player extends Component {
   render() {
     var currentTime = 0;
     var totalTime = 0;
-    const { volume } = this.state;
-    const { loop } = this.props;
+    const { volume, is_playing, progress } = this.state;
+    const { loop, src, onPrev, onNext, onDone } = this.props;
     if (this._player.current) {
-      if (loop) {
-        this._player.current.loop = true;
-      }
-      if (
-        this._player.current.currentSrc !== this.props.src &&
-        this.props.src !== null
-      ) {
-        this._player.current.src = this.props.src;
+      if (this._player.current.currentSrc !== src && src !== null) {
+        this._player.current.src = src;
       }
 
       if (this._player.current.paused && !this._player.current.ended) {
-        if (this.state.is_playing) {
-          this._player.current.loop = false;
-          this._player.current.load();
+        if (is_playing) {
+          // this._player.current.load();
+          //Đặt onload ở đây là chết
           this._player.current.play();
         }
-      } else if (!this.state.is_playing) {
+      } else if (!is_playing) {
         this._player.current.pause();
       }
 
@@ -112,13 +107,14 @@ class Player extends Component {
         this.is_progress_dirty = false;
 
         this._player.current.currentTime =
-          this._player.current.duration * this.state.progress;
+          this._player.current.duration * progress;
       }
-      this._player.current.volume = this.state.volume;
+      this._player.current.volume = volume;
+      this._player.current.loop = loop;
       currentTime = this._player.current.currentTime;
       totalTime = this._player.current.duration;
     }
-    const btnPlayer = !this.state.is_playing ? (
+    const btnPlayer = !is_playing ? (
       <PlayCircleOutline
         className="songicon"
         style={{ fontSize: 'xx-large' }}
@@ -133,14 +129,14 @@ class Player extends Component {
       <div className="player">
         <div className="controls">
           <div className="childs">
-            <a onClick={this.props.onPrev}>
+            <a onClick={onPrev}>
               <FastRewind
                 className="songicon"
                 style={{ fontSize: 'xx-large' }}
               />
             </a>
             <a onClick={this.togglePlay.bind(this)}>{btnPlayer}</a>
-            <a onClick={this.props.onNext}>
+            <a onClick={onNext}>
               <FastForward
                 className="songicon"
                 style={{ fontSize: 'xx-large' }}
@@ -157,7 +153,7 @@ class Player extends Component {
           className="progress"
         >
           <div ref={this._progress_bar} className="bar">
-            <div style={{ width: this.state.progress * 100 + '%' }} />
+            <div style={{ width: progress * 100 + '%' }} />
           </div>
         </div>
         <div className="time2">{formatTime(totalTime)}</div>
@@ -168,16 +164,24 @@ class Player extends Component {
         />
         <audio
           ref={this._player}
-          autoPlay={this.state.is_playing}
-          onEnded={() => this.props.onDone()}
+          autoPlay={is_playing}
+          onEnded={() => onDone()}
         >
-          <source src={this.props.src} />
+          {src && <source src={src} />}
+
           <source />
         </audio>
       </div>
     );
   }
 }
+Player.Proptype = {
+  src: PropTypes.string.isRequired,
+  loop: PropTypes.bool.isRequired,
+  onPrev: PropTypes.func.isRequired,
+  onNext: PropTypes.func.isRequired,
+  onDone: PropTypes.func.isRequired
+};
 
 function offsetLeft(el) {
   var left = 0;
