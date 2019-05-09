@@ -38,9 +38,9 @@ class Upload extends Component {
       artists: '',
       authors: '',
       album: '',
-      genre: ['5c94e85aaf5c382f1ce434b1', 'Acoustic'],
+      genre: '',
       country: '',
-      released: '2019',
+      released: '',
       link: '',
       duration: '',
       format: '',
@@ -69,25 +69,31 @@ class Upload extends Component {
 
   onSubmit(e) {
     e.preventDefault();
-
-    const trackData = {
-      name: this.state.name,
-      image: this.state.image,
-      artists: this.state.artists,
-      authors: this.state.authors,
-      album: this.state.album,
-      genre: this.state.genre,
-      country: this.state.country,
-      released: this.state.released,
-      link: this.state.link,
-      duration: this.state.duration,
-      format: this.state.format,
-      bit_rate: this.state.bit_rate,
-      bytes: this.state.bytes
-    };
-    console.log('hehe', trackData);
-
-    this.props.createTrack(trackData, this.props.history);
+    if (this.state.genre === '') {
+      this.setState({ errors: { inside: 'Genre is required' } });
+    } else if (this.state.link === '') {
+      this.setState({
+        errors: { inside: 'Please upload your track befor submit.' }
+      });
+    } else {
+      const trackData = {
+        name: this.state.name,
+        image: this.state.image,
+        artists: this.state.artists,
+        authors: this.state.authors,
+        album: this.state.album,
+        genre: this.state.genre,
+        country: this.state.country,
+        released: this.state.released,
+        link: this.state.link,
+        duration: this.state.duration,
+        format: this.state.format,
+        bit_rate: this.state.bit_rate,
+        bytes: this.state.bytes
+      };
+      console.log('hehe', trackData);
+      this.props.createTrack(trackData, this.props.history);
+    }
   }
 
   onChange(e) {
@@ -341,6 +347,7 @@ class Upload extends Component {
                       name="genre"
                       onChange={this.onChange}
                     >
+                      <option defaultValue>...genre...</option>
                       {genres.map(option => (
                         <option key={option._id} value={option._id}>
                           {option.name}
@@ -382,6 +389,19 @@ class Upload extends Component {
             </div>
           </div>
           <br />
+          {errors.inside && (
+            <div
+              className="feedback"
+              style={{
+                color: 'red',
+                fontWeight: 400,
+                marginLeft: '20px',
+                marginTop: '20px'
+              }}
+            >
+              {errors.inside}
+            </div>
+          )}
           <br />
           <div className="form-row justify-content-md-center">
             <input

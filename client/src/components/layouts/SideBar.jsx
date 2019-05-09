@@ -30,7 +30,7 @@ import {
 
 import { logoutUser } from '../../actions/auth.action';
 import { NavLink } from 'react-router-dom';
-import Player from '../common/Player/Player';
+import Audio from '../common/Player/Audio';
 const drawerWidth = 240;
 
 const styles = theme => ({
@@ -133,19 +133,22 @@ class SideBar extends React.Component {
 
     this.state = {
       open: false,
-      songs: []
+      songs: undefined
     };
     this.onLogoutClick = this.onLogoutClick.bind(this);
   }
+
   componentWillReceiveProps(newProps) {
-    this.setState({ songs: newProps.song.songs });
+    this.setState({
+      songs: newProps.song.songs
+    });
   }
   onTogglePlaylist() {
     console.log('PLAYLIST:', this.state.songs.map(val => val.name));
+    console.log(this.state);
   }
   onLogoutClick(e) {
     e.preventDefault();
-    // this.props.clearCurrentProfile();
     this.props.logoutUser();
   }
   handleDrawerOpen = () => {
@@ -157,12 +160,7 @@ class SideBar extends React.Component {
   };
 
   render() {
-    let firstSongLink = '';
-    if (this.props.song.songs.length > 0) {
-      firstSongLink = this.props.song.songs[0];
-      console.log('First SOng Link: ', firstSongLink);
-    }
-
+    const { songs } = this.state;
     const { classes, theme } = this.props;
     const { isAuthenticated } = this.props.auth;
     const isAuthRender = isAuthenticated ? (
@@ -208,12 +206,10 @@ class SideBar extends React.Component {
               onClick={() => this.onTogglePlaylist()}
               noWrap
             >
-              {!!firstSongLink
-                ? firstSongLink.name
-                : 'Best Places to Upload Your Music'}
+              Best Places to Upload Your Music
             </Typography>
 
-            <Player src={firstSongLink.link} />
+            {songs && <Audio songs={songs} />}
           </Toolbar>
         </AppBar>
         <Drawer

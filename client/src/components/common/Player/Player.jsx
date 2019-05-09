@@ -24,7 +24,6 @@ class Player extends Component {
     };
 
     this.is_progress_dirty = false;
-    // this.interval_id = setInterval(this.onUpdate.bind(this), 250);
   }
   componentWillReceiveProps() {
     this.interval_id = setInterval(this.onUpdate.bind(this), 250);
@@ -38,9 +37,11 @@ class Player extends Component {
         });
       }
 
-      if (this._player.current.ended && this.props.onDone) {
-        this.props.onDone(this.props.src);
-      }
+      // if (this._player.current.ended && this.props.onDone) {
+      //   this.props.onDone(); //Gọi để chuyển bài
+      //   this._player.current.src = this.props.src;
+      //   this._player.current.play();
+      // }
     }
   }
   toggleVolumePlus() {
@@ -167,7 +168,11 @@ class Player extends Component {
         <div className="time">
           {formatTime(currentTime)} / {formatTime(totalTime)}
         </div>
-        <audio ref={this._player} autoPlay={this.state.is_playing}>
+        <audio
+          ref={this._player}
+          autoPlay={this.state.is_playing}
+          onEnded={() => this.props.onDone()}
+        >
           <source src={this.props.src} />
           <source />
         </audio>
