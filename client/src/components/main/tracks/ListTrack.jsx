@@ -57,8 +57,8 @@ function getSorting(order, orderBy) {
 const styles = theme => ({
   root: {
     width: '90%',
-    marginTop: theme.spacing.unit * 3
-    // marginLeft: theme.spacing.unit * 4
+    marginTop: theme.spacing(3)
+    // marginLeft:  theme.spacing(4)
   },
   table: {
     minWidth: 1020

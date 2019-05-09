@@ -75,9 +75,9 @@ const styles = theme => ({
       duration: theme.transitions.duration.leavingScreen
     }),
     overflowX: 'hidden',
-    width: theme.spacing.unit * 7 + 1,
+    width: theme.spacing(7) + 1,
     [theme.breakpoints.up('sm')]: {
-      width: theme.spacing.unit * 9 + 1
+      width: theme.spacing(9) + 1
     }
   },
   toolbar: {
@@ -89,7 +89,7 @@ const styles = theme => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing.unit * 3
+    padding: theme.spacing(3)
   }
 });
 
@@ -142,10 +142,6 @@ class SideBar extends React.Component {
     this.setState({
       songs: newProps.song.songs
     });
-  }
-  onTogglePlaylist() {
-    console.log('PLAYLIST:', this.state.songs.map(val => val.name));
-    console.log(this.state);
   }
   onLogoutClick(e) {
     e.preventDefault();
@@ -200,12 +196,7 @@ class SideBar extends React.Component {
             >
               <MenuIcon />
             </IconButton>
-            <Typography
-              variant="h6"
-              color="inherit"
-              onClick={() => this.onTogglePlaylist()}
-              noWrap
-            >
+            <Typography variant="h6" color="inherit" noWrap>
               Best Places to Upload Your Music
             </Typography>
 
