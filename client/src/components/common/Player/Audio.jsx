@@ -108,6 +108,7 @@ const Audio = props => {
       )}
       <Player
         src={curSrc.link}
+        loop={loop === 2}
         onNext={() => {
           const next = suffle ? random : 1;
           console.log('ran1', next);
@@ -120,8 +121,16 @@ const Audio = props => {
         }}
         onDone={() => {
           const next = suffle ? random : 1;
-          console.log('ondone');
-          return setIndex(pre => (pre + next) % total);
+          if (loop !== 2) {
+            if (loop === 1) {
+              console.log('ondone');
+              return setIndex(pre => (pre + next) % total);
+            }
+            if (index !== total - 1) {
+              return setIndex(pre => (pre + next) % total);
+            }
+            return setIndex(total - 1);
+          }
         }}
       />
       <PlaylistPlay

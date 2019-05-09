@@ -86,8 +86,11 @@ class Player extends Component {
     var currentTime = 0;
     var totalTime = 0;
     const { volume } = this.state;
-
+    const { loop } = this.props;
     if (this._player.current) {
+      if (loop) {
+        this._player.current.loop = true;
+      }
       if (
         this._player.current.currentSrc !== this.props.src &&
         this.props.src !== null
@@ -97,6 +100,8 @@ class Player extends Component {
 
       if (this._player.current.paused && !this._player.current.ended) {
         if (this.state.is_playing) {
+          this._player.current.loop = false;
+          this._player.current.load();
           this._player.current.play();
         }
       } else if (!this.state.is_playing) {
