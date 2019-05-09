@@ -19,7 +19,7 @@ const validateTrack = require('../../validations/apis/track');
 router.get('/', (req, res) => {
   Track.find()
     .sort({ name: 1 })
-    .populate('genre')
+    .populate('genre', 'name')
     .then(track => res.json(track))
     .catch(err =>
       res.status(404).json({ notrackFounds: `No tracks found: ${err}` })
@@ -117,7 +117,7 @@ router.post('/', (req, res) => {
               genres: [genre]
             });
             const newTemp = await newArst.save();
-            newArtists.unshift(newTemp.id);
+            newArtists.unshift({ artist: newTemp.id, name: newTemp.name });
           }
         } catch (error) {
           console.log(error);

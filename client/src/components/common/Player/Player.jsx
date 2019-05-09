@@ -5,11 +5,10 @@ import {
   FastForward,
   FastRewind,
   PauseCircleOutline,
-  PlayCircleOutline,
-  VolumeDown,
-  VolumeUp
+  PlayCircleOutline
 } from '@material-ui/icons';
 import formatTime from '../../../apis/formatTime';
+import Volume from './Volume';
 class Player extends Component {
   constructor() {
     super();
@@ -36,15 +35,10 @@ class Player extends Component {
             this._player.current.currentTime / this._player.current.duration
         });
       }
-
-      // if (this._player.current.ended && this.props.onDone) {
-      //   this.props.onDone(); //Gọi để chuyển bài
-      //   this._player.current.src = this.props.src;
-      //   this._player.current.play();
-      // }
     }
   }
-  toggleVolumePlus() {
+  // VOLUME
+  increaseVolume() {
     const currState = this.state.volume;
     if (currState >= 0.9) {
       this.setState({ volume: 1 });
@@ -52,7 +46,7 @@ class Player extends Component {
       this.setState({ volume: currState + 0.1 });
     }
   }
-  toggleVolumeSub() {
+  decreaseVolume() {
     const currState = this.state.volume;
     if (currState <= 0.1) {
       this.setState({ volume: 0 });
@@ -60,9 +54,7 @@ class Player extends Component {
       this.setState({ volume: currState - 0.1 });
     }
   }
-  toggleVolumeMute() {
-    this.setState({ isMuted: !this.state.isMuted });
-  }
+  // PLAY
   togglePlay() {
     this.setState({ is_playing: !this.state.is_playing });
   }
@@ -93,6 +85,7 @@ class Player extends Component {
   render() {
     var currentTime = 0;
     var totalTime = 0;
+    const { volume } = this.state;
 
     if (this._player.current) {
       if (
@@ -121,34 +114,36 @@ class Player extends Component {
       totalTime = this._player.current.duration;
     }
     const btnPlayer = !this.state.is_playing ? (
-      <PlayCircleOutline />
+      <PlayCircleOutline
+        className="songicon"
+        style={{ fontSize: 'xx-large' }}
+      />
     ) : (
-      <PauseCircleOutline />
-    );
-    const controlBtn = !!this.props.src ? (
-      <div className="controls">
-        <a onClick={this.props.onPrev}>
-          <FastRewind />
-        </a>
-        <a onClick={this.togglePlay.bind(this)}>{btnPlayer}</a>
-        <a onClick={this.props.onNext}>
-          <FastForward />
-        </a>
-      </div>
-    ) : (
-      <div className="controls">
-        <a>
-          <FastRewind />
-        </a>
-        <a>{btnPlayer}</a>
-        <a>
-          <FastForward />
-        </a>
-      </div>
+      <PauseCircleOutline
+        className="songicon"
+        style={{ fontSize: 'xx-large' }}
+      />
     );
     return (
       <div className="player">
-        {controlBtn}
+        <div className="controls">
+          <div className="childs">
+            <a onClick={this.props.onPrev}>
+              <FastRewind
+                className="songicon"
+                style={{ fontSize: 'xx-large' }}
+              />
+            </a>
+            <a onClick={this.togglePlay.bind(this)}>{btnPlayer}</a>
+            <a onClick={this.props.onNext}>
+              <FastForward
+                className="songicon"
+                style={{ fontSize: 'xx-large' }}
+              />
+            </a>
+          </div>
+        </div>
+        <div className="time1">{formatTime(currentTime)}</div>
         <div
           onMouseDown={this.startSetProgress.bind(this)}
           onMouseMove={this.setProgress.bind(this)}
@@ -160,14 +155,12 @@ class Player extends Component {
             <div style={{ width: this.state.progress * 100 + '%' }} />
           </div>
         </div>
-        <div className="volume">
-          <VolumeDown onClick={() => this.toggleVolumeSub()} />
-          <a href="">{Math.floor(this.state.volume * 100)} </a>
-          <VolumeUp onClick={() => this.toggleVolumePlus()} />
-        </div>
-        <div className="time">
-          {formatTime(currentTime)} / {formatTime(totalTime)}
-        </div>
+        <div className="time2">{formatTime(totalTime)}</div>
+        <Volume
+          volume={volume}
+          increaseVolume={this.increaseVolume.bind(this)}
+          decreaseVolume={this.decreaseVolume.bind(this)}
+        />
         <audio
           ref={this._player}
           autoPlay={this.state.is_playing}

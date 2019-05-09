@@ -14,12 +14,12 @@ export const getTracks = () => dispatch => {
   dispatch(setTrackLoading());
   axios
     .get('/api/track')
-    .then(res =>
+    .then(res => {
       dispatch({
         type: GET_TRACKS,
         payload: res.data
-      })
-    )
+      });
+    })
     .catch(err =>
       dispatch({
         type: GET_TRACKS,

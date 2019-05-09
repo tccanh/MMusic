@@ -3,7 +3,54 @@
   position: inherit;
   margin-left: auto;
 }
+.infosong {
+  font-size: 14px;
+}
+.namesong {
+  position: absolute;
+  left: 41%;
+  top: 10px;
+}
+.artistsong {
+  left: 41%;
+  position: absolute;
+  font-size: 9.5px;
+}
 
+.lovesong {
+  font-size: x-large;
+  position: absolute;
+  left: 54.5%;
+  bottom: 25px;
+}
+.repeatsong {
+  position: absolute;
+  left: 57%;
+  bottom: 25px;
+}
+.sufflesong {
+  position: absolute;
+  left: 83%;
+  bottom: 25px;
+}
+.imagesong {
+  position: absolute;
+  border: unset;
+  max-width: 68px;
+  left: 35.5%;
+  border-radius: 16px;
+}
+.volumesong {
+  position: absolute;
+  left: 70%;
+  bottom: -5px;
+  margin: 0px 21px;
+}
+.btnplaylist {
+  left: 96%;
+  bottom: 16px;
+  position: absolute;
+}
 .controls {
   float: left;
 }
@@ -18,19 +65,26 @@
   float: left;
   cursor: pointer;
 }
-
-.controls > a:hover {
+.controls .childs {
+  position: absolute;
+  left: 35.5%;
+  bottom: -8px;
+}
+.songicon:hover {
   color: #b3b3b3;
   font-size: 20px;
+}
+.controls.childs.songicon:hover {
+  font-size: 40px;
 }
 
 .progress {
   position: absolute;
-  left: 110px;
-  /* top: 15px; */
-  right: 160px;
-  bottom: 15px;
-  background: black;
+  left: 5%;
+  top: 15px;
+  height: 6px;
+  right: 20%;
+  background: white;
   cursor: pointer;
 }
 .progress > .bar {
@@ -44,20 +98,25 @@
 .progress > .bar > div {
   position: absolute;
   left: 0;
-  top: 0;
-  bottom: 0;
-  width: 50%;
-  background: white;
+  top: -6px;
+  bottom: -2px;
+  background: #495057;
 }
 
-.time {
+.time1,
+.time2 {
   position: absolute;
-  right: 0;
   width: 100px;
   color: white;
   font-size: 12px;
-  padding-top: 16px;
+  top: 10px;
   text-align: center;
+}
+.time1 {
+  left: -8%;
+}
+.time2 {
+  right: 7%;
 }
 .volume {
   position: absolute;
@@ -75,4 +134,8 @@
 }
 .volume a:hover {
   text-decoration: none;
+}
+val.voluebnt:hover {
+  background-color: lightgray;
+  font-size: 2em;
 }
