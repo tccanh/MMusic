@@ -6,6 +6,7 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable no-return-assign */
 const router = require('express').Router();
+const passport = require('passport');
 const Track = require('../../models/Track');
 const Artist = require('../../models/Artist');
 const User = require('../../models/User');
@@ -64,197 +65,221 @@ router.get('/:id', (req, res) => {
 });
 
 // Track create or update image
-router.post('/', (req, res) => {
-  const { errors, isValid } = validateTrack(req.body);
-  const {
-    name,
-    image,
-    artists,
-    authors,
-    album,
-    genre,
-    country,
-    released,
-    link,
-    duration,
-    format,
-    bit_rate,
-    bytes
-  } = req.body;
-  if (!isValid) {
-    return res.status(400).json(errors);
-  }
-  const newTrack = {};
-  newTrack.owner = req.user.id;
-  if (name) newTrack.name = name;
-  if (image) newTrack.image = image;
-  if (genre) newTrack.genre = genre;
-  if (link) newTrack.link = link;
-  if (format) newTrack.format = format;
-  if (bit_rate) newTrack.bit_rate = bit_rate;
-  if (bytes) newTrack.bytes = bytes;
-  if (duration) newTrack.duration = duration;
-  if (country) newTrack.country = country;
-  if (released) newTrack.released = released;
-  newTrack.authors = authors.split(',').map(auth => formatText(auth));
+router.post(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validateTrack(req.body);
+    const {
+      name,
+      image,
+      artists,
+      authors,
+      album,
+      genre,
+      country,
+      released,
+      link,
+      duration,
+      format,
+      bit_rate,
+      bytes
+    } = req.body;
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+    const newTrack = {};
+    newTrack.owner = req.user.id;
+    if (name) newTrack.name = name;
+    if (image) newTrack.image = image;
+    if (genre) newTrack.genre = genre;
+    if (link) newTrack.link = link;
+    if (format) newTrack.format = format;
+    if (bit_rate) newTrack.bit_rate = bit_rate;
+    if (bytes) newTrack.bytes = bytes;
+    if (duration) newTrack.duration = duration;
+    if (country) newTrack.country = country;
+    if (released) newTrack.released = released;
+    newTrack.authors = authors.split(',').map(auth => formatText(auth));
 
-  if (artists) {
-    const listArtists = artists.split(',').map(arts => formatText(arts));
-    console.log('hehe', listArtists);
+    if (artists) {
+      const listArtists = artists.split(',').map(arts => formatText(arts));
+      console.log('hehe', listArtists);
 
-    const newArtists = [];
-    let albID;
-    Promise.all(
-      listArtists.map(async value => {
-        try {
-          const temp = await Artist.findOne({ name: value });
-          if (temp) {
-            newArtists.unshift(temp.id);
+      const newArtists = [];
+      let albID;
+      Promise.all(
+        listArtists.map(async value => {
+          try {
+            const temp = await Artist.findOne({ name: value });
+            if (temp) {
+              newArtists.unshift(temp.id);
+            } else {
+              const newArst = new Artist({
+                name: value,
+                image,
+                genres: [genre]
+              });
+              const newTemp = await newArst.save();
+              newArtists.unshift({ artist: newTemp.id, name: newTemp.name });
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        }),
+        (async () => {
+          const alb = await Album.findOne({ name: album });
+          if (!isEmpty(alb)) {
+            albID = alb.id;
           } else {
-            const newArst = new Artist({
-              name: value,
-              image,
-              genres: [genre]
+            const newAlb = new Album({
+              name: album,
+              image
             });
-            const newTemp = await newArst.save();
-            newArtists.unshift({ artist: newTemp.id, name: newTemp.name });
+            // eslint-disable-next-line no-underscore-dangle
+            const _alb = await newAlb.save();
+            albID = _alb.id;
           }
-        } catch (error) {
-          console.log(error);
-        }
-      }),
-      (async () => {
-        const alb = await Album.findOne({ name: album });
-        if (!isEmpty(alb)) {
-          albID = alb.id;
-        } else {
-          const newAlb = new Album({
-            name: album,
-            image
+        })()
+      ).finally(() => {
+        newTrack.artists = newArtists;
+        newTrack.album = albID;
+        // console.log(newTrack);
+
+        new Track(newTrack)
+          .save()
+          .then(__track => res.json(__track))
+          .catch(err => {
+            errors.track = `FUCK : ${err}`;
+            return res.status(400).json(errors);
           });
-          // eslint-disable-next-line no-underscore-dangle
-          const _alb = await newAlb.save();
-          albID = _alb.id;
-        }
-      })()
-    ).finally(() => {
-      newTrack.artists = newArtists;
-      newTrack.album = albID;
-      // console.log(newTrack);
-
-      new Track(newTrack)
-        .save()
-        .then(__track => res.json(__track))
-        .catch(err => {
-          errors.track = `FUCK : ${err}`;
-          return res.status(400).json(errors);
-        });
-    });
+      });
+    }
   }
-});
+);
 
-router.post('/comment/:id', (req, res) => {
-  //   const { errors, isValid } = validateCMT(req.body);
-  // Check Validation
-  //   if (!isValid) {
-  //     // Return any errors with 400 status
-  //     return res.status(400).json(errors);
-  //   }
-  Track.findById(req.params.id)
-    .then(track => {
-      const newComment = {
-        text: req.body.text,
-        user: req.user.id,
-        name: req.user.name,
-        avatar: req.body.avatar
-      };
-      // Add to comments array
-      track.comments.unshift(newComment);
-      track.save().then(_post => res.json(_post));
-    })
-    .catch(err => res.json({ noTrackFound: 'Not post found.' }));
-});
-router.delete('/comment/:id/:cmt_id', (req, res) => {
-  User.findById(req.user.id)
-    .then(_user => {
-      Track.findById(req.params.id)
-        .then(track => {
-          if (
-            track.comments.filter(
-              cmt => cmt.id.toString() === req.params.cmt_id
-            ).length === 0
-          ) {
-            return res
-              .status(404)
-              .json({ commentNotExist: 'Comment is not exists' });
-          }
-          // Get remove
-          const removeIndex = track.comments
-            .map(cmt => cmt.id.toString())
-            .indexOf(req.params.cmt_id);
-          track.comments.splice(removeIndex, 1);
-          track.save().then(post => res.json(post));
-        })
-        .catch(err => {
-          res.status(404).json({ noPostFound: 'Not post found.' });
-        });
-    })
-    .catch(err => res.status(400).json({ UserErrors: 'USER not found' }));
-});
+router.post(
+  '/comment/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    //   const { errors, isValid } = validateCMT(req.body);
+    // Check Validation
+    //   if (!isValid) {
+    //     // Return any errors with 400 status
+    //     return res.status(400).json(errors);
+    //   }
+    Track.findById(req.params.id)
+      .then(track => {
+        const newComment = {
+          text: req.body.text,
+          user: req.user.id,
+          name: req.user.name,
+          avatar: req.body.avatar
+        };
+        // Add to comments array
+        track.comments.unshift(newComment);
+        track.save().then(_post => res.json(_post));
+      })
+      .catch(err => res.json({ noTrackFound: 'Not post found.' }));
+  }
+);
+router.delete(
+  '/comment/:id/:cmt_id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    User.findById(req.user.id)
+      .then(_user => {
+        Track.findById(req.params.id)
+          .then(track => {
+            if (
+              track.comments.filter(
+                cmt => cmt.id.toString() === req.params.cmt_id
+              ).length === 0
+            ) {
+              return res
+                .status(404)
+                .json({ commentNotExist: 'Comment is not exists' });
+            }
+            // Get remove
+            const removeIndex = track.comments
+              .map(cmt => cmt.id.toString())
+              .indexOf(req.params.cmt_id);
+            track.comments.splice(removeIndex, 1);
+            track.save().then(post => res.json(post));
+          })
+          .catch(err => {
+            res.status(404).json({ noPostFound: 'Not post found.' });
+          });
+      })
+      .catch(err => res.status(400).json({ UserErrors: 'USER not found' }));
+  }
+);
 
-router.post('/like/:id', (req, res) => {
-  User.findById(req.user.id)
-    .then(_user => {
-      Track.findById(req.params.id)
-        .then(track => {
-          if (
-            track.likes.filter(like => like.user.toString() === req.user.id)
-              .length > 0
-          ) {
-            return res
-              .status(400)
-              .json({ alreadyLike: 'User already liked this post' });
-          }
-          track.likes.unshift({ user: req.user.id });
-          track.save().then(__track => res.json(__track));
-        })
-        .catch(err => {
-          res.status(404).json({ noPostFound: 'Not post found' });
-        });
-    })
-    .catch(err => res.status(400).json({ UserErrors: 'USER not found' }));
-});
-router.post('/unlike/:id', (req, res, next) => {
-  User.findById(req.user.id)
-    .then(_user => {
-      Track.findById(req.params.id)
-        .then(track => {
-          if (
-            track.likes.filter(like => like.user.toString() === req.user.id)
-              .length === 0
-          ) {
-            return res
-              .status(400)
-              .json({ notLike: 'You has not like this post yet.' });
-          }
-          const removeIndex = track.likes
-            .map(value => value.user.toString())
-            .indexOf(req.params.id);
-          // Remove out array likes
-          track.likes.splice(removeIndex, 1);
-          track.save().then(post => res.json(post));
-        })
-        .catch(err => {
-          res.status(404).json({ noPostFound: 'Not post found.' });
-        });
-    })
-    .catch(err => res.status(400).json({ UserErrors: 'USER not found' }));
-});
+router.post(
+  '/like/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    User.findById(req.user.id)
+      .then(_user => {
+        Track.findById(req.params.id)
+          .then(track => {
+            if (
+              track.likes.filter(like => like.user.toString() === req.user.id)
+                .length > 0
+            ) {
+              return res
+                .status(400)
+                .json({ alreadyLike: 'User already liked this post' });
+            }
+            track.likes.unshift({ user: req.user.id });
+            track.save().then(__track => res.json(__track));
+          })
+          .catch(err => {
+            res.status(404).json({ noPostFound: 'Not post found' });
+          });
+      })
+      .catch(err => res.status(400).json({ UserErrors: 'USER not found' }));
+  }
+);
+router.post(
+  '/unlike/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res, next) => {
+    User.findById(req.user.id)
+      .then(_user => {
+        Track.findById(req.params.id)
+          .then(track => {
+            if (
+              track.likes.filter(like => like.user.toString() === req.user.id)
+                .length === 0
+            ) {
+              return res
+                .status(400)
+                .json({ notLike: 'You has not like this post yet.' });
+            }
+            const removeIndex = track.likes
+              .map(value => value.user.toString())
+              .indexOf(req.params.id);
+            // Remove out array likes
+            track.likes.splice(removeIndex, 1);
+            track.save().then(post => res.json(post));
+          })
+          .catch(err => {
+            res.status(404).json({ noPostFound: 'Not post found.' });
+          });
+      })
+      .catch(err => res.status(400).json({ UserErrors: 'USER not found' }));
+  }
+);
 
-router.delete('/:track_id', (req, res, next) => {
-  Track.findByIdAndRemove(req.params.track_id)
-    .then((haha, hihi) => res.json({ Success: true }))
-    .catch(err => res.status(400).json(`Track not found: ${err}`));
-});
+router.delete(
+  '/:track_id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res, next) => {
+    Track.findByIdAndRemove(req.params.track_id)
+      .then((haha, hihi) => res.json({ Success: true }))
+      .catch(err => res.status(400).json(`Track not found: ${err}`));
+  }
+);
 
 module.exports = router;

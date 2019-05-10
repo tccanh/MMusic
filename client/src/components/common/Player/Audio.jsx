@@ -64,13 +64,16 @@ const Audio = props => {
         curIndex={index}
         songPicker={i => setIndex(i)}
       />
-      <img className="imagesong" src={curSrc.image} />
-      <div className="infosong">
-        <p className="namesong">{curSrc.name}</p>
-        {collapeArtists(curSrc.artists) && (
-          <p className="artistsong">{collapeArtists(curSrc.artists)}</p>
-        )}
-      </div>
+
+      {curSrc && <img className="imagesong" src={curSrc.image} />}
+      {curSrc && (
+        <div className="infosong">
+          <p className="namesong">{curSrc.name}</p>
+          {collapeArtists(curSrc.artists) && (
+            <p className="artistsong">{collapeArtists(curSrc.artists)}</p>
+          )}
+        </div>
+      )}
       {love ? (
         <Favorite
           onClick={() => handleLove()}

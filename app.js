@@ -85,38 +85,13 @@ mongoose.connect(
 cloudinary.config(CONFIGS.CLODINARY_CONFIG);
 
 app.use('/', indexRouter);
-app.use(
-  '/users',
-  passport.authenticate('jwt', { session: false }),
-  usersRouter
-);
-app.use(
-  '/api/album',
-  passport.authenticate('jwt', { session: false }),
-  albumRouter
-);
-app.use(
-  '/api/artist',
-  passport.authenticate('jwt', { session: false }),
-  artistRouter
-);
-app.use(
-  '/api/genre',
-  // passport.authenticate("jwt", { session: false }),
-  genreRouter
-);
-app.use(
-  '/api/playlist',
-  passport.authenticate('jwt', { session: false }),
-  playlistRouter
-);
-app.use(
-  '/api/track',
-  passport.authenticate('jwt', { session: false }),
-  trackRouter
-);
-
 app.use('/auth', authRouter);
+app.use('/users', usersRouter);
+app.use('/api/album', albumRouter);
+app.use('/api/artist', artistRouter);
+app.use('/api/genre', genreRouter);
+app.use('/api/playlist', playlistRouter);
+app.use('/api/track', trackRouter);
 app.use('/api/search', searchRouter);
 app.use('/api/upload', uploadImageRouter);
 app.use('/api/upload', uploadMediaRouter);
