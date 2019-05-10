@@ -9,7 +9,7 @@ import {
 } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import Player from './Player';
-
+import Playing from './Playing';
 const Audio = props => {
   const [curSrc, setCurSrc] = useState('');
   const [index, setIndex] = useState(0);
@@ -19,6 +19,7 @@ const Audio = props => {
   const [love, setLove] = useState(false);
   const [suffle, setSuffle] = useState(false);
   const [random, setRandom] = useState(1);
+  const [playlist, setPlaylist] = useState(false);
   useEffect(() => {
     setSongs(props.songs);
     setTotal(props.songs.length);
@@ -54,8 +55,15 @@ const Audio = props => {
     setSuffle(pre => !pre);
     setRandom(Math.floor(Math.random() * (total - 1) + 1));
   }
+
   return (
     <>
+      <Playing
+        open={playlist}
+        songs={songs}
+        curIndex={index}
+        songPicker={i => setIndex(i)}
+      />
       <img className="imagesong" src={curSrc.image} />
       <div className="infosong">
         <p className="namesong">{curSrc.name}</p>
@@ -134,7 +142,7 @@ const Audio = props => {
         }}
       />
       <PlaylistPlay
-        onClick={() => console.log(collapeArtists(curSrc.artists))}
+        onClick={() => setPlaylist(pre => !pre)}
         className="songicon btnplaylist"
         style={{ fontSize: 'xx-large' }}
       />

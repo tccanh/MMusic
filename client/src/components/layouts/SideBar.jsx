@@ -31,7 +31,7 @@ import {
 import { logoutUser } from '../../actions/auth.action';
 import { NavLink } from 'react-router-dom';
 import Audio from '../common/Player/Audio';
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 const styles = theme => ({
   appBar: {
@@ -86,10 +86,6 @@ const styles = theme => ({
     justifyContent: 'flex-end',
     padding: '0 8px',
     ...theme.mixins.toolbar
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3)
   }
 });
 

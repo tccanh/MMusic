@@ -24,7 +24,6 @@ import CreateArtist from './components/main/artists/CreateArtist';
 import Tracks from './components/main/tracks/Tracks';
 import Playlists from './components/main/playlists/Playlists';
 import Upload from './components/upload/Upload';
-
 //=================================================
 //Check for token
 if (localStorage.jwtToken) {
