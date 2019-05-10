@@ -10,7 +10,7 @@ import Notifications, { notify } from 'react-notify-toast';
 import axios from 'axios';
 import Buttons from '../../upload/subUpload/Buttons';
 import Images from '../../upload/subUpload/Images';
-import Spinner from '../../common/Spinner/Spinner';
+import Circular from '../../common/Progress/Circular';
 
 const toastColor = {
   background: 'red',
@@ -135,7 +135,7 @@ class CreateArtist extends Component {
     const content = () => {
       switch (true) {
         case uploading:
-          return <Spinner size="3x" />;
+          return <Circular />;
         case images.length > 0:
           return (
             <Images

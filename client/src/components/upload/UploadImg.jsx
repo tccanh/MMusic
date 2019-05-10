@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import Buttons from './subUpload/Buttons';
 import Images from './subUpload/Images';
-import Spinner from '../common/Spinner/Spinner';
+import Circular from '../common/Progress/Circular';
 
 const toastColor = {
   background: 'red',
@@ -93,7 +93,7 @@ export class UploadImg extends Component {
     const content = () => {
       switch (true) {
         case uploading:
-          return <Spinner />;
+          return <Circular />;
         case images.length > 0:
           return <Images images={images} removeImage={this.removeImage} />;
         default:

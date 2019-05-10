@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ListGenres from './ListGenres';
 import { getGenres } from '../../../actions/genre.action';
-import Spinner from '../../common/Spinner/Spinner';
 import { Link } from 'react-router-dom';
+import Circular from '../../common/Progress/Circular';
 class Genres extends Component {
   componentDidMount() {
     this.props.getGenres(); // cập nhật lúc đầu
@@ -14,7 +14,7 @@ class Genres extends Component {
     const { genres, loading } = this.props.genre;
     let GenresContent;
     if (genres === null || loading) {
-      GenresContent = <Spinner />;
+      GenresContent = <Circular />;
     } else {
       GenresContent = <ListGenres genres={genres} />;
     }

@@ -12,11 +12,11 @@ import Notifications, { notify } from 'react-notify-toast';
 import axios from 'axios';
 import Buttons from '../../upload/subUpload/Buttons';
 import Images from '../../upload/subUpload/Images';
-import Spinner from '../../common/Spinner/Spinner';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
+import Circular from '../../common/Progress/Circular';
 const toastColor = {
   background: 'red',
   text: '#fff'
@@ -143,7 +143,7 @@ class CreatePlaylist extends Component {
     const content = () => {
       switch (true) {
         case uploading:
-          return <Spinner size="3x" />;
+          return <Circular />;
         case images.length > 0:
           return (
             <Images

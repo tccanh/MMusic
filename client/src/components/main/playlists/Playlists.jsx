@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ListPlaylists from './ListPlaylists';
-import Spinner from '../../common/Spinner/Spinner';
 import { getPlaylists } from '../../../actions/playlist.action';
 import CreatePlaylist from './CreatePlaylist';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
+import Circular from '../../common/Progress/Circular';
 class Playlists extends Component {
   constructor(props) {
     super(props);
@@ -30,7 +30,7 @@ class Playlists extends Component {
     const { playlists, loading } = this.props.playlist;
     let PlaylistsContent;
     if (playlists === null || loading) {
-      PlaylistsContent = <Spinner />;
+      PlaylistsContent = <Circular />;
     } else {
       PlaylistsContent = <ListPlaylists playlists={playlists} />;
     }

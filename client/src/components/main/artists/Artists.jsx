@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import ListArtists from './ListArtists';
 import { Link } from 'react-router-dom';
 import { getArtists } from '../../../actions/artist.action';
-import Spinner from '../../common/Spinner/Spinner';
+import Circular from '../../common/Progress/Circular';
 class Artists extends Component {
   componentDidMount() {
     this.props.getArtists(); // cập nhật lúc đầu
@@ -14,7 +14,7 @@ class Artists extends Component {
     const { artists, loading } = this.props.artist;
     let ArtistsContent;
     if (artists === null || loading) {
-      ArtistsContent = <Spinner />;
+      ArtistsContent = <Circular />;
     } else {
       ArtistsContent = <ListArtists artists={artists} />;
     }

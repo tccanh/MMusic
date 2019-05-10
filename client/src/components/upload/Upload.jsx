@@ -11,7 +11,7 @@ import Notifications, { notify } from 'react-notify-toast';
 import axios from 'axios';
 import Buttons from './subUpload/Buttons';
 import Images from './subUpload/Images';
-import Spinner from '../common/Spinner/Spinner';
+import Circular from '../common/Progress/Circular';
 import { faFileAudio } from '@fortawesome/free-solid-svg-icons';
 const toastColor = {
   background: 'red',
@@ -215,7 +215,7 @@ class Upload extends Component {
     const uploadImageContent = () => {
       switch (true) {
         case isuploadImage:
-          return <Spinner size="1x" />;
+          return <Circular />;
         case images.length > 0:
           return (
             <Images
@@ -231,7 +231,7 @@ class Upload extends Component {
     const uploadMediaContent = () => {
       switch (true) {
         case isuploadMedia:
-          return <Spinner size="1x" />;
+          return <Circular />;
         case media.length > 0:
           return (
             // <MusicPlay

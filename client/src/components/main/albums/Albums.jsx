@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import ListAlbums from './ListAlbums';
 import { Link } from 'react-router-dom';
 import { getAlbums } from '../../../actions/album.action';
-import Spinner from '../../common/Spinner/Spinner';
+import Circular from '../../common/Progress/Circular';
 class Albums extends Component {
   componentDidMount() {
     this.props.getAlbums(); // cập nhật lúc đầu
@@ -14,7 +14,7 @@ class Albums extends Component {
     const { albums, loading } = this.props.album;
     let AlbumsContent;
     if (albums === null || loading) {
-      AlbumsContent = <Spinner />;
+      AlbumsContent = <Circular></Circular>
     } else {
       AlbumsContent = <ListAlbums albums={albums} />;
     }

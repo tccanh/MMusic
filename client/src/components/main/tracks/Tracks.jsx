@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import { getTracks } from '../../../actions/track.action';
 import { addSongs } from '../../../actions/song.action';
 import ListTrack from './ListTrack';
-import Spinner from '../../common/Spinner/Spinner';
 import { Button } from '@material-ui/core';
+import Circular from '../../common/Progress/Circular';
 class Tracks extends Component {
   static propTypes = {
     getTracks: PropTypes.func.isRequired,
@@ -23,7 +23,7 @@ class Tracks extends Component {
     let TrackContent;
     const { tracks, loading } = this.props.track;
     if (tracks === null || loading) {
-      TrackContent = <Spinner />;
+      TrackContent = <Circular />;
     } else {
       TrackContent = <ListTrack tracks={tracks} />;
     }
