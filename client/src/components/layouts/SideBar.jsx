@@ -153,6 +153,8 @@ class SideBar extends React.Component {
 
   render() {
     const { songs } = this.state;
+    console.log('CHECK SONG', songs);
+
     const { classes, theme } = this.props;
     const { isAuthenticated } = this.props.auth;
     const isAuthRender = isAuthenticated ? (
@@ -196,7 +198,7 @@ class SideBar extends React.Component {
               Best Places to Upload Your Music
             </Typography>
 
-            {songs && <Audio songs={songs} />}
+            {songs && songs.length > 0 && <Audio songs={songs} />}
           </Toolbar>
         </AppBar>
         <Drawer

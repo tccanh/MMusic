@@ -86,7 +86,11 @@ cloudinary.config(CONFIGS.CLODINARY_CONFIG);
 
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
-app.use('/users', usersRouter);
+app.use(
+  '/users',
+  passport.authenticate('jwt', { session: false }),
+  usersRouter
+);
 app.use('/api/album', albumRouter);
 app.use('/api/artist', artistRouter);
 app.use('/api/genre', genreRouter);

@@ -101,6 +101,9 @@ class Upload extends Component {
   }
   toast = notify.createShowQueue();
 
+  removeImage = id => {
+    this.setState({ images: this.filter(id) });
+  };
   onChangeImage = e => {
     const ImgErrs = [];
     const ImageFile = e.target.files[0];

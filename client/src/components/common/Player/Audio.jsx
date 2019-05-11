@@ -21,19 +21,21 @@ const Audio = props => {
   const [random, setRandom] = useState(1);
   const [playlist, setPlaylist] = useState(false);
   useEffect(() => {
-    setSongs(props.songs);
-    setTotal(props.songs.length);
-    setCurSrc(props.songs[0]);
-    setRandom(Math.floor(Math.random() * (props.songs.length - 1)) + 1);
+    if (props.songs) {
+      setSongs(props.songs);
+      setTotal(props.songs.length);
+      setCurSrc(props.songs[0]);
+      setRandom(Math.floor(Math.random() * (props.songs.length - 1)) + 1);
+    }
     return () => {
-      // console.log('Did UnMount 1');
+      console.log('Did UnMount 1');
     };
   }, [props.songs]);
   useEffect(() => {
     if (songs) setCurSrc(songs[index]);
-    // console.log('Did Mount 2');
+    console.log('Did Mount 2');
     return () => {
-      // console.log('Did UnMount 2');
+      console.log('Did UnMount 2');
     };
   }, [index, songs]);
   function collapeArtists(artists) {
