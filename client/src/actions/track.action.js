@@ -84,7 +84,9 @@ export const unlikeTrack = data => dispatch => {
 export const increaseViews = data => dispatch => {
   axios
     .post(`/api/track/increase/views/${data}`)
-    .then(res => console.log('View is increased'))
+    .then(res => {
+      // console.log('View is increased');
+    })
     .catch(err =>
       dispatch({
         type: GET_ERRORS,

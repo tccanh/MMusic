@@ -22,11 +22,17 @@ class Player extends Component {
       volume: 0.5,
       in_set_progress_mode: false
     };
-
     this.is_progress_dirty = false;
   }
   componentWillReceiveProps() {
-    this.interval_id = setInterval(this.onUpdate.bind(this), 250);
+    //console.log('OUT:', this.interval);
+    if (this.interval) {
+      //console.log('Clear', this.interval);
+      clearInterval(this.interval);
+    } else {
+      this.interval = setInterval(this.onUpdate.bind(this), 250);
+      //console.log('Create:', this.interval);
+    }
   }
   onUpdate() {
     if (this._player.current) {

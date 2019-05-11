@@ -45,8 +45,6 @@ import { Collapse, Avatar } from '@material-ui/core';
 const drawerWidth = 180;
 
 const styles = theme => ({
-  root: { color: 'white', fontSize: '2rem' },
-
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {

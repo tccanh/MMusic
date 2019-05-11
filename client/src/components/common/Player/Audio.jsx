@@ -30,7 +30,7 @@ const Audio = props => {
       setRandom(Math.floor(Math.random() * (props.songs.length - 1)) + 1);
     }
     return () => {
-      console.log('Unmount Start');
+      //console.log('Unmount Start');
     };
   }, [props.songs]);
 
@@ -39,7 +39,7 @@ const Audio = props => {
       setIsAuth(props.isAuthenticated);
     }
     return () => {
-      console.log('Unmount: Authenticated');
+      //console.log('Unmount: Authenticated');
     };
   }, [props.isAuthenticated]);
 
@@ -48,9 +48,9 @@ const Audio = props => {
       const currentSong = songs[index];
       setCurSrc(currentSong);
     }
-    console.log('Mount: CurSrc');
+    //console.log('Mount: CurSrc');
     return () => {
-      console.log('Unmount: CurSrc');
+      //console.log('Unmount: CurSrc');
     };
   }, [index, songs]);
 
@@ -59,9 +59,9 @@ const Audio = props => {
       props.increaseView(curSrc.id);
     }
 
-    console.log('Mount: View');
+    //console.log('Mount: View');
     return () => {
-      console.log('Unmount: View');
+      //console.log('Unmount: View');
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [curSrc.id]);
@@ -70,9 +70,9 @@ const Audio = props => {
     if (curSrc.isLike) {
       setLove(curSrc.isLike);
     }
-    console.log('Mount: Love');
+    //console.log('Mount: Love');
     return () => {
-      console.log('Unmount: Love');
+      //console.log('Unmount: Love');
     };
   }, [curSrc.isLike]);
 
@@ -91,10 +91,10 @@ const Audio = props => {
 
   function handleLove() {
     if (love) {
-      console.log(curSrc.id);
+      //console.log(curSrc.id);
       props.unLikeSong(curSrc.id);
     } else {
-      console.log(curSrc.id);
+      //console.log(curSrc.id);
       props.likeSong(curSrc.id);
     }
     return setLove(pre => !pre);
@@ -172,19 +172,19 @@ const Audio = props => {
         loop={loop === 2}
         onNext={() => {
           const next = suffle ? random : 1;
-          // console.log('ran1', next);
+          // //console.log('ran1', next);
           return setIndex(pre => (pre + next) % total);
         }}
         onPrev={() => {
           const next = suffle ? random : 1;
-          // console.log('ran2', next);
+          // //console.log('ran2', next);
           return setIndex(pre => (pre + total - next) % total);
         }}
         onDone={() => {
           const next = suffle ? random : 1;
           if (loop !== 2) {
             if (loop === 1) {
-              // console.log('ondone');
+              // //console.log('ondone');
               return setIndex(pre => (pre + next) % total);
             }
             if (index !== total - 1) {

@@ -36,9 +36,9 @@
 .imagesong {
   position: absolute;
   border: unset;
-  max-width: 68px;
+  max-width: 50px;
   left: 35.5%;
-  border-radius: 16px;
+  border-radius: 8px;
 }
 .volumesong {
   position: absolute;
