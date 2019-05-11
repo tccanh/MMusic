@@ -25,14 +25,13 @@ class Player extends Component {
     this.is_progress_dirty = false;
   }
   componentWillReceiveProps() {
-    //console.log('OUT:', this.interval);
-    if (this.interval) {
-      //console.log('Clear', this.interval);
-      clearInterval(this.interval);
-    } else {
+    new Promise(resole => {
+      console.log('Clean old interval:', this.interval);
+      return resole(clearInterval(this.interval));
+    }).then(() => {
       this.interval = setInterval(this.onUpdate.bind(this), 250);
-      //console.log('Create:', this.interval);
-    }
+      console.log('Create new interval:', this.interval);
+    });
   }
   onUpdate() {
     if (this._player.current) {
