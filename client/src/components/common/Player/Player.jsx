@@ -91,6 +91,7 @@ class Player extends Component {
     if (this._player.current) {
       if (this._player.current.currentSrc !== src && src !== null) {
         this._player.current.src = src;
+        this._player.current.load();
       }
 
       if (this._player.current.paused && !this._player.current.ended) {
@@ -167,8 +168,6 @@ class Player extends Component {
           autoPlay={is_playing}
           onEnded={() => onDone()}
         >
-          {src && <source src={src} />}
-
           <source />
         </audio>
       </div>

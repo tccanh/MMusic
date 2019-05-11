@@ -214,7 +214,17 @@ router.delete(
       .catch(err => res.status(400).json({ UserErrors: 'USER not found' }));
   }
 );
-
+router.post('/increase/views/:id', (req, res) => {
+  Track.findById(req.params.id)
+    .then(track => {
+      // eslint-disable-next-line no-param-reassign
+      track.views += 1;
+      track.save().then(track_ => res.json({ success: true }));
+    })
+    .catch(err =>
+      res.status(404).json({ notrackFounds: `No tracks found: ${err}` })
+    );
+});
 router.post(
   '/like/:id',
   passport.authenticate('jwt', { session: false }),

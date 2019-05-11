@@ -58,6 +58,41 @@ export const createTrack = (data, history) => dispatch => {
       })
     );
 };
+
+export const likeTrack = data => dispatch => {
+  axios
+    .post(`/api/track/like/${data}`)
+    .then(res => console.log('Liked'))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+export const unlikeTrack = data => dispatch => {
+  axios
+    .post(`/api/track/unlike/${data}`)
+    .then(res => console.log('Unliked'))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+export const increaseViews = data => dispatch => {
+  axios
+    .post(`/api/track/increase/views/${data}`)
+    .then(res => console.log('View is increased'))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
 export const clearErrors = () => {
   return {
     type: CLEAR_ERRORS

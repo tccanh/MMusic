@@ -20,24 +20,62 @@ const Audio = props => {
   const [suffle, setSuffle] = useState(false);
   const [random, setRandom] = useState(1);
   const [playlist, setPlaylist] = useState(false);
+  const [isAuth, setIsAuth] = useState(false);
   useEffect(() => {
     if (props.songs) {
       setSongs(props.songs);
       setTotal(props.songs.length);
       setCurSrc(props.songs[0]);
+      setLove(props.songs[0].isLike);
       setRandom(Math.floor(Math.random() * (props.songs.length - 1)) + 1);
     }
     return () => {
-      console.log('Did UnMount 1');
+      console.log('Unmount Start');
     };
   }, [props.songs]);
+
   useEffect(() => {
-    if (songs) setCurSrc(songs[index]);
-    console.log('Did Mount 2');
+    if (props.isAuthenticated) {
+      setIsAuth(props.isAuthenticated);
+    }
     return () => {
-      console.log('Did UnMount 2');
+      console.log('Unmount: Authenticated');
+    };
+  }, [props.isAuthenticated]);
+
+  useEffect(() => {
+    if (songs) {
+      const currentSong = songs[index];
+      setCurSrc(currentSong);
+    }
+    console.log('Mount: CurSrc');
+    return () => {
+      console.log('Unmount: CurSrc');
     };
   }, [index, songs]);
+
+  useEffect(() => {
+    if (curSrc.id) {
+      props.increaseView(curSrc.id);
+    }
+
+    console.log('Mount: View');
+    return () => {
+      console.log('Unmount: View');
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [curSrc.id]);
+
+  useEffect(() => {
+    if (curSrc.isLike) {
+      setLove(curSrc.isLike);
+    }
+    console.log('Mount: Love');
+    return () => {
+      console.log('Unmount: Love');
+    };
+  }, [curSrc.isLike]);
+
   function collapeArtists(artists) {
     if (artists) {
       return artists
@@ -50,8 +88,16 @@ const Audio = props => {
   function handleLoop() {
     setLoop(pre => (pre + 1) % 3);
   }
+
   function handleLove() {
-    setLove(pre => !pre);
+    if (love) {
+      console.log(curSrc.id);
+      props.unLikeSong(curSrc.id);
+    } else {
+      console.log(curSrc.id);
+      props.likeSong(curSrc.id);
+    }
+    return setLove(pre => !pre);
   }
   function handleSuffle() {
     setSuffle(pre => !pre);
@@ -76,19 +122,21 @@ const Audio = props => {
           )}
         </div>
       )}
-      {love ? (
-        <Favorite
-          onClick={() => handleLove()}
-          className="songicon lovesong"
-          style={{ fontSize: 'x-large', color: 'red' }}
-        />
-      ) : (
-        <Favorite
-          onClick={() => handleLove()}
-          className="songicon lovesong"
-          style={{ fontSize: 'x-large' }}
-        />
-      )}
+      {isAuth ? (
+        love ? (
+          <Favorite
+            onClick={() => handleLove()}
+            className="songicon lovesong"
+            style={{ fontSize: 'x-large', color: 'red' }}
+          />
+        ) : (
+          <Favorite
+            onClick={() => handleLove()}
+            className="songicon lovesong"
+            style={{ fontSize: 'x-large' }}
+          />
+        )
+      ) : null}
       {suffle ? (
         <Shuffle
           onClick={() => handleSuffle()}
@@ -156,7 +204,10 @@ const Audio = props => {
 };
 
 Audio.propTypes = {
-  songs: PropTypes.array.isRequired
+  songs: PropTypes.array.isRequired,
+  unLikeSong: PropTypes.func.isRequired,
+  likeSong: PropTypes.func.isRequired,
+  increaseView: PropTypes.func.isRequired
 };
 
 export default Audio;

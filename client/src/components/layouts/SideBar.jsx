@@ -27,7 +27,11 @@ import {
   ExitToApp,
   PowerSettingsNew
 } from '@material-ui/icons';
-
+import {
+  likeTrack,
+  unlikeTrack,
+  increaseViews
+} from '../../actions/track.action';
 import { logoutUser } from '../../actions/auth.action';
 import { NavLink } from 'react-router-dom';
 import Audio from '../common/Player/Audio';
@@ -135,9 +139,23 @@ class SideBar extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    this.setState({
-      songs: newProps.song.songs
-    });
+    if (newProps.song.songs !== this.props.song.songs) {
+      const songs_ = newProps.song.songs.map(song => ({
+        id: song._id,
+        isLike: this.props.auth.isAuthenticated
+          ? song.likes.filter(like => like.user === this.props.auth.user.id)
+              .length > 0
+          : false,
+        authors: song.authors,
+        artists: song.artists,
+        name: song.name,
+        image: song.image,
+        link: song.link
+      }));
+      this.setState({
+        songs: songs_
+      });
+    }
   }
   onLogoutClick(e) {
     e.preventDefault();
@@ -150,11 +168,17 @@ class SideBar extends React.Component {
   handleDrawerClose = () => {
     this.setState({ open: false });
   };
-
+  handleLove(id) {
+    return this.props.likeTrack(id);
+  }
+  handleUnLove(id) {
+    return this.props.unlikeTrack(id);
+  }
+  increaseView(id) {
+    return this.props.increaseViews(id);
+  }
   render() {
     const { songs } = this.state;
-    console.log('CHECK SONG', songs);
-
     const { classes, theme } = this.props;
     const { isAuthenticated } = this.props.auth;
     const isAuthRender = isAuthenticated ? (
@@ -198,7 +222,15 @@ class SideBar extends React.Component {
               Best Places to Upload Your Music
             </Typography>
 
-            {songs && songs.length > 0 && <Audio songs={songs} />}
+            {songs && songs.length > 0 && (
+              <Audio
+                songs={songs}
+                isAuthenticated={isAuthenticated}
+                unLikeSong={this.handleUnLove.bind(this)}
+                likeSong={this.handleLove.bind(this)}
+                increaseView={this.increaseView.bind(this)}
+              />
+            )}
           </Toolbar>
         </AppBar>
         <Drawer
@@ -262,6 +294,9 @@ SideBar.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
   logoutUser: PropTypes.func.isRequired,
+  likeTrack: PropTypes.func.isRequired,
+  unlikeTrack: PropTypes.func.isRequired,
+  increaseViews: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   song: PropTypes.object.isRequired
 };
@@ -271,7 +306,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  logoutUser
+  logoutUser,
+  likeTrack,
+  unlikeTrack,
+  increaseViews
 };
 
 export default connect(
