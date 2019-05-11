@@ -17,7 +17,7 @@ class Login extends Component {
   }
   componentWillReceiveProps(nextPops) {
     if (nextPops.auth.isAuthenticated) {
-      this.props.history.push('/dashboard');
+      this.props.history.push('/');
     }
     if (nextPops.errors) {
       this.setState({ errors: nextPops.errors });
@@ -26,7 +26,7 @@ class Login extends Component {
 
   componentDidMount() {
     if (this.props.auth.isAuthenticated) {
-      this.props.history.push('/dashboard');
+      this.props.history.push('/');
     }
   }
 

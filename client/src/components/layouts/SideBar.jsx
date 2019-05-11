@@ -3,29 +3,35 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import {
+  Drawer,
+  AppBar,
+  Toolbar,
+  List,
+  CssBaseline,
+  Typography,
+  Divider,
+  IconButton,
+  ListItem,
+  ListItemIcon,
+  ListItemText
+} from '@material-ui/core';
+
 import {
   BarChart,
   LibraryMusic,
-  PlaylistPlay,
+  PlaylistAdd,
   Album,
-  MicNone,
+  Mic,
   CloudUpload,
   ExitToApp,
-  PowerSettingsNew
+  ExpandLess,
+  ExpandMore,
+  Person,
+  AccountCircle,
+  ChevronLeft,
+  ChevronRight,
+  Menu
 } from '@material-ui/icons';
 import {
   likeTrack,
@@ -35,9 +41,12 @@ import {
 import { logoutUser } from '../../actions/auth.action';
 import { NavLink } from 'react-router-dom';
 import Audio from '../common/Player/Audio';
-const drawerWidth = 200;
+import { Collapse, Avatar } from '@material-ui/core';
+const drawerWidth = 180;
 
 const styles = theme => ({
+  root: { color: 'white', fontSize: '2rem' },
+
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {
@@ -79,10 +88,7 @@ const styles = theme => ({
       duration: theme.transitions.duration.leavingScreen
     }),
     overflowX: 'hidden',
-    width: theme.spacing(7) + 1,
-    [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(9) + 1
-    }
+    width: 67
   },
   toolbar: {
     display: 'flex',
@@ -90,6 +96,11 @@ const styles = theme => ({
     justifyContent: 'flex-end',
     padding: '0 8px',
     ...theme.mixins.toolbar
+  },
+  avatar: {
+    maxHeight: 30,
+    maxWidth: 30,
+    marginRight: 30
   }
 });
 
@@ -112,12 +123,12 @@ const listLinks1 = [
   {
     title: 'Artist',
     to: '/artist',
-    icon: MicNone
+    icon: Mic
   },
   {
     title: 'Playlist',
     to: '/playlist',
-    icon: PlaylistPlay
+    icon: PlaylistAdd
   }
 ];
 const listLinks2 = [
@@ -133,6 +144,7 @@ class SideBar extends React.Component {
 
     this.state = {
       open: false,
+      openCollapse: false,
       songs: undefined
     };
     this.onLogoutClick = this.onLogoutClick.bind(this);
@@ -164,6 +176,9 @@ class SideBar extends React.Component {
   handleDrawerOpen = () => {
     this.setState({ open: true });
   };
+  handleCollapse = () => {
+    this.setState({ open: true });
+  };
 
   handleDrawerClose = () => {
     this.setState({ open: false });
@@ -178,28 +193,59 @@ class SideBar extends React.Component {
     return this.props.increaseViews(id);
   }
   render() {
-    const { songs } = this.state;
+    const { songs, openCollapse } = this.state;
     const { classes, theme } = this.props;
-    const { isAuthenticated } = this.props.auth;
+    const { isAuthenticated, user } = this.props.auth;
     const isAuthRender = isAuthenticated ? (
-      <ListItem button onClick={this.onLogoutClick}>
-        <ListItemIcon>
-          <ExitToApp />
-        </ListItemIcon>
-        <ListItemText primary="Logout" />
-      </ListItem>
+      <>
+        <ListItem
+          button
+          onClick={() =>
+            this.setState(pre => ({ openCollapse: !pre.openCollapse }))
+          }
+        >
+          {user.avatar ? (
+            <Avatar src={user.avatar} className={classes.avatar} />
+          ) : (
+            <ListItemIcon>
+              <AccountCircle />
+            </ListItemIcon>
+          )}
+          <ListItemText primary="Account" />
+          {openCollapse ? <ExpandLess /> : <ExpandMore />}
+        </ListItem>
+
+        <Collapse in={openCollapse} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <NavLink to="/profile">
+              <ListItem>
+                <ListItemIcon>
+                  <Person style={{ fontSize: 30, lineHeight: 1.5 }} />
+                </ListItemIcon>
+                <ListItemText primary="Profile" />
+              </ListItem>
+            </NavLink>
+            <ListItem button onClick={this.onLogoutClick}>
+              <ListItemIcon>
+                <ExitToApp style={{ fontSize: 30, lineHeight: 1.5 }} />
+              </ListItemIcon>
+              <ListItemText primary="Logout" />
+            </ListItem>
+          </List>
+        </Collapse>
+      </>
     ) : (
       <NavLink to="/login">
         <ListItem>
           <ListItemIcon>
-            <PowerSettingsNew />
+            <AccountCircle style={{ fontSize: 30, lineHeight: 1.5 }} />
           </ListItemIcon>
           <ListItemText primary="Login" />
         </ListItem>
       </NavLink>
     );
     return (
-      <>
+      <div className={classes.root}>
         <CssBaseline />
         <AppBar
           position="fixed"
@@ -216,7 +262,7 @@ class SideBar extends React.Component {
                 [classes.hide]: this.state.open
               })}
             >
-              <MenuIcon />
+              <Menu />
             </IconButton>
             <Typography variant="h6" color="inherit" noWrap>
               Best Places to Upload Your Music
@@ -249,11 +295,7 @@ class SideBar extends React.Component {
         >
           <div className={classes.toolbar}>
             <IconButton onClick={this.handleDrawerClose}>
-              {theme.direction === 'rtl' ? (
-                <ChevronRightIcon />
-              ) : (
-                <ChevronLeftIcon />
-              )}
+              {theme.direction === 'rtl' ? <ChevronRight /> : <ChevronLeft />}
             </IconButton>
           </div>
           <Divider />
@@ -262,7 +304,10 @@ class SideBar extends React.Component {
               <NavLink to={val.to} key={val.title}>
                 <ListItem button>
                   <ListItemIcon>
-                    <val.icon />
+                    <val.icon
+                      color="error"
+                      style={{ fontSize: 30, lineHeight: 1.5 }}
+                    />
                   </ListItemIcon>
                   <ListItemText primary={val.title} />
                 </ListItem>
@@ -275,7 +320,10 @@ class SideBar extends React.Component {
               <NavLink to={val.to} key={val.title}>
                 <ListItem button>
                   <ListItemIcon>
-                    <val.icon />
+                    <val.icon
+                      color="error"
+                      style={{ fontSize: 30, lineHeight: 1.5 }}
+                    />
                   </ListItemIcon>
                   <ListItemText primary={val.title} />
                 </ListItem>
@@ -285,7 +333,7 @@ class SideBar extends React.Component {
           <Divider />
           {isAuthRender}
         </Drawer>
-      </>
+      </div>
     );
   }
 }

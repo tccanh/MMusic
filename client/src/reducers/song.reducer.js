@@ -27,7 +27,7 @@ export default (state = initialState, { type, payload }) => {
     case ADD_SONG:
       return {
         ...state,
-        songs: [payload, ...state.songs]
+        songs: [...state.songs, payload]
       };
     case ADD_SONGS:
       return {
