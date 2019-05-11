@@ -7,6 +7,7 @@ const passport = require('passport');
 const cloudinary = require('cloudinary');
 const multer = require('multer');
 const Genre = require('../../models/Genre');
+const Track = require('../../models/Track');
 const { fileFilter, storage } = require('../../configs/uploadImage');
 
 const upload = multer({ storage, fileFilter });
@@ -16,6 +17,19 @@ router.get('/', (req, res, next) => {
   Genre.find()
     .sort({ name: 1 })
     .then(genre => res.json(genre))
+    .catch(err =>
+      res.status(404).json({ nogenreFounds: `No genres found: ${err}` })
+    );
+});
+// Get by name
+router.get('/:name', (req, res, next) => {
+  const { name } = req.params;
+  Genre.findOne({ name })
+    .then(genre => {
+      Track.find({ genre: genre.id }).then(tracks => {
+        return res.json({ tracks, genre });
+      });
+    })
     .catch(err =>
       res.status(404).json({ nogenreFounds: `No genres found: ${err}` })
     );
@@ -43,11 +57,12 @@ router.post(
       // Return any errors with 400 status
       return res.status(400).json(errors);
     }
-    const { name, image } = req.body;
+    const { name, image, description } = req.body;
     // Get fields
     const genreFields = {};
     if (name) genreFields.name = name;
     if (image) genreFields.image = image;
+    if (description) genreFields.description = description;
 
     Genre.findOne({ name }).then(genre => {
       if (genre) {

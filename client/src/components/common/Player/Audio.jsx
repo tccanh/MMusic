@@ -10,6 +10,7 @@ import {
 import PropTypes from 'prop-types';
 import Player from './Player';
 import Playing from '../Playing/Playing';
+import collapeArtists from '../../../apis/collapeArtists';
 const Audio = props => {
   const [curSrc, setCurSrc] = useState('');
   const [index, setIndex] = useState(0);
@@ -76,15 +77,6 @@ const Audio = props => {
     };
   }, [curSrc.isLike]);
 
-  function collapeArtists(artists) {
-    if (artists) {
-      return artists
-        .map(art => {
-          return art.name;
-        })
-        .join(',  ');
-    } else return undefined;
-  }
   function handleLoop() {
     setLoop(pre => (pre + 1) % 3);
   }

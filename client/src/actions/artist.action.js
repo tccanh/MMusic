@@ -1,5 +1,11 @@
 import axios from 'axios';
-import { GET_ARTISTS, ARTIST_LOADING, GET_ERRORS } from './actionTypes';
+import {
+  GET_ARTISTS,
+  ARTIST_LOADING,
+  GET_ERRORS,
+  GET_ARTIST,
+  CLEAR_ARTIST
+} from './actionTypes';
 // Set loading state
 export const setArtistsLoading = () => {
   return {
@@ -36,3 +42,26 @@ export const getArtists = () => dispatch => {
       })
     );
 };
+export const getArtist = id => dispatch => {
+  dispatch(setArtistsLoading());
+  dispatch(clearArtist());
+  axios
+    .get(`/api/artist/${id}`)
+    .then(res =>
+      dispatch({
+        type: GET_ARTIST,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ARTISTS,
+        payload: null
+      })
+    );
+};
+
+export const clearArtist = () => dispatch =>
+  dispatch({
+    type: CLEAR_ARTIST
+  });

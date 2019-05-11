@@ -25,6 +25,7 @@ import Tracks from './components/main/tracks/Tracks';
 import Playlists from './components/main/playlists/Playlists';
 import Upload from './components/upload/Upload';
 import ArtistDetail from './components/main/artists/ArtistDetail';
+import GenresDetail from './components/main/genres/GenresDetail';
 //=================================================
 //Check for token
 if (localStorage.jwtToken) {
@@ -76,6 +77,7 @@ class App extends Component {
               <Route exact path="/login" component={Login} />
               <Route exact path="/album" component={Albums} />
               <Route exact path="/genre" component={Genres} />
+              <Route exact path="/genre/:name" component={GenresDetail} />
               <Route exact path="/artist" component={Artists} />
               <Route exact path="/artist/:id" component={ArtistDetail} />
               <Route exact path="/chart" component={Tracks} />

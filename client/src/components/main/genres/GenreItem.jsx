@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
+import { Link } from 'react-router-dom';
 export class GenreItem extends Component {
   static propTypes = {
     genre: PropTypes.object.isRequired
@@ -10,14 +10,14 @@ export class GenreItem extends Component {
   render() {
     const { genre } = this.props;
     return (
-      <div className="col-md-2">
+      <Link className="col-md-2" to={`/genre/${genre.name}`}>
         <img
           className=" img-thumbnail img-fluid"
           src={genre.image}
           alt={genre.name}
         />
         <h5 className="text-center title">{genre.name}</h5>
-      </div>
+      </Link>
     );
   }
 }

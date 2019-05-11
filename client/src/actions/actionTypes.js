@@ -10,11 +10,15 @@ export const GET_ALBUMS = 'GET_ALBUMS';
 export const ALBUM_LOADING = 'ALBUM_LOADING';
 //Genre
 export const GET_GENRES = 'GET_GENRES';
+export const GET_GENRE = 'GET_GENRE';
+export const CLEAR_GENRE = 'CLEAR_GENRE';
 export const GENRE_LOADING = 'GENRE_LOADING';
 export const ADD_GENRE = 'ADD_GENRE';
 
 //Artist
 export const GET_ARTISTS = 'GET_ARTISTS';
+export const GET_ARTIST = 'GET_ARTIST';
+export const CLEAR_ARTIST = 'CLEAR_ARTIST';
 export const ARTIST_LOADING = 'ARTIST_LOADING';
 //Playlist
 export const GET_PLAYLISTS = 'GET_PLAYLISTS';

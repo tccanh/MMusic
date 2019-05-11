@@ -1,12 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { Favorite } from '@material-ui/icons';
 const ArtistDetail = props => {
   return (
     <section className="row">
-      <div class="album-tracks col-7">
+      <div className="album-tracks col-7">
         <ol>
           <li>
+            <span>Feel Invincible</span>
             <span>Feel Invincible</span>
             <span>3:49</span>
           </li>
@@ -56,17 +57,17 @@ const ArtistDetail = props => {
           </li>
         </ol>
       </div>
-      <div class="album-info col-5">
-        <div class="album-art">
+      <div className="album-info col-5">
+        <div className="album-art">
           <img src="https://target.scene7.com/is/image/Target/51223401?wid=520&amp;hei=520&amp;fmt=pjpeg" />
-          <div class="actions">
-            <div class="play">Play</div>
-            <div class="bookmark">
+          <div className="actions">
+            <div className="play">Play</div>
+            <div className="bookmark">
               <Favorite color="error" />
             </div>
           </div>
         </div>
-        <div class="album-details">
+        <div className="album-details">
           <h2>
             <img src="https://68.media.tumblr.com/avatar_edbd71e8c8ac_128.png" />
             Skillet

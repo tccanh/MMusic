@@ -10,7 +10,7 @@ import axios from 'axios';
 import Buttons from '../../upload/subUpload/Buttons';
 import Images from '../../upload/subUpload/Images';
 import Circular from '../../common/Progress/Circular';
-
+import TextAreaGroup from '../../hoc/TextAreaGroup';
 const toastColor = {
   background: 'red',
   text: '#fff'
@@ -21,6 +21,7 @@ class CreateGenre extends Component {
     super(props);
     this.state = {
       name: '',
+      description: '',
       image:
         'https://res.cloudinary.com/dx6o8ihdt/image/upload/c_scale,w_500/v1555581186/images/Common/genredefault.jpg',
       images: [],
@@ -42,6 +43,7 @@ class CreateGenre extends Component {
 
     const genreData = {
       name: this.state.name,
+      description: this.state.description,
       image: this.state.image
     };
 
@@ -152,6 +154,19 @@ class CreateGenre extends Component {
                 value={this.state.name}
                 onChange={this.onChange}
                 error={errors.name}
+              />
+              <TextAreaGroup
+                id="descriptionGenre"
+                label="Description"
+                className={classnames('form-control form-control-lg', {
+                  'is-invalid': errors.description
+                })}
+                placeholder="A few descriptions of this genre ..."
+                name="description"
+                value={this.state.description}
+                onChange={this.onChange}
+                error={errors.description}
+                rows="5"
               />
             </div>
             <div className="col-md-5">

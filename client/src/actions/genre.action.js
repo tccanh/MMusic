@@ -3,7 +3,8 @@ import {
   GET_GENRES,
   GENRE_LOADING,
   GET_ERRORS,
-  CLEAR_ERRORS
+  CLEAR_ERRORS,
+  GET_GENRE
 } from './actionTypes';
 // Set loading state
 export const setGenresLoading = () => {
@@ -48,3 +49,26 @@ export const getGenres = () => dispatch => {
       })
     );
 };
+export const getGenre = name => dispatch => {
+  dispatch(setGenresLoading());
+  dispatch(clearGenre());
+  axios
+    .get(`/api/genre/${name}`)
+    .then(res =>
+      dispatch({
+        type: GET_GENRE,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_GENRE,
+        payload: null
+      })
+    );
+};
+
+export const clearGenre = () => dispatch =>
+  dispatch({
+    type: GET_GENRE
+  });

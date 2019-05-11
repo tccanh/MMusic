@@ -1,4 +1,9 @@
-import { ARTIST_LOADING, GET_ARTISTS } from '../actions/actionTypes';
+import {
+  ARTIST_LOADING,
+  GET_ARTISTS,
+  GET_ARTIST,
+  CLEAR_ARTIST
+} from '../actions/actionTypes';
 const initialState = {
   artists: [],
   artist: {},
@@ -16,6 +21,18 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         artists: payload,
+        loading: false
+      };
+    case GET_ARTIST:
+      return {
+        ...state,
+        artist: payload,
+        loading: false
+      };
+    case CLEAR_ARTIST:
+      return {
+        ...state,
+        artist: {},
         loading: false
       };
 
