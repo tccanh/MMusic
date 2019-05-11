@@ -1,6 +1,6 @@
 export default s => {
   if (!s && s !== 0) {
-    return 'NaN:NaN';
+    return '00:00';
   }
 
   var total_seconds = Math.floor(s);

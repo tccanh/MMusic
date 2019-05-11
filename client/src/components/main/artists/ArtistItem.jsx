@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 export class ArtistItem extends Component {
   static propTypes = {
@@ -9,14 +10,14 @@ export class ArtistItem extends Component {
   render() {
     const { artist } = this.props;
     return (
-      <div className="col-md-2">
+      <Link className="col-md-2" to={`/artist/${artist._id}`}>
         <img
           className=" img-thumbnail img-fluid"
           src={artist.image}
           alt={artist.name}
         />
         <h5 className="text-center title">{artist.name}</h5>
-      </div>
+      </Link>
     );
   }
 }

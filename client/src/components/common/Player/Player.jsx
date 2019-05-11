@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import './Player.css';
 import {
   FastForward,
   FastRewind,
@@ -26,11 +25,9 @@ class Player extends Component {
   }
   componentWillReceiveProps() {
     new Promise(resole => {
-      console.log('Clean old interval:', this.interval);
       return resole(clearInterval(this.interval));
     }).then(() => {
-      this.interval = setInterval(this.onUpdate.bind(this), 250);
-      console.log('Create new interval:', this.interval);
+      this.interval = setInterval(this.onUpdate.bind(this), 200);
     });
   }
   onUpdate() {
@@ -95,8 +92,12 @@ class Player extends Component {
     const { loop, src, onPrev, onNext, onDone } = this.props;
     if (this._player.current) {
       if (this._player.current.currentSrc !== src && src !== null) {
-        this._player.current.src = src;
-        this._player.current.load();
+        new Promise(resole => {
+          return resole(clearInterval(this.interval));
+        }).then(() => {
+          this._player.current.src = src;
+          this._player.current.load();
+        });
       }
 
       if (this._player.current.paused && !this._player.current.ended) {

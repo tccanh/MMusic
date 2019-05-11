@@ -9,7 +9,7 @@ import {
 } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import Player from './Player';
-import Playing from './Playing';
+import Playing from '../Playing/Playing';
 const Audio = props => {
   const [curSrc, setCurSrc] = useState('');
   const [index, setIndex] = useState(0);
