@@ -160,7 +160,8 @@ class SideBar extends React.Component {
         artists: song.artists,
         name: song.name,
         image: song.image,
-        link: song.link
+        link: song.link,
+        duration: song.duration
       }));
       this.setState({
         songs: songs_
