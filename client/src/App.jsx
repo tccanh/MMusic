@@ -11,6 +11,7 @@ import { Route, BrowserRouter, Switch } from 'react-router-dom';
 import { setCurrentUser, logoutUser } from './actions/auth.action';
 //=================================================
 import Login from './components/main/auths/Login';
+import Register from './components/main/auths/Register';
 import PrivateRoute from './components/hoc/PrivateRoute';
 import SideBar from './components/layouts/SideBar';
 import Landing from './components/layouts/Landing';
@@ -75,6 +76,7 @@ class App extends Component {
               <div className={classes.toolbar} />
               <Route exact path="/" component={Landing} />
               <Route exact path="/login" component={Login} />
+              <Route exact path="/register" component={Register} />
               <Route exact path="/album" component={Albums} />
               <Route exact path="/album/:id" component={AlbumDetail} />
               <Route exact path="/genre" component={Genres} />
