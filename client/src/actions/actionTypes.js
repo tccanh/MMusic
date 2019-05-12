@@ -7,7 +7,10 @@ export const GET_PROFILES = 'GET_PROFILES';
 export const POST_LOADING = 'POST_LOADING';
 //Albums
 export const GET_ALBUMS = 'GET_ALBUMS';
+export const GET_ALBUM = 'GET_ALBUM';
+export const CLEAR_ALBUM = 'CLEAR_ALBUM';
 export const ALBUM_LOADING = 'ALBUM_LOADING';
+export const ADD_ALBUM = 'ADD_ALBUM';
 //Genre
 export const GET_GENRES = 'GET_GENRES';
 export const GET_GENRE = 'GET_GENRE';

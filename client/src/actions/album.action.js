@@ -1,6 +1,22 @@
 import axios from 'axios';
-import { GET_ALBUMS, GET_ERRORS } from './actionTypes';
+import {
+  GET_ALBUMS,
+  GET_ERRORS,
+  CLEAR_ERRORS,
+  ALBUM_LOADING,
+  GET_ALBUM
+} from './actionTypes';
 
+export const setAlbumLoading = () => {
+  return {
+    type: ALBUM_LOADING
+  };
+};
+export const clearErrors = () => {
+  return {
+    type: CLEAR_ERRORS
+  };
+};
 export const createAlbum = (data, history) => dispatch => {
   axios
     .post('/api/album', data)
@@ -14,9 +30,7 @@ export const createAlbum = (data, history) => dispatch => {
 };
 
 export const getAlbums = () => dispatch => {
-  //getLoadding
-  //==================
-
+  dispatch(setAlbumLoading());
   axios
     .get('/api/album')
     .then(res =>
@@ -32,3 +46,26 @@ export const getAlbums = () => dispatch => {
       })
     );
 };
+export const getAlbum = id => dispatch => {
+  dispatch(setAlbumLoading());
+  dispatch(clearAlum());
+  axios
+    .get(`/api/album/${id}`)
+    .then(res =>
+      dispatch({
+        type: GET_ALBUM,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ALBUM,
+        payload: null
+      })
+    );
+};
+
+export const clearAlum = () => dispatch =>
+  dispatch({
+    type: GET_ALBUM
+  });

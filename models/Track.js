@@ -54,7 +54,10 @@ const TrackSchema = new Schema({
   },
   artists: [
     {
-      artist: String,
+      artist: {
+        type: Schema.Types.ObjectId,
+        ref: 'artists'
+      },
       name: String
     }
   ],

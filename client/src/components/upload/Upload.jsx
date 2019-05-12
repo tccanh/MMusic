@@ -76,6 +76,9 @@ class Upload extends Component {
         errors: { inside: 'Please upload your track befor submit.' }
       });
     } else {
+      if (this.state.album === '') {
+        this.setState({ album: this.state.name + ' (Single)' });
+      }
       const trackData = {
         name: this.state.name,
         image: this.state.image,
@@ -91,7 +94,6 @@ class Upload extends Component {
         bit_rate: this.state.bit_rate,
         bytes: this.state.bytes
       };
-      console.log('hehe', trackData);
       this.props.createTrack(trackData, this.props.history);
     }
   }

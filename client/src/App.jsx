@@ -26,6 +26,7 @@ import Playlists from './components/main/playlists/Playlists';
 import Upload from './components/upload/Upload';
 import ArtistDetail from './components/main/artists/ArtistDetail';
 import GenresDetail from './components/main/genres/GenresDetail';
+import AlbumDetail from './components/main/albums/AlbumDetail';
 //=================================================
 //Check for token
 if (localStorage.jwtToken) {
@@ -46,9 +47,8 @@ if (localStorage.jwtToken) {
 //=================================================
 const styles = theme => ({
   root: {
-    display: 'flex',
-    background: '#b6bdc3',
-    height: '100%'
+    display: 'flex'
+    // background: '#b6bdc3',
   },
   toolbar: {
     display: 'flex',
@@ -76,6 +76,7 @@ class App extends Component {
               <Route exact path="/" component={Landing} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/album" component={Albums} />
+              <Route exact path="/album/:id" component={AlbumDetail} />
               <Route exact path="/genre" component={Genres} />
               <Route exact path="/genre/:name" component={GenresDetail} />
               <Route exact path="/artist" component={Artists} />

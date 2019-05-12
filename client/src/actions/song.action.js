@@ -13,6 +13,12 @@ export const addSongs = songs => dispatch => {
     payload: songs
   });
 };
+
+export const playSong = song => dispatch => {
+  dispatch(removeAllSong());
+  dispatch(addSong(song));
+};
+
 export const addSong = src => dispatch => {
   dispatch(setSongsLoading());
   dispatch({

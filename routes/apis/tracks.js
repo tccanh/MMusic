@@ -102,57 +102,71 @@ router.post(
     if (released) newTrack.released = released;
     newTrack.authors = authors.split(',').map(auth => formatText(auth));
 
-    if (artists) {
-      const listArtists = artists.split(',').map(arts => formatText(arts));
-      console.log('hehe', listArtists);
-
-      const newArtists = [];
-      let albID;
-      Promise.all(
-        listArtists.map(async value => {
-          try {
-            const temp = await Artist.findOne({ name: value });
-            if (temp) {
-              newArtists.unshift(temp.id);
-            } else {
-              const newArst = new Artist({
-                name: value,
-                image,
-                genres: [genre]
-              });
-              const newTemp = await newArst.save();
-              newArtists.unshift({ artist: newTemp.id, name: newTemp.name });
-            }
-          } catch (error) {
-            console.log(error);
-          }
-        }),
-        (async () => {
-          const alb = await Album.findOne({ name: album });
-          if (!isEmpty(alb)) {
-            albID = alb.id;
-          } else {
-            const newAlb = new Album({
-              name: album,
-              image
-            });
-            // eslint-disable-next-line no-underscore-dangle
-            const _alb = await newAlb.save();
-            albID = _alb.id;
-          }
-        })()
-      ).finally(() => {
-        newTrack.artists = newArtists;
-        newTrack.album = albID;
-        // console.log(newTrack);
-
-        new Track(newTrack)
-          .save()
-          .then(__track => res.json(__track))
-          .catch(err => {
-            errors.track = `FUCK : ${err}`;
-            return res.status(400).json(errors);
+    if (album) {
+      const AlbumPromise = new Promise(async resole => {
+        const alb = await Album.findOne({ name: album });
+        if (!isEmpty(alb)) {
+          return resole(alb);
+        } else {
+          const newAlb = new Album({
+            name: album,
+            image
           });
+          const _alb = await newAlb.save();
+          return resole(_alb);
+        }
+      });
+      AlbumPromise.then(album => {
+        console.log('This albim', album);
+
+        if (artists) {
+          const listArtists = artists.split(',').map(arts => formatText(arts));
+          console.log('hehe', listArtists);
+          const newArtists = [];
+          Promise.all(
+            listArtists.map(async name => {
+              try {
+                const temp = await Artist.findOne({ name });
+
+                if (!isEmpty(temp)) {
+                  temp.albums = [...temp.albums, album.id];
+                  const artUpdate = await temp.save();
+                  newArtists.unshift({
+                    artist: artUpdate.id,
+                    name: artUpdate.name
+                  });
+                } else {
+                  const newArst = new Artist({
+                    name,
+                    image,
+                    genres: [genre],
+                    albums: [album.id]
+                  });
+                  const newTemp = await newArst.save();
+                  newArtists.unshift({
+                    artist: newTemp.id,
+                    name: newTemp.name
+                  });
+                  console.log('new', newArtists);
+                }
+              } catch (error) {
+                console.log(error);
+              }
+            })
+          ).finally(() => {
+            newTrack.artists = newArtists;
+            newTrack.album = album.id;
+            console.log('1', newTrack);
+
+            new Track(newTrack)
+              .save()
+              .then(__track => res.json(__track))
+              .catch(err => {
+                errors.track = `FUCK : ${err}`;
+                return res.status(400).json(errors);
+              });
+          });
+        }
       });
     }
   }

@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 const router = require('express').Router();
 const Album = require('../../models/Album');
+const Track = require('../../models/Track');
 const passport = require('passport');
 const validateAlbum = require('../../validations/apis/album');
 // Get list album
@@ -12,7 +13,22 @@ router.get('/', (req, res, next) => {
       res.status(404).json({ noalbumFounds: `No albums found: ${err}` })
     );
 });
-
+router.get('/:id', (req, res, next) => {
+  const { id } = req.params;
+  Album.findById(id)
+    .then(album =>
+      Track.find({ album: album.id })
+        .then(tracks => {
+          return res.json({ tracks, album });
+        })
+        .catch(err =>
+          res.status(404).json({ notracksFounds: `No albs found: ${err}` })
+        )
+    )
+    .catch(err =>
+      res.status(404).json({ noalbFounds: `No albs found: ${err}` })
+    );
+});
 // Post create or update image
 // eslint-disable-next-line consistent-return
 router.post(

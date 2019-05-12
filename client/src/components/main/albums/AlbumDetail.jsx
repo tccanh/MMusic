@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { getArtist } from '../../../actions/artist.action';
+import { getAlbum } from '../../../actions/album.action';
 import { addSongs, playSong } from '../../../actions/song.action';
 import formatTime from '../../../apis/formatTime';
+import { leftDate } from '../../../apis/formatDate';
 import collapeArtists from '../../../apis/collapeArtists';
 import { PlayArrow } from '@material-ui/icons';
-class GenresDetail extends Component {
+class AlbumDetail extends Component {
   static propTypes = {
-    artist: PropTypes.object.isRequired,
-    getArtist: PropTypes.func.isRequired,
+    album: PropTypes.object.isRequired,
+    getAlbum: PropTypes.func.isRequired,
     addSongs: PropTypes.func.isRequired,
     playSong: PropTypes.func.isRequired
   };
@@ -17,31 +18,31 @@ class GenresDetail extends Component {
     super(props);
 
     this.state = {
-      artist: {},
+      album: {},
       tracks: []
     };
   }
 
   componentDidMount() {
-    this.props.getArtist(this.props.match.params.id);
+    this.props.getAlbum(this.props.match.params.id);
   }
   componentWillReceiveProps(newProps) {
     if (
-      newProps.artist.artist &&
-      Object.entries(newProps.artist.artist).length > 0
+      newProps.album.album &&
+      Object.entries(newProps.album.album).length > 0
     ) {
       this.setState({
-        tracks: newProps.artist.artist.tracks,
-        artist: newProps.artist.artist.artist
+        tracks: newProps.album.album.tracks,
+        album: newProps.album.album.album
       });
     }
   }
   render() {
-    const { artist, tracks } = this.state;
+    const { album, tracks } = this.state;
 
     return (
       <>
-        <h1 className="title-section">{artist.name}</h1>
+        <h1 className="title-section">{album.name}</h1>
         <section className="row">
           <div className="album-tracks col-7">
             <ol>
@@ -51,9 +52,17 @@ class GenresDetail extends Component {
                     <li key={key}>
                       <span onClick={() => this.props.playSong(track)}>
                         {track.name}
+                        <p
+                          style={{
+                            display: 'inline',
+                            fontStyle: 'italic',
+                            fontWeight: 500
+                          }}
+                        >
+                          ({collapeArtists(track.artists)})
+                        </p>
                         <PlayArrow fontSize="small" />
                       </span>
-                      {track.album && <span>{track.album.name}</span>}
                       <span>{formatTime(track.duration)}</span>
                     </li>
                   );
@@ -62,7 +71,7 @@ class GenresDetail extends Component {
           </div>
           <div className="album-info col-5">
             <div className="album-art">
-              {artist && <img src={artist.image} alt={artist.name} />}
+              {album && <img src={album.image} alt={album.name} />}
               <br />
               <br />
               <div className="actions">
@@ -74,12 +83,11 @@ class GenresDetail extends Component {
                 </div>
               </div>
             </div>
-            <div
-              className="album-details"
-              style={{ marginTop: '-25px', fontStyle: 'italic' }}
-            >
-              <h3 style={{ fontSize: 'x-large' }}>Description:</h3>
-              <p style={{ marginTop: '-25px' }}>{artist.description}</p>
+            <div className="album-details" style={{ marginTop: '-25px' }}>
+              <h3 style={{ fontSize: 'large' }}>
+                Release: {leftDate(album.release)}
+              </h3>
+              <h3 style={{ fontSize: 'large' }}>Description:</h3>
             </div>
           </div>
         </section>
@@ -88,11 +96,11 @@ class GenresDetail extends Component {
   }
 }
 
-const mapStateToProps = state => ({ artist: state.artist });
+const mapStateToProps = state => ({ album: state.album });
 
-const mapDispatchToProps = { getArtist, addSongs, playSong };
+const mapDispatchToProps = { getAlbum, addSongs, playSong };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(GenresDetail);
+)(AlbumDetail);

@@ -6,6 +6,7 @@ const cloudinary = require('cloudinary');
 const passport = require('passport');
 const multer = require('multer');
 const Artist = require('../../models/Artist');
+const Track = require('../../models/Track');
 const Album = require('../../models/Album');
 const User = require('../../models/User');
 const { fileFilter, storage } = require('../../configs/uploadImage');
@@ -19,6 +20,23 @@ router.get('/', (req, res, next) => {
   Artist.find()
     .sort({ name: -1 })
     .then(artist => res.json(artist))
+    .catch(err =>
+      res.status(404).json({ noartistFounds: `No artists found: ${err}` })
+    );
+});
+router.get('/:id', (req, res, next) => {
+  const { id } = req.params;
+  Artist.findById(id)
+    .then(artist =>
+      Track.find({ 'artists.name': artist.name })
+        .populate('album', 'name')
+        .then(tracks => {
+          return res.json({ tracks, artist });
+        })
+        .catch(err =>
+          res.status(404).json({ notracksFounds: `No artists found: ${err}` })
+        )
+    )
     .catch(err =>
       res.status(404).json({ noartistFounds: `No artists found: ${err}` })
     );
