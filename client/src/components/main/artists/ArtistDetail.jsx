@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { getArtist } from '../../../actions/artist.action';
 import { addSongs, playSong } from '../../../actions/song.action';
 import formatTime from '../../../apis/formatTime';
-import collapeArtists from '../../../apis/collapeArtists';
 import { PlayArrow } from '@material-ui/icons';
 class GenresDetail extends Component {
   static propTypes = {

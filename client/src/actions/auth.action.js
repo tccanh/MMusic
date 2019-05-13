@@ -19,20 +19,14 @@ export const loginUser = userData => dispatch => {
   axios
     .post('/auth/login', userData)
     .then(res => {
-      // save to LocalStorage
       const { token } = res.data;
-      //set token to ls
       localStorage.setItem('jwtToken', token);
-      // set token to Auth header
       setAuthToken(token);
-      // Decode token to get user data
       const decoded = jwt_decode(token);
-      //Set Current user
-      dispatch(setCurrentUser(decoded));
+      return dispatch(setCurrentUser(decoded));
     })
     .catch(err => {
       console.log(err);
-
       return dispatch({
         type: GET_ERRORS,
         payload: err.response.data
@@ -56,4 +50,55 @@ export const logoutUser = () => dispatch => {
   dispatch(setCurrentUser({}));
   //Remove user profile
   //   dispatch(clearCurrentProfile());
+};
+
+export const GoogleOauth = response => dispatch => {
+  const avatar = response.profileObj.imageUrl;
+  const googleID = response.googleId;
+  const name = response.profileObj.name;
+  const email = response.profileObj.email;
+  const data = { avatar, googleID, name, email };
+  axios
+    .post('/auth/google', data)
+    .then(res => {
+      const { token } = res.data;
+      localStorage.setItem('jwtToken', token);
+      setAuthToken(token);
+      const decoded = jwt_decode(token);
+
+      return dispatch(setCurrentUser(decoded));
+    })
+    .catch(err => {
+      console.log(err);
+      return dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      });
+    });
+};
+
+export const FacebookOauth = response => dispatch => {
+  const avatar = `http://graph.facebook.com/${
+    response.userID
+  }/picture?type=large`;
+  const facebookID = response.userID;
+  const name = response.name;
+
+  const data = { avatar, facebookID, name };
+  axios
+    .post('/auth/facebook', data)
+    .then(res => {
+      const { token } = res.data;
+      localStorage.setItem('jwtToken', token);
+      setAuthToken(token);
+      const decoded = jwt_decode(token);
+      return dispatch(setCurrentUser(decoded));
+    })
+    .catch(err => {
+      console.log(err);
+      return dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      });
+    });
 };

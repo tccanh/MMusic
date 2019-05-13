@@ -5,9 +5,20 @@ import TextAuth from '../../hoc/TextAuth';
 import { Link } from 'react-router-dom';
 import { registerUser } from '../../../actions/auth.action';
 import Notifications, { notify } from 'react-notify-toast';
+import {
+  loginUser,
+  GoogleOauth,
+  FacebookOauth
+} from '../../../actions/auth.action';
+
+import { FBkey, GGkey } from './Key';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
+import GoogleLogin from 'react-google-login';
 class Register extends Component {
   static propTypes = {
-    prop: PropTypes
+    registerUser: PropTypes.func.isRequired,
+    FacebookOauth: PropTypes.func.isRequired,
+    GoogleOauth: PropTypes.func.isRequired
   };
   constructor(props) {
     super(props);
@@ -116,10 +127,37 @@ class Register extends Component {
               Already have account? Login
             </button>
           </Link>
-          <button className="social-signin facebook">
-            Log in with facebook
-          </button>
-          <button className="social-signin google">Log in with Google+</button>
+          <FacebookLogin
+            appId={FBkey}
+            callback={res => this.props.FacebookOauth(res)}
+            render={renderProps => (
+              <button
+                onClick={() => renderProps.onClick()}
+                className="social-signin facebook"
+              >
+                Log in with Facebook
+              </button>
+            )}
+          />
+
+          <GoogleLogin
+            clientId={GGkey}
+            render={renderProps => (
+              <button
+                onClick={() => renderProps.onClick()}
+                disabled={renderProps.disabled}
+                className="social-signin google"
+              >
+                Log in with Google+
+              </button>
+            )}
+            buttonText="Login"
+            onSuccess={value => {
+              this.props.GoogleOauth(value);
+            }}
+            onFailure={() => this.responseGoogle()}
+            cookiePolicy={'single_host_origin'}
+          />
         </div>
         <div className="or">OR</div>
       </div>
@@ -132,7 +170,7 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-const mapDispatchToProps = { registerUser };
+const mapDispatchToProps = { registerUser, GoogleOauth, FacebookOauth };
 
 export default connect(
   mapStateToProps,
