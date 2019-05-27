@@ -1,0 +1,191 @@
+section {
+  background: white;
+  padding: 10px;
+  color: black;
+}
+.title-section {
+  text-align: center;
+  color: black;
+  font-style: italic;
+  font-weight: bolder;
+  font-family: cursive;
+}
+
+.album-info {
+  padding: 100px 10px 0px 24px;
+}
+section .album-info:after {
+  content: ' ';
+  display: block;
+  height: 0;
+  clear: both;
+}
+section .album-art {
+  float: left;
+  width: 220px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+section .album-art * {
+  border-radius: 3px;
+}
+section .album-art img {
+  width: 100%;
+  margin-bottom: 10px;
+  margin-top: -80px;
+  border-radius: 30px;
+  border: solid white 5px;
+  box-shadow: 0 5px 60px -3px rgba(0, 0, 0, 0.18);
+}
+section .play {
+  display: flex;
+  flex-wrap: initial;
+  justify-content: center;
+  align-items: center;
+  align-content: initial;
+  color: white;
+  background: #353330;
+  padding: 10px;
+  text-transform: uppercase;
+  flex: 1 0 50%;
+  font-size: 20px;
+  border-radius: 9px;
+  cursor: pointer;
+}
+section .play:hover {
+  background: #5a564f;
+  font-weight: 600;
+}
+section .bookmark {
+  display: flex;
+  flex-wrap: initial;
+  justify-content: center;
+  align-items: center;
+  align-content: initial;
+  width: 48px;
+  height: 48px;
+  border: 3px solid red;
+  margin-left: 10px;
+}
+section .album-details > * {
+  padding: 15px 0;
+  font-size: large;
+}
+section h2 {
+  display: flex;
+  flex-wrap: initial;
+  justify-content: initial;
+  align-items: center;
+  align-content: initial;
+  color: var(--dark);
+  font-size: 16px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+section h2 img {
+  width: 24px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+section h1 {
+  font-size: 50px;
+  font-weight: 300;
+  word-wrap: break-word;
+}
+section h1 + span {
+  color: var(--dark);
+}
+section h1 + span span:first-child {
+  padding-right: 20px;
+}
+section p {
+  margin-top: 15px;
+  margin: 15px 50px 0 20px;
+}
+section .album-tracks {
+  background: #212529;
+  border-radius: 15px;
+}
+
+@media (max-width: 800px) {
+  section {
+    margin: 100px 36px 36px 36px;
+  }
+}
+@media (max-width: 700px) {
+  section .album-art {
+    width: 100%;
+  }
+  section .album-art img {
+    width: auto;
+    max-width: 100%;
+    margin: -100px auto 10px auto;
+    display: block;
+  }
+  section .album-details {
+    float: left;
+    max-width: 100%;
+  }
+}
+@media (max-width: 550px) {
+  section {
+    margin: 100px 20px 20px 20px;
+    padding: 20px 16px;
+  }
+  section ol {
+    padding: 16px;
+  }
+}
+
+ol {
+  list-style-type: none;
+  padding: 20px 36px;
+  font-weight: 500;
+}
+ol li {
+  counter-increment: number;
+  display: flex;
+  flex-wrap: initial;
+  justify-content: space-between;
+  align-items: center;
+  align-content: initial;
+  height: 45px;
+  color: whitesmoke;
+  border-bottom: solid whitesmoke 1px;
+}
+ol li span:not(:last-child) {
+  margin-right: 2em;
+  font-weight: bold;
+}
+@media (max-width: 700px) {
+  ol li span:not(:last-child) {
+    margin-right: 1em;
+  }
+}
+ol li span:first-child {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  color: whitesmoke;
+  cursor: pointer;
+}
+ol li span:first-child:hover {
+  color: #ff5353;
+}
+ol li span:first-child:before {
+  content: counter(number);
+  margin-right: 2em;
+  color: rgb(212, 173, 173);
+  display: inline-block;
+  text-align: end;
+  width: 20px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: initial;
+  justify-content: initial;
+  align-items: initial;
+  align-content: initial;
+  flex: 1 1 100%;
+}

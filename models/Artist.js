@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 const ArtistSchema = new Schema({
@@ -11,22 +11,21 @@ const ArtistSchema = new Schema({
   },
   albums: [
     {
-      id: {
-        type: Schema.Types.ObjectId,
-        ref: "albums"
-      },
-      name: String
+      type: Schema.Types.ObjectId,
+      ref: 'albums'
     }
   ],
-  genres: {
-    type: [String],
-    required: true
-  },
+  genres: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'genres'
+    }
+  ],
   likes: [
     {
       user: {
         type: Schema.Types.ObjectId,
-        ref: "users"
+        ref: 'users'
       }
     }
   ],
@@ -34,5 +33,5 @@ const ArtistSchema = new Schema({
     type: String
   }
 });
-const Artist = mongoose.model("artists", ArtistSchema);
+const Artist = mongoose.model('artists', ArtistSchema);
 module.exports = Artist;

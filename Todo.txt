@@ -1,7 +1,0 @@
-﻿DONE    Sửa oauth: khi xét user qua uer id nếu cói email rồi thì liên kết và add nó vào GG và facebookID chứ không tạo thêm người dùng mới vào
-( Vấn đề là nếu người dùng k đồng bộ email thì sẽ 2 người cùng dùng chung 1 tài khoản, otherwise, 2 người dùng 2 tài khoản nhưng 2 tài khoản đó lại chung email )
-    Nếu liên kết các tài khoản với nhau vd qua FB và GG thì thông tin người dùng sẽ lấy từ đâu
-
-//Sửa lại đăng nhập oauth và axios để đăng kí xong chuyển đăng nhập trực tiếp
-
-// tìm hiểu chức năng đăng kí nhận thông tin qua mail

@@ -1,0 +1,8 @@
+.listss:hover {
+  background: red;
+}
+.customhover {
+  padding: 6px;
+  border-radius: 20px;
+  cursor: pointer;
+}

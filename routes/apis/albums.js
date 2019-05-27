@@ -1,68 +1,76 @@
-/* eslint-disable consistent-return */
 /* eslint-disable no-unused-vars */
 const router = require('express').Router();
-const cloudinary = require('cloudinary');
-const multer = require('multer');
 const Album = require('../../models/Album');
-const { fileFilter, storage } = require('../../configs/uploadImage');
-
-const upload = multer({ storage, fileFilter });
+const Track = require('../../models/Track');
+const passport = require('passport');
 const validateAlbum = require('../../validations/apis/album');
 // Get list album
 router.get('/', (req, res, next) => {
   Album.find()
-    .sort({ date: -1 })
+    .sort({ name: -1 })
     .then(album => res.json(album))
     .catch(err =>
       res.status(404).json({ noalbumFounds: `No albums found: ${err}` })
     );
 });
-
+router.get('/:id', (req, res, next) => {
+  const { id } = req.params;
+  Album.findById(id)
+    .then(album =>
+      Track.find({ album: album.id })
+        .then(tracks => {
+          return res.json({ tracks, album });
+        })
+        .catch(err =>
+          res.status(404).json({ notracksFounds: `No albs found: ${err}` })
+        )
+    )
+    .catch(err =>
+      res.status(404).json({ noalbFounds: `No albs found: ${err}` })
+    );
+});
 // Post create or update image
-router.post('/', upload.single('image'), async (req, res, next) => {
-  const { errors, isValid } = validateAlbum(req.body);
-  const { name } = req.body;
-  const newAlbum = {};
-  if (!isValid) {
-    return res.status(400).json(errors);
-  }
-  if (!req.file) {
-    errors.FileUpload = 'Invalid file upload.';
-    return res.status(400).json(errors);
-  } else {
-    try {
-      await cloudinary.v2.uploader
-        .upload(req.file.path, { folder: 'images/albums' })
-        .then(res => (newAlbum.image = res.secure_url));
-    } catch (error) {
-      errors.FileUpload = 'Error Upload Image';
+// eslint-disable-next-line consistent-return
+router.post(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  (req, res, next) => {
+    const { errors, isValid } = validateAlbum(req.body);
+    const { name, image } = req.body;
+    const newAlbum = {};
+    if (!isValid) {
       return res.status(400).json(errors);
     }
+    if (name) newAlbum.name = name;
+    if (image) newAlbum.image = image;
+
+    Album.findOne({ name }).then(album => {
+      if (album) {
+        // Update
+        Album.findOneAndUpdate(
+          { _id: album.id },
+          { $set: newAlbum },
+          { new: true }
+        )
+          .then(profile => res.json(profile))
+          .catch(err => res.json(`USER: ${req.user.id}::${err}`));
+      } else {
+        new Album(newAlbum)
+          .save()
+          .then(_album => res.json(_album))
+          .catch(err => res.json({ CreateAlbumERROR: err }));
+      }
+    });
   }
+);
 
-  Album.findOne({ name }).then(album => {
-    if (album) {
-      // Update
-      Album.findOneAndUpdate(
-        { _id: album.id },
-        { $set: newAlbum },
-        { new: true }
-      )
-        .then(profile => res.json(profile))
-        .catch(err => res.json(`USER: ${req.user.id}::${err}`));
-    } else {
-      if (req.body.name) newAlbum.name = req.body.name;
-      new Album(newAlbum)
-        .save()
-        .then(_album => res.json(_album))
-        .catch(err => res.json({ CreateAlbumERROR: err }));
-    }
-  });
-});
-
-router.delete('/delete/:album_id', (req, res, next) => {
-  Album.findByIdAndRemove(req.params.album_id)
-    .then((haha, hihi) => res.json({ Success: true }))
-    .catch(err => res.status(400).json(`Album not found: ${err}`));
-});
+router.delete(
+  '/delete/:album_id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res, next) => {
+    Album.findByIdAndRemove(req.params.album_id)
+      .then((haha, hihi) => res.json({ Success: true }))
+      .catch(err => res.status(400).json(`Album not found: ${err}`));
+  }
+);
 module.exports = router;

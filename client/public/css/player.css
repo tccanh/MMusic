@@ -1,0 +1,141 @@
+.player {
+  width: 50%;
+  position: inherit;
+  margin-left: auto;
+}
+.infosong {
+  font-size: 14px;
+}
+.namesong {
+  position: absolute;
+  left: 41%;
+  top: 10px;
+}
+.artistsong {
+  left: 41%;
+  position: absolute;
+  font-size: 9.5px;
+}
+
+.lovesong {
+  font-size: x-large;
+  position: absolute;
+  left: 54.5%;
+  bottom: 25px;
+}
+.repeatsong {
+  position: absolute;
+  left: 57%;
+  bottom: 25px;
+}
+.sufflesong {
+  position: absolute;
+  left: 83%;
+  bottom: 25px;
+}
+.imagesong {
+  position: absolute;
+  border: unset;
+  max-width: 50px;
+  left: 35.5%;
+  border-radius: 8px;
+}
+.volumesong {
+  position: absolute;
+  left: 70%;
+  bottom: -5px;
+  margin: 0px 21px;
+}
+.btnplaylist {
+  left: 96%;
+  bottom: 16px;
+  position: absolute;
+}
+.controls {
+  float: left;
+}
+
+.controls > a {
+  text-decoration: none;
+  height: 50px;
+  width: 34px;
+  box-sizing: border-box;
+  text-align: center;
+  padding: 14px 0px;
+  float: left;
+  cursor: pointer;
+}
+.controls .childs {
+  position: absolute;
+  left: 35.5%;
+  bottom: -8px;
+}
+.songicon:hover {
+  color: #b3b3b3;
+  font-size: 20px;
+}
+.controls.childs.songicon:hover {
+  font-size: 40px;
+}
+
+.progress {
+  position: absolute;
+  left: 5%;
+  top: 15px;
+  height: 6px;
+  right: 20%;
+  background: white;
+  cursor: pointer;
+}
+.progress > .bar {
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  top: 5px;
+  bottom: 5px;
+}
+
+.progress > .bar > div {
+  position: absolute;
+  left: 0;
+  top: -6px;
+  bottom: -2px;
+  background: #495057;
+}
+
+.time1,
+.time2 {
+  position: absolute;
+  width: 100px;
+  color: white;
+  font-size: 12px;
+  top: 10px;
+  text-align: center;
+}
+.time1 {
+  left: -8%;
+}
+.time2 {
+  right: 7%;
+}
+.volume {
+  position: absolute;
+  right: 58px;
+  width: 100px;
+  color: white;
+  font-size: 10px;
+  padding-top: 15px;
+}
+.volume :hover {
+  color: #fdff71;
+}
+.volume a {
+  color: white;
+}
+.volume a:hover {
+  text-decoration: none;
+}
+val.voluebnt:hover {
+  background-color: lightgray;
+  font-size: 2em;
+}

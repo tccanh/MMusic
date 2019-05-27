@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 const AlbumSchema = new Schema({
@@ -14,5 +14,5 @@ const AlbumSchema = new Schema({
     default: Date.now()
   }
 });
-const Album = mongoose.model("albums", AlbumSchema);
+const Album = mongoose.model('albums', AlbumSchema);
 module.exports = Album;

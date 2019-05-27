@@ -3,38 +3,40 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "nodemon ./bin/www",
+    "mongod": "sudo service mongod start",
     "server": "nodemon ./bin/www",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "body-parser": "^1.18.3",
-    "cloudinary": "^1.13.2",
+    "body-parser": "^1.19.0",
+    "cloudinary": "^1.14.0",
     "concurrently": "^4.1.0",
-    "cookie-parser": "~1.4.3",
-    "debug": "~2.6.9",
-    "ejs": "~2.5.7",
-    "express": "~4.16.0",
-    "express-session": "^1.15.6",
+    "cookie-parser": "~1.4.4",
+    "debug": "~4.1.1",
+    "ejs": "~2.6.1",
+    "express": "~4.17.0",
+    "express-form-data": "^2.0.8",
+    "express-session": "^1.16.1",
     "gravatar": "^1.8.0",
-    "helmet": "^3.16.0",
-    "http-errors": "~1.6.2",
+    "helmet": "^3.18.0",
+    "http-errors": "~1.7.2",
     "https": "^1.0.0",
-    "jsonwebtoken": "^8.5.0",
-    "mongoose": "^5.4.15",
-    "morgan": "~1.9.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.5.11",
+    "morgan": "~1.9.1",
     "multer": "^1.4.1",
     "passport": "^0.4.0",
     "passport-facebook": "^3.0.0",
-    "passport-google-oauth20": "^1.0.0",
+    "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
-    "validator": "^10.11.0"
+    "validator": "^11.0.0"
   },
   "devDependencies": {
-    "dotenv": "^6.2.0",
-    "nodemon": "^1.18.10"
+    "dotenv": "^8.0.0",
+    "nodemon": "^1.19.0"
   }
 }

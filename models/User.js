@@ -3,8 +3,8 @@
 /* eslint-disable func-names */
 /* eslint-disable space-before-function-paren */
 /* eslint-disable comma-dangle */
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const { Schema } = mongoose;
 const UserSchema = new Schema({
@@ -13,8 +13,7 @@ const UserSchema = new Schema({
     required: true
   },
   email: {
-    type: String,
-    required: true
+    type: String
   },
   username: String,
   password: String,
@@ -23,20 +22,20 @@ const UserSchema = new Schema({
   },
   gender: {
     type: String,
-    enum: ["male", "female", "other"],
-    default: "other"
+    enum: ['male', 'female', 'other'],
+    default: 'other'
   },
   role: {
     type: String,
-    default: "USER",
-    enum: ["USER", "ADMIN", "MOD"],
+    default: 'USER',
+    enum: ['USER', 'ADMIN', 'MOD'],
     required: true
   },
   googleID: String,
   facebookID: String
 });
 
-const User = mongoose.model("User", UserSchema);
+const User = mongoose.model('User', UserSchema);
 module.exports = User;
 
 module.exports.comparePassword = function(candidatePassword, hash, callback) {

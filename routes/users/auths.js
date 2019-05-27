@@ -1,5 +1,7 @@
+// app.use('/auth', authRouter);
 /* eslint-disable no-shadow */
 /* eslint-disable consistent-return */
+
 const router = require('express').Router();
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
@@ -28,9 +30,9 @@ router.post('/login', (req, res) => {
         payload,
         process.env.JWT_SECRET,
         {
-          expiresIn: 3600
+          expiresIn: 86400
         },
-        (err, token) => res.json({ success: true, token: 'Bearer ' + token })
+        (err, token) => res.json({ success: true, token: `Bearer ${token}` })
       );
     });
   })(req, res);
@@ -49,7 +51,7 @@ router.post('/register', (req, res, next) => {
       return res.status(400).json(errors);
     }
     const newUser = {};
-    if (req.body.avatar) {
+    if (req.body.email) {
       newUser.avatar = gravatar.url(req.body.email, {
         s: '200', // Size
         r: 'pg', // Rating
@@ -68,51 +70,28 @@ router.post('/register', (req, res, next) => {
         newUser.password = hash;
         new User(newUser)
           .save()
-          .then(user => res.json(user))
+          .then(user => res.json({ success: true }))
           .catch(err => res.status(400).json(err));
       });
     });
   });
 });
 
-router.post('/oauth', (req, res, next) => {
-  // const { errors, isValid } = validateRegister(req.body);
+router.post('/google', (req, res, next) => {
+  const { avatar, googleID, name, email } = req.body;
 
-  // // Check Validation
-  // if (!isValid) {
-  //   return res.status(400).json(errors);
-  // }
-  User.findOne({ facebookID: req.body.facebookID }).then(user => {
+  User.findOne({ googleID }).then(user => {
     if (user) {
-      req.login(user, { session: false }, err => {
-        if (err) {
-          res.send(err);
-        }
-        const payload = { id: user.id, name: user.name, avatar: user.avatar };
-        jwt.sign(
-          payload,
-          process.env.JWT_SECRET,
-          {
-            expiresIn: 3600
-          },
-          (err, token) => res.json({ success: true, token: 'Bearer ' + token })
-        );
-      });
-    }
-    const newUser = {};
-    newUser.avatar = `http://graph.facebook.com/${
-      req.body.facebookID
-    }/picture?type=large`;
-    newUser.name = req.body.name;
-    newUser.email = req.body.email;
-    newUser.facebookID = req.body.facebookID;
-    new User(newUser)
-      .save()
-      .then(user => {
-        req.login(user, { session: false }, err => {
-          if (err) {
-            res.send(err);
-          }
+      User.findByIdAndUpdate(
+        user.id,
+        {
+          avatar,
+          name,
+          email
+        },
+        { new: true }
+      )
+        .then(user => {
           const payload = { id: user.id, name: user.name, avatar: user.avatar };
           jwt.sign(
             payload,
@@ -121,73 +100,80 @@ router.post('/oauth', (req, res, next) => {
               expiresIn: 3600
             },
             (err, token) =>
-              res.json({ success: true, token: 'Bearer ' + token })
+              res.json({ success: true, token: `Bearer ${token}` })
           );
-        });
+        })
+        .catch(err => res.status(400).json(err));
+    }
+    const newUser = {};
+    newUser.avatar = avatar;
+    newUser.googleID = googleID;
+    newUser.name = name;
+    newUser.email = email;
+    new User(newUser)
+      .save()
+      .then(user => {
+        const payload = { id: user.id, name: user.name, avatar: user.avatar };
+        jwt.sign(
+          payload,
+          process.env.JWT_SECRET,
+          {
+            expiresIn: 3600
+          },
+          (err, token) => res.json({ success: true, token: `Bearer ${token}` })
+        );
       })
       .catch(err => res.status(400).json(err));
   });
 });
+router.post('/facebook', (req, res, next) => {
+  const { avatar, facebookID, name, email } = req.body;
 
-// // Google
-// router.get(
-//   "/google",
-//   passport.authenticate("google", {
-//     scope: ["https://www.googleapis.com/auth/userinfo.email"]
-//   })
-// );
-// router.get(
-//   "/google/callback",
-//   passport.authenticate("google", { failureRedirect: "/login" }),
-//   (req, res) => {
-//     // ----------------------------------------------------------
-//     req.login(req.user, { session: false }, err => {
-//       if (err) {
-//         res.send(err);
-//       }
-//       const payload = { id: user.id, name: user.name, avatar: user.avatar };
-//       jwt.sign(
-//         payload,
-//         process.env.JWT_SECRET,
-//         {
-//           expiresIn: 3600
-//         },
-//         (err, token) => res.json({ success: true, token: "Bearer " + token })
-//       );
-//     });
-//     // ----------------------------------------------------------
-//     // return res.redirect("/");
-//   }
-// );
-
-// // Facebook
-// router.get(
-//   "/facebook",
-//   passport.authenticate("facebook", { scope: "public_profile" })
-// );
-
-// router.get(
-//   "/facebook/callback",
-//   passport.authenticate("facebook", { failureRedirect: "/login" }),
-//   (req, res) => {
-//     // ----------------------------------------------------------
-//     req.login(req.user, { session: false }, err => {
-//       if (err) {
-//         res.send(err);
-//       }
-//       const payload = { id: user.id, name: user.name, avatar: user.avatar };
-//       jwt.sign(
-//         payload,
-//         process.env.JWT_SECRET,
-//         {
-//           expiresIn: 3600
-//         },
-//         (err, token) => res.json({ success: true, token: "Bearer " + token })
-//       );
-//     });
-//     // ----------------------------------------------------------
-//     // return res.redirect("/");
-//   }
-// );
+  User.findOne({ facebookID }).then(user => {
+    if (user) {
+      User.findByIdAndUpdate(
+        user.id,
+        {
+          avatar,
+          name,
+          email
+        },
+        { new: true }
+      )
+        .then(user => {
+          const payload = { id: user.id, name: user.name, avatar: user.avatar };
+          jwt.sign(
+            payload,
+            process.env.JWT_SECRET,
+            {
+              expiresIn: 3600
+            },
+            (err, token) =>
+              res.json({ success: true, token: `Bearer ${token}` })
+          );
+        })
+        .catch(err => res.status(400).json(err));
+    }
+    const newUser = {};
+    newUser.avatar = avatar;
+    newUser.facebookID = facebookID;
+    newUser.name = name;
+    newUser.email = email;
+    new User(newUser)
+      .save()
+      .then(user => {
+        const payload = { id: user.id, name: user.name, avatar: user.avatar };
+        jwt.sign(
+          payload,
+          process.env.JWT_SECRET,
+          {
+            expiresIn: 3600
+          },
+          (err, token) => res.json({ success: true, token: `Bearer ${token}` })
+        );
+      })
+      .catch(err => res.status(400).json(err));
+  });
+});
 
 module.exports = router;
