@@ -6,7 +6,8 @@ import {
   UPLOAD_FAIL,
   UPLOAD_SUCCESS,
   GET_TRACK,
-  TRACK_LOADING
+  TRACK_LOADING,
+  GET_TRACKS_LOVE
 } from './actionTypes';
 
 export const getTracks = () => dispatch => {
@@ -42,6 +43,24 @@ export const getTrack = id => dispatch => {
     .catch(err =>
       dispatch({
         type: GET_TRACK,
+        payload: null
+      })
+    );
+};
+// Get Post
+export const getLovedTrack = () => dispatch => {
+  dispatch(setTrackLoading());
+  axios
+    .get(`/api/track/waslike`)
+    .then(res =>
+      dispatch({
+        type: GET_TRACKS_LOVE,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_TRACKS_LOVE,
         payload: null
       })
     );

@@ -26,6 +26,16 @@ router.get('/', (req, res) => {
       res.status(404).json({ notrackFounds: `No tracks found: ${err}` })
     );
 });
+router.get(
+  '/waslike',
+  passport.authenticate('jwt', { session: false }),
+  (req, res, next) => {
+    Track.find({ 'likes.user': { $eq: req.user.id } })
+      .then(track => res.json(track))
+      .catch(err => res.status(400).json(`Track not found: ${err}`));
+  }
+);
+
 // Có nên chèn bảng xếp hạng việt nam vào đây k?
 router.get('/top50', (req, res, next) => {
   // sort by views of tracks

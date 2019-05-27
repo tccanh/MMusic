@@ -45,3 +45,21 @@ export const getPlaylists = () => dispatch => {
       })
     );
 };
+// Get Posts
+export const getOwnPlaylists = () => dispatch => {
+  dispatch(setPlaylistsLoading());
+  axios
+    .get('/api/playlist/owner')
+    .then(res =>
+      dispatch({
+        type: GET_PLAYLISTS,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_PLAYLISTS,
+        payload: null
+      })
+    );
+};

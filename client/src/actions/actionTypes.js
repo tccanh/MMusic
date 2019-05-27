@@ -30,6 +30,7 @@ export const ADD_PLAYLIST = 'ADD_PLAYLIST';
 //Track
 export const GET_TRACK = 'GET_TRACK';
 export const GET_TRACKS = 'GET_TRACKS';
+export const GET_TRACKS_LOVE = 'GET_TRACKS_LOVE';
 export const ADD_TRACK = 'ADD_TRACK';
 export const TRACK_LOADING = 'TRACK_LOADING';
 //ERROR

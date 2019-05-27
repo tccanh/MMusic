@@ -42,7 +42,7 @@ import { logoutUser } from '../../actions/auth.action';
 import { NavLink } from 'react-router-dom';
 import Audio from '../common/Player/Audio';
 import { Collapse, Avatar } from '@material-ui/core';
-const drawerWidth = 180;
+const drawerWidth = 210;
 
 const styles = theme => ({
   appBar: {
@@ -141,7 +141,7 @@ class SideBar extends React.Component {
     super(props);
 
     this.state = {
-      open: false,
+      open: true,
       openCollapse: false,
       songs: undefined
     };

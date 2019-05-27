@@ -28,6 +28,7 @@ import Upload from './components/upload/Upload';
 import ArtistDetail from './components/main/artists/ArtistDetail';
 import GenresDetail from './components/main/genres/GenresDetail';
 import AlbumDetail from './components/main/albums/AlbumDetail';
+import Profile from './components/main/users/Profile';
 //=================================================
 //Check for token
 if (localStorage.jwtToken) {
@@ -111,6 +112,9 @@ class App extends Component {
                   path="/create-album"
                   component={CreateAlbum}
                 />
+              </Switch>
+              <Switch>
+                <PrivateRoute exact path="/profile" component={Profile} />
               </Switch>
             </main>
           </div>

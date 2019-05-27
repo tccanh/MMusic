@@ -37,14 +37,14 @@ router.get('/public', (req, res, next) => {
       res.status(404).json({ noplayListFounds: `No playLists found: ${err}` })
     );
 });
-router.get('/', (req, res, next) => {
-  PlayList.find({ owner: req.user.id })
-    .sort({ name: -1 })
-    .then(playList => res.json(playList))
-    .catch(err =>
-      res.status(404).json({ noplayListFounds: `No playLists found: ${err}` })
-    );
-});
+// router.get('/', (req, res, next) => {
+//   PlayList.find({ owner: req.user.id })
+//     .sort({ name: -1 })
+//     .then(playList => res.json(playList))
+//     .catch(err =>
+//       res.status(404).json({ noplayListFounds: `No playLists found: ${err}` })
+//     );
+// });
 // chuyển playlist sang public hoặc ngược lại phụ thuộc vào query
 router.post(
   '/toPublic/:id',

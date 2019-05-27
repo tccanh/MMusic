@@ -69,7 +69,7 @@ app.use(passport.initialize());
 
 // Config database
 mongoose.connect(
-  process.env.MONGOOSE_URL2,
+  process.env.MONGOOSE_URL,
   { useNewUrlParser: true, useCreateIndex: true },
   err => {
     if (err) {

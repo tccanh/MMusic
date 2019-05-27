@@ -5,11 +5,7 @@ import TextAuth from '../../hoc/TextAuth';
 import { Link } from 'react-router-dom';
 import { registerUser } from '../../../actions/auth.action';
 import Notifications, { notify } from 'react-notify-toast';
-import {
-  loginUser,
-  GoogleOauth,
-  FacebookOauth
-} from '../../../actions/auth.action';
+import { GoogleOauth, FacebookOauth } from '../../../actions/auth.action';
 
 import { FBkey, GGkey } from './Key';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';

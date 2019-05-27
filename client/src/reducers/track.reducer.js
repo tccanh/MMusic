@@ -2,11 +2,13 @@ import {
   TRACK_LOADING,
   GET_TRACKS,
   ADD_TRACK,
-  GET_TRACK
+  GET_TRACK,
+  GET_TRACKS_LOVE
 } from '../actions/actionTypes';
 const initialState = {
   tracks: [],
   track: {},
+  tracks_love: [],
   loading: false
 };
 
@@ -21,6 +23,12 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         tracks: payload,
+        loading: false
+      };
+    case GET_TRACKS_LOVE:
+      return {
+        ...state,
+        tracks_love: payload,
         loading: false
       };
     case ADD_TRACK:

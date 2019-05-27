@@ -1,157 +1,66 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import {
-  TableFooter,
-  TablePagination,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-  Paper
-} from '@material-ui/core';
+import { PlayCircleOutline } from '@material-ui/icons';
 
-import EnhancedTableHead from '../../hoc/EnhancedTableHead';
-import TablePaginationActions from '../../hoc/TablePaginationActions';
-import TrackItem from './TrackItem';
+const ListTrack = props => {
+  const { tracks, playSong } = props;
+  console.log(tracks);
 
-const headerRows = [
-  {
-    id: 'name',
-    numeric: false,
-    disablePadding: true,
-    label: 'Name'
-  },
-  { id: 'genre', numeric: false, disablePadding: false, label: 'Genre' },
-  { id: 'artists', numeric: false, disablePadding: false, label: 'Artists' },
-  { id: 'like', numeric: true, disablePadding: false, label: 'Like' },
-  { id: 'views', numeric: true, disablePadding: false, label: 'Views' }
-];
-
-function desc(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function stableSort(array, cmp) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = cmp(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map(el => el[0]);
-}
-
-function getSorting(order, orderBy) {
-  return order === 'desc'
-    ? (a, b) => desc(a, b, orderBy)
-    : (a, b) => -desc(a, b, orderBy);
-}
-
-const styles = theme => ({
-  root: {
-    width: '90%',
-    marginTop: theme.spacing(3)
-    // marginLeft:  theme.spacing(4)
-  },
-  table: {
-    minWidth: 1020
-  },
-  tableWrapper: {
-    overflowX: 'auto'
-  }
-});
-class ListTrack extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      order: 'asc',
-      orderBy: 'name',
-      page: 0,
-      rowsPerPage: 5
-    };
-  }
-
-  handleRequestSort = (event, property) => {
-    const orderBy = property;
-    let order = 'desc';
-
-    if (this.state.orderBy === property && this.state.order === 'desc') {
-      order = 'asc';
-    }
-
-    this.setState({ order, orderBy });
-  };
-
-  handleChangePage = (event, page) => {
-    this.setState({ page });
-  };
-
-  handleChangeRowsPerPage = event => {
-    this.setState({ rowsPerPage: parseInt(event.target.value) });
-  };
-
-  render() {
-    const { classes, tracks } = this.props;
-    const { order, orderBy, rowsPerPage, page } = this.state;
-    const emptyRows =
-      rowsPerPage - Math.min(rowsPerPage, tracks.length - page * rowsPerPage);
-    return (
-      <Paper className={classes.root}>
-        <div className={classes.tableWrapper}>
-          <Table className={classes.table} aria-labelledby="tableTitle">
-            <EnhancedTableHead
-              headerRows={headerRows}
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={this.handleRequestSort}
-              rowCount={tracks.length}
-            />
-            <TableBody>
-              {stableSort(tracks, getSorting(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((value, index) => {
-                  return <TrackItem value={value} key={index} />;
-                })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 49 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
-                  colSpan={3}
-                  count={tracks.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  SelectProps={{
-                    native: true
-                  }}
-                  onChangePage={this.handleChangePage}
-                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                  ActionsComponent={TablePaginationActions}
-                />
-              </TableRow>
-            </TableFooter>
-          </Table>
-        </div>
-      </Paper>
-    );
-  }
-}
-
-ListTrack.propTypes = {
-  classes: PropTypes.object.isRequired
+  return (
+    <ul className="list-unstyled list_music">
+      <div className="row ">
+        {tracks &&
+          tracks.length > 0 &&
+          tracks.map((track, key) => {
+            return (
+              <div key={key} className="col-6">
+                <li className="media align-items-stretch items-stretch-2013458">
+                  <div className="media_tmp align-self-center d-flex align-items-center mr-3 pl-3">
+                    <span className="counter">{key + 1}</span>
+                  </div>
+                  <div className="media-left align-items-stretch mr-2">
+                    <img
+                      style={{ marginRight: 10, borderRadius: 10 }}
+                      src={track.image}
+                      alt={track.name}
+                    />
+                  </div>
+                  <div className="media-body align-items-stretch d-flex flex-column justify-content-between p-0">
+                    <div>
+                      <h5
+                        onClick={() => playSong(track)}
+                        className="media-title mt-0 mb-0 title_home_tablet"
+                        style={{ cursor: 'pointer' }}
+                      >
+                        <PlayCircleOutline /> {track.name}
+                      </h5>
+                      <div className="author title_home_tablet">
+                        <a href="/ca-si/Den~Y3NuX2FydGlzdH40MjEy.html">
+                          {track.artists
+                            .map(art => {
+                              return art.name;
+                            })
+                            .join('; ')}
+                        </a>
+                      </div>
+                    </div>
+                    <small className="type_music">
+                      <span className="card-text" style={{ color: 'red' }}>
+                        {track.format.toUpperCase()}
+                      </span>
+                    </small>
+                  </div>
+                </li>
+              </div>
+            );
+          })}
+      </div>
+    </ul>
+  );
 };
 
-export default withStyles(styles)(ListTrack);
+ListTrack.propTypes = {
+  playSong: PropTypes.func.isRequired
+};
+
+export default ListTrack;
