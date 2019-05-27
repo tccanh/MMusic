@@ -1,26 +1,38 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { PlayCircleOutline } from '@material-ui/icons';
 
 const ListTrack = props => {
   const { tracks, playSong } = props;
-  console.log(tracks);
 
   return (
-    <ul className="list-unstyled list_music">
-      <div className="row ">
+    <div className="container" style={{ marginTop: 20 }}>
+      <ul className="list-unstyled list_music">
         {tracks &&
           tracks.length > 0 &&
           tracks.map((track, key) => {
             return (
-              <div key={key} className="col-6">
-                <li className="media align-items-stretch items-stretch-2013458">
+              <div key={key}>
+                <li
+                  style={{
+                    borderRadius: 10,
+                    backgroundColor: '#e0e0e0',
+                    marginBottom: 15
+                  }}
+                  className="media align-items-stretch items-stretch-2013458"
+                >
                   <div className="media_tmp align-self-center d-flex align-items-center mr-3 pl-3">
                     <span className="counter">{key + 1}</span>
                   </div>
                   <div className="media-left align-items-stretch mr-2">
                     <img
-                      style={{ marginRight: 10, borderRadius: 10 }}
+                      style={{
+                        marginRight: 10,
+                        borderRadius: 10,
+                        width: 130,
+                        height: 'auto'
+                      }}
                       src={track.image}
                       alt={track.name}
                     />
@@ -35,7 +47,7 @@ const ListTrack = props => {
                         <PlayCircleOutline /> {track.name}
                       </h5>
                       <div className="author title_home_tablet">
-                        <a href="/ca-si/Den~Y3NuX2FydGlzdH40MjEy.html">
+                        <a href="#">
                           {track.artists
                             .map(art => {
                               return art.name;
@@ -54,8 +66,8 @@ const ListTrack = props => {
               </div>
             );
           })}
-      </div>
-    </ul>
+      </ul>
+    </div>
   );
 };
 

@@ -33,8 +33,8 @@ class OwnPlaylists extends Component {
         <div className="box_playlist">
           <div>
             <div className="form-group form-check">
-              <a className="btn btn-danger">
-                <i className="fa fa-pencil" aria-hidden="true" /> Tạo playlist
+              <a className="btn btn-danger" style={{ color: 'white' }}>
+                Tạo playlist
               </a>
             </div>
           </div>

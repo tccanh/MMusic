@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -31,11 +32,22 @@ class Tracks extends Component {
       );
     }
     return (
-      <>
-        <h1 className="text-center title">CHART</h1>
-        <Button onClick={() => this.toggleListenAll(tracks)}>Listen ALl</Button>
+      <div className="container">
+        <h1
+          className="text-center title"
+          style={{ fontSize: 60, fontFamily: 'monospace', fontWeight: 'bold' }}
+        >
+          CHART
+        </h1>
+        <a
+          onClick={() => this.toggleListenAll(tracks)}
+          className="btn btn-danger"
+          style={{ color: 'white', marginLeft: 15 }}
+        >
+          LISTEN ALL
+        </a>
         {TrackContent}
-      </>
+      </div>
     );
   }
 }
