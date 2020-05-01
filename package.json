@@ -7,7 +7,9 @@
     "mongod": "sudo service mongod start",
     "server": "nodemon ./bin/www",
     "client": "npm start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -33,10 +35,12 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
-    "validator": "^11.0.0"
+    "validator": "^11.0.0",
+    "snyk": "^1.316.1"
   },
   "devDependencies": {
     "dotenv": "^8.0.0",
     "nodemon": "^1.19.0"
-  }
+  },
+  "snyk": true
 }
